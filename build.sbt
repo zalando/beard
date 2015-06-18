@@ -1,6 +1,6 @@
-name := "beard"
-
-version := "0.1-SNAPSHOT"
+name          := "beard"
+organization  := "de.zalando.spearheads"
+version       := "0.0.1-SNAPSHOT"
 
 scalaVersion := "2.11.6"
 scalacOptions := Seq("-unchecked", "-feature", "-deprecation", "-encoding", "utf8")
