@@ -1,6 +1,6 @@
 name := "beard"
 
-version := "1.0"
+version := "0.1-SNAPSHOT"
 
 scalaVersion := "2.11.6"
 scalacOptions := Seq("-unchecked", "-feature", "-deprecation", "-encoding", "utf8")
