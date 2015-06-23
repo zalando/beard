@@ -1,6 +1,6 @@
 package de.zalando.beard
 
-import de.zalando.beard.ast.{Identifier, Interpolation, BeardTemplate, Text}
+import de.zalando.beard.ast.{BeardTemplate, Identifier, Interpolation, Text}
 import org.scalatest._
 
 class BeardTemplateParserSpec extends FunSpec with Matchers {
@@ -61,6 +61,69 @@ class BeardTemplateParserSpec extends FunSpec with Matchers {
     describe("when parsing a string the contains UTF-8 chars") {
       it("should return a BeardTemplate containing a text with those UTF-8 chars") {
         BeardTemplateParser("å∂ßå∑œ´˚∆˙ø¨…˚¬∆˜≥≤µøˆ") should be(BeardTemplate(List(Text("å∂ßå∑œ´˚∆˙ø¨…˚¬∆˜≥≤µøˆ"))))
+      }
+    }
+
+    describe("when parsing a string that contains interpolations with attributes") {
+      it("should allow attributes") {
+        BeardTemplateParser("{{hello name=\"Dan\" color = 'blue'}}") should
+          be(BeardTemplate(List(
+            Interpolation(Identifier("hello"), List(("name", "Dan"), ("color", "blue")))
+          )))
+      }
+
+      it("should skip white spaces, tabs and new lines inside an interpolation") {
+        BeardTemplateParser("{{  hello   \t name=\"Dan\" \n color = 'blue' }}") should
+          be(BeardTemplate(List(
+            Interpolation(Identifier("hello"), List(("name", "Dan"), ("color", "blue")))
+          )))
+      }
+
+      describe("attribute values") {
+
+        it("should preserve white spaces, tabs and new lines inside of an attribute value") {
+          BeardTemplateParser("{{hello name=\"D a\tn\" color = 'bl\nue'}}") should
+            be(BeardTemplate(List(
+              Interpolation(Identifier("hello"), List(("name", "D a\tn"), ("color", "bl\nue")))
+            )))
+        }
+
+        it("should allow UTF-8 chars inside of attribute values") {
+          BeardTemplateParser("{{hello name=\"å∂ßå∑œ´˚∆˙ø¨…˚¬∆˜≥≤µøˆDan\"}}") should
+            be(BeardTemplate(List(
+              Interpolation(Identifier("hello"), List(("name", "å∂ßå∑œ´˚∆˙ø¨…˚¬∆˜≥≤µøˆDan")))
+            )))
+        }
+
+        it("should allow special chars inside of attribute values except quotes and double quotes") {
+          BeardTemplateParser("{{hello name=\"~!@#$%^&*()_+|-=\\<>,.?;:[]\"}}") should
+            be(BeardTemplate(List(
+              Interpolation(Identifier("hello"), List(("name", "~!@#$%^&*()_+|-=\\<>,.?;:[]")))
+            )))
+        }
+      }
+
+      describe("attribute identifiers") {
+
+        it("should not start with a number") {
+          BeardTemplateParser("{{9hello name=\"Dan\" color = 'blue'}}") should
+            be(BeardTemplate(List(
+              Interpolation(Identifier("hello"), List(("name", "Dan"), ("color", "blue")))
+            )))
+        }
+
+        it("should not allow special chars inside of attribute identifiers") {
+          BeardTemplateParser("{{h!el!l%o name=\"Dan\" color = 'blue'}}") should
+            be(BeardTemplate(List()))
+        }
+      }
+
+      it("should return a BeardTemplate containing an interpolation with attributes") {
+        BeardTemplateParser("more {{   hello   \n name=\"  He   llo  \" color = 'blue'}} world") should
+          be(BeardTemplate(List(
+            Text("more "),
+            Interpolation(Identifier("hello"), List(("name", "  He   llo  "), ("color", "blue"))),
+            Text(" world"))))
       }
     }
   }

@@ -4,15 +4,29 @@ import de.zalando.beard.BeardParser._
 import de.zalando.beard.ast._
 import scala.collection.JavaConversions._
 
-class BeardTemplateListener extends BeardBaseListener {
+class BeardTemplateListener extends BeardParserBaseListener {
 
   var result: BeardTemplate = BeardTemplate(List.empty)
 
   override def exitText(ctx: TextContext): Unit = ctx.result = Text(ctx.TEXT().getText)
 
-  override def exitIdentifier(ctx: IdentifierContext): Unit = ctx.result = Identifier(ctx.TEXT().getText)
+  override def exitIdentifier(ctx: IdentifierContext): Unit = {
+    ctx.result = Identifier(ctx.IDENTIFIER().getText)
+  }
 
-  override def exitInterpolation(ctx: InterpolationContext): Unit = ctx.result = Interpolation(ctx.identifier().result)
+  override def exitAttrValue(ctx: AttrValueContext): Unit = ctx.result = ctx.ATTR_TEXT().getText
+
+  override def exitAttribute(ctx: AttributeContext): Unit = {
+    ctx.result = (ctx.identifier.result.identifier, ctx.attrValue().ATTR_TEXT().getText)
+  }
+
+  override def exitInterpolation(ctx: InterpolationContext): Unit = {
+    val attributes: List[(String, String)] = ctx.attribute().map(_.result).toList
+
+    ctx.result =
+      Interpolation(ctx.identifier().result, attributes)
+  }
+
 
   override def exitSentence(ctx: SentenceContext): Unit = {
     val parts: List[Part] = List(Option(ctx.text()).toSeq.map(_.result),

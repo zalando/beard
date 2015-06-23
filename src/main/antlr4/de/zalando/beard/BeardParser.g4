@@ -1,4 +1,8 @@
-grammar Beard;
+parser grammar BeardParser;
+
+options {
+  tokenVocab=BeardLexer;
+}
 
 @parser::header{
 import de.zalando.beard.ast.*;
@@ -19,23 +23,25 @@ locals [Sentence result]
 
 interpolation
 locals [Interpolation result]
-    : LL identifier RR
+    : LL identifier attribute* RR
+    ;
+
+attribute
+locals [scala.Tuple2<String, String> result]
+    : identifier START_ATTR attrValue
+    ;
+
+attrValue
+locals [String result]
+    : START_ATTR_VALUE ATTR_TEXT END_ATTR_VALUE
     ;
 
 identifier
 locals [Identifier result]
-    : TEXT
+    : IDENTIFIER
     ;
 
 text
 locals [Text result]
-    :TEXT
+    : TEXT
     ;
-
-// parser rules start with lowercase letters, lexer rules with uppercase
-
-
-LL : '{{';
-RR : '}}';
-
-TEXT : ~([{}])+;

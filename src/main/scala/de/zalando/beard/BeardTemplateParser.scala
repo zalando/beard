@@ -1,8 +1,7 @@
 package de.zalando.beard
 
 import de.zalando.beard.ast.BeardTemplate
-import org.antlr.v4.runtime.tree.ParseTree
-import org.antlr.v4.runtime.{CommonTokenStream, ANTLRInputStream}
+import org.antlr.v4.runtime.{ANTLRInputStream, CommonTokenStream}
 
 class BeardTemplateParser {
 
