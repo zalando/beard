@@ -68,14 +68,14 @@ class BeardTemplateParserSpec extends FunSpec with Matchers {
       it("should allow attributes") {
         BeardTemplateParser("{{hello name=\"Dan\" color = 'blue'}}") should
           be(BeardTemplate(List(
-            Interpolation(Identifier("hello"), List(("name", "Dan"), ("color", "blue")))
+            Interpolation(Identifier("hello"), Map("name" -> "Dan", "color" -> "blue"))
           )))
       }
 
       it("should skip white spaces, tabs and new lines inside an interpolation") {
         BeardTemplateParser("{{  hello   \t name=\"Dan\" \n color = 'blue' }}") should
           be(BeardTemplate(List(
-            Interpolation(Identifier("hello"), List(("name", "Dan"), ("color", "blue")))
+            Interpolation(Identifier("hello"), Map("name" -> "Dan", "color" -> "blue"))
           )))
       }
 
@@ -84,21 +84,21 @@ class BeardTemplateParserSpec extends FunSpec with Matchers {
         it("should preserve white spaces, tabs and new lines inside of an attribute value") {
           BeardTemplateParser("{{hello name=\"D a\tn\" color = 'bl\nue'}}") should
             be(BeardTemplate(List(
-              Interpolation(Identifier("hello"), List(("name", "D a\tn"), ("color", "bl\nue")))
+              Interpolation(Identifier("hello"), Map("name" -> "D a\tn", "color" -> "bl\nue"))
             )))
         }
 
         it("should allow UTF-8 chars inside of attribute values") {
           BeardTemplateParser("{{hello name=\"å∂ßå∑œ´˚∆˙ø¨…˚¬∆˜≥≤µøˆDan\"}}") should
             be(BeardTemplate(List(
-              Interpolation(Identifier("hello"), List(("name", "å∂ßå∑œ´˚∆˙ø¨…˚¬∆˜≥≤µøˆDan")))
+              Interpolation(Identifier("hello"), Map("name" -> "å∂ßå∑œ´˚∆˙ø¨…˚¬∆˜≥≤µøˆDan"))
             )))
         }
 
         it("should allow special chars inside of attribute values except quotes and double quotes") {
           BeardTemplateParser("{{hello name=\"~!@#$%^&*()_+|-=\\<>,.?;:[]\"}}") should
             be(BeardTemplate(List(
-              Interpolation(Identifier("hello"), List(("name", "~!@#$%^&*()_+|-=\\<>,.?;:[]")))
+              Interpolation(Identifier("hello"), Map("name" -> "~!@#$%^&*()_+|-=\\<>,.?;:[]"))
             )))
         }
       }
@@ -108,7 +108,7 @@ class BeardTemplateParserSpec extends FunSpec with Matchers {
         it("should not start with a number") {
           BeardTemplateParser("{{9hello name=\"Dan\" color = 'blue'}}") should
             be(BeardTemplate(List(
-              Interpolation(Identifier("hello"), List(("name", "Dan"), ("color", "blue")))
+              Interpolation(Identifier("hello"), Map("name" -> "Dan", "color" -> "blue"))
             )))
         }
 
@@ -122,7 +122,7 @@ class BeardTemplateParserSpec extends FunSpec with Matchers {
         BeardTemplateParser("more {{   hello   \n name=\"  He   llo  \" color = 'blue'}} world") should
           be(BeardTemplate(List(
             Text("more "),
-            Interpolation(Identifier("hello"), List(("name", "  He   llo  "), ("color", "blue"))),
+            Interpolation(Identifier("hello"), Map("name" -> "  He   llo  ", "color" -> "blue")),
             Text(" world"))))
       }
     }

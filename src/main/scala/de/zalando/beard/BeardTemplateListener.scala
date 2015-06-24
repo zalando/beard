@@ -21,7 +21,7 @@ class BeardTemplateListener extends BeardParserBaseListener {
   }
 
   override def exitInterpolation(ctx: InterpolationContext): Unit = {
-    val attributes: List[(String, String)] = ctx.attribute().map(_.result).toList
+    val attributes = ctx.attribute().map(_.result).toMap
 
     ctx.result =
       Interpolation(ctx.identifier().result, attributes)
