@@ -1,8 +1,8 @@
 name          := "beard"
 organization  := "de.zalando.spearheads"
-version       := "0.0.2-SNAPSHOT"
+version       := "0.0.2"
 
-scalaVersion := "2.11.6"
+scalaVersion := "2.11.7"
 scalacOptions := Seq("-unchecked", "-feature", "-deprecation", "-encoding", "utf8")
 
 antlr4Settings
