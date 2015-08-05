@@ -15,11 +15,30 @@ locals [scala.collection.immutable.List<Sentence> result]
 
 sentence
 locals [Sentence result]
-         : interpolation sentence
+         : ifBlock
+         | interpolation sentence
          | text sentence
          | text
          | interpolation
          ;
+
+ifBlock
+locals [IfBlock result]
+    : ifInterpolation sentence elseInterpolation sentence endifInterpolation
+    | ifInterpolation sentence endifInterpolation
+    ;
+
+ifInterpolation
+    : LL IF RR
+    ;
+
+elseInterpolation
+    : LL ELSE RR
+    ;
+
+endifInterpolation
+    : LL ENDIF RR
+    ;
 
 interpolation
 locals [Interpolation result]
@@ -27,16 +46,16 @@ locals [Interpolation result]
     | attrInterpolation
     ;
 
-// {{address street="Ferdinand" number="1"}}
-attrInterpolation
-locals [AttrInterpolation result]
-    : LL identifier attribute* RR
-    ;
-
 // {{address.street.number}}
 idInterpolation
 locals [IdInterpolation result]
     : LL identifier (DOT identifier)* RR
+    ;
+
+// {{address street="Ferdinand" number="1"}}
+attrInterpolation
+locals [AttrInterpolation result]
+    : LL identifier attribute* RR
     ;
 
 attribute
@@ -48,6 +67,10 @@ attrValue
 locals [String result]
     : START_ATTR_VALUE ATTR_TEXT END_ATTR_VALUE
     ;
+
+//if: IF;
+//else: ELSE;
+//endif: ENDIF;
 
 identifier
 locals [Identifier result]

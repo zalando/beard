@@ -22,6 +22,9 @@ class BeardTemplateListener extends BeardParserBaseListener {
     ctx.result = (ctx.identifier.result.identifier, ctx.attrValue().ATTR_TEXT().getText)
   }
 
+  override def exitIfBlock(ctx: IfBlockContext): Unit = {
+    ctx.result = IfBlock(ctx.sentence().head.result, ctx.sentence().tail.lastOption.map(sentence => sentence.result))
+  }
 
   override def exitAttrInterpolation(ctx: AttrInterpolationContext): Unit = {
     val attributes = ctx.attribute().map(a => Attribute(a.result._1, a.result._2)).toList
@@ -41,7 +44,9 @@ class BeardTemplateListener extends BeardParserBaseListener {
   }
 
   override def exitSentence(ctx: SentenceContext): Unit = {
-    val parts: List[Part] = List(Option(ctx.text()).toSeq.map(_.result),
+    val parts: List[Part] = List(
+      Option(ctx.ifBlock()).toSeq.map(_.result),
+      Option(ctx.text()).toSeq.map(_.result),
       Option(ctx.interpolation()).toSeq.map(_.result),
       Option(ctx.sentence()).toSeq.map(_.result))
       .flatten

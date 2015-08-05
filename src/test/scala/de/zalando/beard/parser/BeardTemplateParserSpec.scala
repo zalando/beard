@@ -136,6 +136,18 @@ class BeardTemplateParserSpec extends FunSpec with Matchers {
       }
     }
 
+    describe("if block") {
+      it ("should return a BeardTemplate containing an simple if block") {
+        BeardTemplateParser("hello {{ if }} hello {{ endif}} end") should
+          be(BeardTemplate(List(Text("hello "), IfBlock(Sentence(List(Text(" hello "))),None), Text(" end"))))
+      }
+
+      it ("should return a BeardTemplate containing an simple if-else block") {
+        BeardTemplateParser("hello {{ if }} hello {{ else }} dan {{endif}} end") should
+          be(BeardTemplate(List(Text("hello "), IfBlock(Sentence(List(Text(" hello "))),Some(Sentence(List(Text(" dan "))))), Text(" end"))))
+      }
+    }
+
     describe("from file") {
       it ("should parse the template") {
         val template = Source.fromInputStream(getClass.getResourceAsStream(s"/templates/hello.beard")).mkString

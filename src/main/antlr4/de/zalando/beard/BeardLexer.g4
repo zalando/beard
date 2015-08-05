@@ -8,6 +8,10 @@ mode INSIDE_INTERPOLATION;
 
     RR : '}}' -> popMode;
 
+    IF : 'if';
+    ELSE: 'else';
+    ENDIF: 'endif';
+
     IDENTIFIER
         : LETTER LETTER_OR_DIGIT*
         ;

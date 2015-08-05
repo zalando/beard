@@ -13,6 +13,8 @@ case class AttrInterpolation(identifier: Identifier, attributes: Seq[Attribute] 
 
 case class IdInterpolation(identifier: Identifier, identifiers: Seq[Identifier] =  Seq.empty) extends Interpolation
 
+case class IfBlock(ifSentence: Sentence, elseSentence: Option[Sentence]) extends Part
+
 case class Attribute(key: String, value: String)
 
 case class Text(text: String) extends Part
