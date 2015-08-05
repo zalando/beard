@@ -1,0 +1,18 @@
+<div>somediv</div>
+{{block id="navigation"}}
+    <ul>
+        <li>first</li>
+    </ul>
+{{endblock}}
+
+<p>Hello world</p>
+
+{{if cond="users.empty"}}
+    <div>No users</div>
+{{else}}
+    <div class="users">
+    {{for user="users"}}
+        {{user.name}}{{unless cond="user.last"}},{{endunless}}
+    {{endfor}}
+    </div>
+{{endif}}

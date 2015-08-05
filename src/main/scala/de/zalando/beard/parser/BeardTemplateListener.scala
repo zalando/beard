@@ -1,7 +1,9 @@
-package de.zalando.beard
+package de.zalando.beard.parser
 
 import de.zalando.beard.BeardParser._
+import de.zalando.beard.BeardParserBaseListener
 import de.zalando.beard.ast._
+import scala.collection.immutable.Seq
 import scala.collection.JavaConversions._
 
 class BeardTemplateListener extends BeardParserBaseListener {
@@ -20,13 +22,23 @@ class BeardTemplateListener extends BeardParserBaseListener {
     ctx.result = (ctx.identifier.result.identifier, ctx.attrValue().ATTR_TEXT().getText)
   }
 
-  override def exitInterpolation(ctx: InterpolationContext): Unit = {
-    val attributes = ctx.attribute().map(_.result).toMap
+
+  override def exitAttrInterpolation(ctx: AttrInterpolationContext): Unit = {
+    val attributes = ctx.attribute().map(a => Attribute(a.result._1, a.result._2)).toList
 
     ctx.result =
-      Interpolation(ctx.identifier().result, attributes)
+      AttrInterpolation(ctx.identifier().result, attributes)
   }
 
+  override def exitIdInterpolation(ctx: IdInterpolationContext): Unit = {
+    val identifiers = ctx.identifier().map(id => id.result).toList
+
+    ctx.result = IdInterpolation(identifiers.head, identifiers.tail)
+  }
+
+  override def exitInterpolation(ctx: InterpolationContext): Unit = {
+    ctx.result = List(Option(ctx.attrInterpolation()).toSeq.map(_.result), Option(ctx.idInterpolation()).toSeq.map(_.result)).flatten.head
+  }
 
   override def exitSentence(ctx: SentenceContext): Unit = {
     val parts: List[Part] = List(Option(ctx.text()).toSeq.map(_.result),

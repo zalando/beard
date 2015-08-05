@@ -1,5 +1,6 @@
-package de.zalando.beard
+package de.zalando.beard.parser
 
+import de.zalando.beard.BeardLexer
 import org.antlr.v4.runtime.ANTLRInputStream
 import org.scalatest.{FunSpec, Matchers}
 

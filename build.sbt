@@ -17,8 +17,9 @@ antlr4PackageName in Antlr4 := Some("de.zalando.beard")
 
 libraryDependencies ++= {
   Seq(
-    "org.scalatest"     %% "scalatest"                            % "3.0.0-M1"       % "test",
-    "org.scalamock"     %% "scalamock-scalatest-support"          % "3.2.2"          % "test"
+    "org.scala-lang"            % "scala-reflect"                         % scalaVersion.value,
+    "org.scala-lang.modules"    %% "scala-xml"                            % "1.0.4",
+    "org.scalatest"             %% "scalatest"                            % "3.0.0-M7"       % "test",
+    "org.scalamock"             %% "scalamock-scalatest-support"          % "3.2.2"          % "test"
   )
 }
-

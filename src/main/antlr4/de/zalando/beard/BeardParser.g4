@@ -23,7 +23,20 @@ locals [Sentence result]
 
 interpolation
 locals [Interpolation result]
+    : idInterpolation
+    | attrInterpolation
+    ;
+
+// {{address street="Ferdinand" number="1"}}
+attrInterpolation
+locals [AttrInterpolation result]
     : LL identifier attribute* RR
+    ;
+
+// {{address.street.number}}
+idInterpolation
+locals [IdInterpolation result]
+    : LL identifier (DOT identifier)* RR
     ;
 
 attribute
