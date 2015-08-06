@@ -22,8 +22,16 @@ class BeardTemplateListener extends BeardParserBaseListener {
     ctx.result = (ctx.identifier.result.identifier, ctx.attrValue().ATTR_TEXT().getText)
   }
 
-  override def exitIfBlock(ctx: IfBlockContext): Unit = {
-    ctx.result = IfBlock(ctx.sentence().head.result, ctx.sentence().tail.lastOption.map(sentence => sentence.result))
+
+  override def exitIfOnlyStatement(ctx: IfOnlyStatementContext): Unit = {
+    val statements: Seq[Statement] = ctx.statement().map(st => st.result).toList
+    ctx.result = IfStatement(statements)
+  }
+
+  override def exitIfElseStatement(ctx: IfElseStatementContext): Unit = {
+    val ifStatements = ctx.ifStatements.map(st => st.result).toList
+    val elseStatements = ctx.elseStatements.map(st => st.result).toList
+    ctx.result = IfStatement(ifStatements, elseStatements)
   }
 
   override def exitAttrInterpolation(ctx: AttrInterpolationContext): Unit = {
@@ -43,26 +51,19 @@ class BeardTemplateListener extends BeardParserBaseListener {
     ctx.result = List(Option(ctx.attrInterpolation()).toSeq.map(_.result), Option(ctx.idInterpolation()).toSeq.map(_.result)).flatten.head
   }
 
-  override def exitSentence(ctx: SentenceContext): Unit = {
-    val parts: List[Part] = List(
-      Option(ctx.ifBlock()).toSeq.map(_.result),
+
+  override def exitStatement(ctx: StatementContext): Unit = {
+    val statements: List[Statement] = List(
+      Option(ctx.structuredStatement()).toSeq.map(_.ifStatement().result),
       Option(ctx.text()).toSeq.map(_.result),
-      Option(ctx.interpolation()).toSeq.map(_.result),
-      Option(ctx.sentence()).toSeq.map(_.result))
+      Option(ctx.interpolation()).toSeq.map(_.result))
       .flatten
-    ctx.result = Sentence(parts)
+    ctx.result = statements.head
   }
 
   override def exitBeard(ctx: BeardContext): Unit = {
-    val sentences: List[Sentence] = ctx.sentence().map(_.result).toList
+    val sentences: List[Statement] = ctx.statement().map(_.result).toList
     ctx.result = sentences
-    val flatten: List[Part] = flattenSentences(sentences)
-    result = BeardTemplate(flatten)
-  }
-
-  def flattenSentences(parts: List[Part]): List[Part] = parts match {
-    case Nil => Nil
-    case Sentence(parts) :: tail => flattenSentences(parts) ++ flattenSentences(tail)
-    case part :: tail => part :: flattenSentences(tail)
+    result = BeardTemplate(sentences)
   }
 }

@@ -9,23 +9,26 @@ import de.zalando.beard.ast.*;
 }
 
 beard
-locals [scala.collection.immutable.List<Sentence> result]
-      : sentence*
+locals [scala.collection.immutable.List<Statement> result]
+      : statement*
       ;
 
-sentence
-locals [Sentence result]
-         : ifBlock
-         | interpolation sentence
-         | text sentence
-         | text
+statement
+locals [Statement result]
+         : structuredStatement
          | interpolation
+         | text
          ;
 
-ifBlock
-locals [IfBlock result]
-    : ifInterpolation sentence elseInterpolation sentence endifInterpolation
-    | ifInterpolation sentence endifInterpolation
+structuredStatement
+    : ifStatement
+    ;
+
+
+ifStatement
+locals [IfStatement result]
+    : ifInterpolation statement+ endifInterpolation # IfOnlyStatement
+    | ifInterpolation ifStatements+=statement+ elseInterpolation elseStatements+=statement+ endifInterpolation # IfElseStatement
     ;
 
 ifInterpolation
@@ -39,6 +42,7 @@ elseInterpolation
 endifInterpolation
     : LL ENDIF RR
     ;
+
 
 interpolation
 locals [Interpolation result]
@@ -67,10 +71,6 @@ attrValue
 locals [String result]
     : START_ATTR_VALUE ATTR_TEXT END_ATTR_VALUE
     ;
-
-//if: IF;
-//else: ELSE;
-//endif: ENDIF;
 
 identifier
 locals [Identifier result]

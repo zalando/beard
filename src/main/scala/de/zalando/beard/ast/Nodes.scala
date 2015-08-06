@@ -2,9 +2,9 @@ package de.zalando.beard.ast
 
 import scala.collection.immutable.Seq
 
-sealed trait Part
+sealed trait Statement
 
-sealed trait Interpolation extends Part
+sealed trait Interpolation extends Statement
 
 case class AttrInterpolation(identifier: Identifier, attributes: Seq[Attribute] = Seq.empty) extends Interpolation {
 
@@ -13,14 +13,12 @@ case class AttrInterpolation(identifier: Identifier, attributes: Seq[Attribute] 
 
 case class IdInterpolation(identifier: Identifier, identifiers: Seq[Identifier] =  Seq.empty) extends Interpolation
 
-case class IfBlock(ifSentence: Sentence, elseSentence: Option[Sentence]) extends Part
+case class IfStatement(ifStatements: Seq[Statement], elseStatements: Seq[Statement] = Seq.empty) extends Statement
 
 case class Attribute(key: String, value: String)
 
-case class Text(text: String) extends Part
+case class Text(text: String) extends Statement
 
-case class Sentence(parts: List[Part]) extends Part
-
-case class BeardTemplate(parts: List[Part])
+case class BeardTemplate(parts: Seq[Statement])
 
 case class Identifier(identifier: String)
