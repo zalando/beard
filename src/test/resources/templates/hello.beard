@@ -7,12 +7,12 @@
 
 <p>Hello world</p>
 
-{{if cond="users.empty"}}
+{{if}}
     <div>No users</div>
 {{else}}
     <div class="users">
     {{for user="users"}}
-        {{user.name}}{{unless cond="user.last"}},{{endunless}}
+        {{user.name}}{{if}},{{/if}}
     {{endfor}}
     </div>
-{{endif}}
+{{/if}}
