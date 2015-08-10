@@ -138,17 +138,17 @@ class BeardTemplateParserSpec extends FunSpec with Matchers {
 
     describe("if block") {
       it ("should return a BeardTemplate containing an simple if block") {
-        BeardTemplateParser("hello {{ if }} hello {{ endif}} end") should
+        BeardTemplateParser("hello {{ if }} hello {{ /if}} end") should
           be(BeardTemplate(Seq(Text("hello "), IfStatement(Seq(Text(" hello "))), Text(" end"))))
       }
 
       it ("should return a BeardTemplate containing an simple if-else block") {
-        BeardTemplateParser("block1 {{ if }} block2 {{ else }} block3 {{endif}} block4") should
+        BeardTemplateParser("block1 {{ if }} block2 {{ else }} block3 {{/if}} block4") should
           be(BeardTemplate(Seq(Text("block1 "), IfStatement(Seq(Text(" block2 ")), Seq(Text(" block3 "))), Text(" block4"))))
       }
 
       it ("should return a BeardTemplate containing nested if blocks") {
-        BeardTemplateParser("hello {{ if }} block1 {{ if }} block2 {{endif}}block3{{ endif }} end") should
+        BeardTemplateParser("hello {{ if }} block1 {{ if }} block2 {{/if}}block3{{ /if }} end") should
           be(BeardTemplate(List(Text("hello "),
                                 IfStatement(List(Text(" block1 "),
                                             IfStatement(List(Text(" block2 "))),
@@ -157,7 +157,7 @@ class BeardTemplateParserSpec extends FunSpec with Matchers {
       }
 
       it ("should return a BeardTemplate containing deeper nested if blocks") {
-        BeardTemplateParser("hello{{if}}block1{{if}}block2{{endif}}block3{{else}}{{if}}block4{{else}}block5{{endif}}{{endif}}end") should
+        BeardTemplateParser("hello{{if}}block1{{if}}block2{{/if}}block3{{else}}{{if}}block4{{else}}block5{{/if}}{{/if}}end") should
           be(BeardTemplate(List(Text("hello"),
                                 IfStatement(
                                     List(

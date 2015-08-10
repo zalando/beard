@@ -10,7 +10,7 @@ mode INSIDE_INTERPOLATION;
 
     IF : 'if';
     ELSE: 'else';
-    ENDIF: 'endif';
+    SLASH: '/';
 
     IDENTIFIER
         : LETTER LETTER_OR_DIGIT*

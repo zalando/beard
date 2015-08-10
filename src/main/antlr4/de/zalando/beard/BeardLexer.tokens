@@ -3,7 +3,7 @@ TEXT=2
 RR=3
 IF=4
 ELSE=5
-ENDIF=6
+SLASH=6
 IDENTIFIER=7
 DOT=8
 START_ATTR=9
@@ -16,6 +16,6 @@ ATTR_TEXT=14
 '}}'=3
 'if'=4
 'else'=5
-'endif'=6
+'/'=6
 '.'=8
 '='=9

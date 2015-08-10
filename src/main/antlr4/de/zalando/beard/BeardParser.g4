@@ -40,7 +40,7 @@ elseInterpolation
     ;
 
 endifInterpolation
-    : LL ENDIF RR
+    : LL SLASH IF RR
     ;
 
 
