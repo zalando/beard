@@ -16,14 +16,14 @@ class BeardTemplateParserSpec extends FunSpec with Matchers {
 
     describe("when parsing a string in brackets") {
       it("should return a BeardTemplate of an interpolation") {
-        BeardTemplateParser("{{hello}}") should be(BeardTemplate(List(IdInterpolation(Identifier("hello")))))
+        BeardTemplateParser("{{hello}}") should be(BeardTemplate(List(IdInterpolation(CompoundIdentifier("hello")))))
       }
     }
 
     describe("when parsing a string with dots in brackets") {
       it("should return a BeardTemplate of an interpolation") {
         BeardTemplateParser("{{hello.world}}") should
-          be(BeardTemplate(List(IdInterpolation(Identifier("hello"), Seq(Identifier("world"))))))
+          be(BeardTemplate(List(IdInterpolation(CompoundIdentifier("hello", Seq("world"))))))
       }
     }
 
@@ -35,13 +35,13 @@ class BeardTemplateParserSpec extends FunSpec with Matchers {
 
     describe("when parsing a string the contains brackets") {
       it("should return a BeardTemplate of a text and an interpolation") {
-        BeardTemplateParser("hello {{world}}") should be(BeardTemplate(List(Text("hello "), IdInterpolation(Identifier("world")))))
+        BeardTemplateParser("hello {{world}}") should be(BeardTemplate(List(Text("hello "), IdInterpolation(CompoundIdentifier("world")))))
       }
     }
 
     describe("when parsing a string the contains brackets") {
       it("should return a BeardTemplate of an interpolation and a text") {
-        BeardTemplateParser("{{hello}} world") should be(BeardTemplate(List(IdInterpolation(Identifier("hello")), Text(" world"))))
+        BeardTemplateParser("{{hello}} world") should be(BeardTemplate(List(IdInterpolation(CompoundIdentifier("hello")), Text(" world"))))
       }
     }
 
@@ -49,13 +49,13 @@ class BeardTemplateParserSpec extends FunSpec with Matchers {
       it("should return a correct BeardTemplate of many interpolations and texts") {
         BeardTemplateParser("{{hello}} world {{how}} is {{the}} weather {{today}} is it good?") should
           be(BeardTemplate(List(
-            IdInterpolation(Identifier("hello")),
+            IdInterpolation(CompoundIdentifier("hello")),
             Text(" world "),
-            IdInterpolation(Identifier("how")),
+            IdInterpolation(CompoundIdentifier("how")),
             Text(" is "),
-            IdInterpolation(Identifier("the")),
+            IdInterpolation(CompoundIdentifier("the")),
             Text(" weather "),
-            IdInterpolation(Identifier("today")),
+            IdInterpolation(CompoundIdentifier("today")),
             Text(" is it good?")
           )))
       }
@@ -176,15 +176,32 @@ class BeardTemplateParserSpec extends FunSpec with Matchers {
         BeardTemplateParser("<ul>{{for user in users}}<li>{{user.name}}</li>{{/for}}</ul>") should
          be(BeardTemplate(List(
                 Text("<ul>"),
-                ForStatement(Identifier("user"), Identifier("users"),
-                  Seq(Text("<li>"), IdInterpolation(Identifier("user"), Seq(Identifier("name"))), Text("</li>"))
+                ForStatement(Identifier("user"), CompoundIdentifier("users"),
+                  Seq(Text("<li>"), IdInterpolation(CompoundIdentifier("user", Seq("name"))), Text("</li>"))
                 ),
                 Text("</ul>")
               ))
          )
       }
-    }
 
+      it ("should return a beard template containing nested for statements") {
+        BeardTemplateParser("<ul>{{for user in users}}<li>{{user.name}}{{for book in user.books}}{{book.name}}{{/for}}</li>{{/for}}</ul>") should
+          be(BeardTemplate(List(
+            Text("<ul>"),
+            ForStatement(Identifier("user"), CompoundIdentifier("users"),
+              Seq(
+                Text("<li>"),
+                IdInterpolation(CompoundIdentifier("user", Seq("name"))),
+                ForStatement(Identifier("book"), CompoundIdentifier("user", Seq("books")), Seq(
+                  IdInterpolation(CompoundIdentifier("book", Seq("name")))
+                )),
+                Text("</li>"))
+            ),
+            Text("</ul>")
+          ))
+          )
+      }
+    }
 
     describe("from file") {
       it ("should parse the template") {
@@ -195,14 +212,14 @@ class BeardTemplateParserSpec extends FunSpec with Matchers {
             Text("<div>somediv</div>\n"),
             AttrInterpolation(Identifier("block"), List(Attribute("id", "navigation"))),
             Text("\n    <ul>\n        <li>first</li>\n    </ul>\n"),
-            IdInterpolation(Identifier("endblock")),
+            IdInterpolation(CompoundIdentifier("endblock")),
             Text("\n\n<p>Hello world</p>\n\n"),
             IfStatement(
               List(Text("\n    <div>No users</div>\n")),
               List(Text("\n    <div class=\"users\">\n    "),
-                   ForStatement(Identifier("user"), Identifier("users"),
+                   ForStatement(Identifier("user"), CompoundIdentifier("users"),
                      List(Text("\n        "),
-                          IdInterpolation(Identifier("user"), List(Identifier("name"))),
+                          IdInterpolation(CompoundIdentifier("user", List("name"))),
                           IfStatement(List(Text(","))),
                           Text("\n    ")
                      )

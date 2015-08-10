@@ -16,6 +16,12 @@ class BeardTemplateListener extends BeardParserBaseListener {
     ctx.result = Identifier(ctx.IDENTIFIER().getText)
   }
 
+  override def exitCompoundIdentifier(ctx: CompoundIdentifierContext) = {
+    val identifiers = ctx.IDENTIFIER().map(id => id.getText).toList
+
+    ctx.result = CompoundIdentifier(identifiers.head, identifiers.tail)
+  }
+
   override def exitAttrValue(ctx: AttrValueContext) = ctx.result = ctx.ATTR_TEXT().getText
 
   override def exitAttribute(ctx: AttributeContext) = {
@@ -45,11 +51,8 @@ class BeardTemplateListener extends BeardParserBaseListener {
       AttrInterpolation(ctx.identifier().result, attributes)
   }
 
-  override def exitIdInterpolation(ctx: IdInterpolationContext) = {
-    val identifiers = ctx.identifier().map(id => id.result).toList
-
-    ctx.result = IdInterpolation(identifiers.head, identifiers.tail)
-  }
+  override def exitIdInterpolation(ctx: IdInterpolationContext) =
+    ctx.result = IdInterpolation(ctx.compoundIdentifier().result)
 
   override def exitInterpolation(ctx: InterpolationContext) = {
     ctx.result = List(Option(ctx.attrInterpolation()).toSeq.map(_.result), Option(ctx.idInterpolation()).toSeq.map(_.result)).flatten.head

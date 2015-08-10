@@ -50,7 +50,7 @@ locals [ForStatement result]
     ;
 
 forInterpolation
-    : LL FOR iter+=identifier IN coll+=identifier RR
+    : LL FOR iter+=identifier IN coll+=compoundIdentifier RR
     ;
 
 endForInterpolation
@@ -66,7 +66,7 @@ locals [Interpolation result]
 // {{address.street.number}}
 idInterpolation
 locals [IdInterpolation result]
-    : LL identifier (DOT identifier)* RR
+    : LL compoundIdentifier RR
     ;
 
 // {{address street="Ferdinand" number="1"}}
@@ -83,6 +83,11 @@ locals [scala.Tuple2<String, String> result]
 attrValue
 locals [String result]
     : START_ATTR_VALUE ATTR_TEXT END_ATTR_VALUE
+    ;
+
+compoundIdentifier
+locals [CompoundIdentifier result]
+    : IDENTIFIER (DOT IDENTIFIER)*
     ;
 
 identifier
