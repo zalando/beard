@@ -137,12 +137,12 @@ class BeardTemplateParserSpec extends FunSpec with Matchers {
     }
 
     describe("if statement") {
-      it ("should return a BeardTemplate containing an simple if statement") {
+      it ("should return a BeardTemplate containing a simple if statement") {
         BeardTemplateParser("hello {{ if }} hello {{ /if}} end") should
           be(BeardTemplate(Seq(Text("hello "), IfStatement(Seq(Text(" hello "))), Text(" end"))))
       }
 
-      it ("should return a BeardTemplate containing an simple if-else statement") {
+      it ("should return a BeardTemplate containing a simple if-else statement") {
         BeardTemplateParser("block1 {{ if }} block2 {{ else }} block3 {{/if}} block4") should
           be(BeardTemplate(Seq(Text("block1 "), IfStatement(Seq(Text(" block2 ")), Seq(Text(" block3 "))), Text(" block4"))))
       }
@@ -171,6 +171,21 @@ class BeardTemplateParserSpec extends FunSpec with Matchers {
       }
     }
 
+    describe("for statement") {
+      it ("should return a beard template containing a for statement") {
+        BeardTemplateParser("<ul>{{for user in users}}<li>{{user.name}}</li>{{/for}}</ul>") should
+         be(BeardTemplate(List(
+                Text("<ul>"),
+                ForStatement(Identifier("user"), Identifier("users"),
+                  Seq(Text("<li>"), IdInterpolation(Identifier("user"), Seq(Identifier("name"))), Text("</li>"))
+                ),
+                Text("</ul>")
+              ))
+         )
+      }
+    }
+
+
     describe("from file") {
       it ("should parse the template") {
         val template = Source.fromInputStream(getClass.getResourceAsStream(s"/templates/hello.beard")).mkString
@@ -182,17 +197,19 @@ class BeardTemplateParserSpec extends FunSpec with Matchers {
             Text("\n    <ul>\n        <li>first</li>\n    </ul>\n"),
             IdInterpolation(Identifier("endblock")),
             Text("\n\n<p>Hello world</p>\n\n"),
-            IfStatement(List(
-                          Text("\n    <div>No users</div>\n")),
-                       List(
-                          Text("\n    <div class=\"users\">\n    "),
-                          AttrInterpolation(Identifier("for"), List(Attribute("user","users"))),
-                          Text("\n        "),
+            IfStatement(
+              List(Text("\n    <div>No users</div>\n")),
+              List(Text("\n    <div class=\"users\">\n    "),
+                   ForStatement(Identifier("user"), Identifier("users"),
+                     List(Text("\n        "),
                           IdInterpolation(Identifier("user"), List(Identifier("name"))),
                           IfStatement(List(Text(","))),
-                          Text("\n    "),
-                          IdInterpolation(Identifier("endfor")),
-                          Text("\n    </div>\n"))))
+                          Text("\n    ")
+                     )
+                   ),
+                   Text("\n    </div>\n"))
+              )
+            )
           )
         )
       }

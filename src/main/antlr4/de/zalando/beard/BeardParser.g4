@@ -22,13 +22,14 @@ locals [Statement result]
 
 structuredStatement
     : ifStatement
+    | forStatement
     ;
 
 
 ifStatement
 locals [IfStatement result]
-    : ifInterpolation statement+ endifInterpolation # IfOnlyStatement
-    | ifInterpolation ifStatements+=statement+ elseInterpolation elseStatements+=statement+ endifInterpolation # IfElseStatement
+    : ifInterpolation statement+ endIfInterpolation # IfOnlyStatement
+    | ifInterpolation ifStatements+=statement+ elseInterpolation elseStatements+=statement+ endIfInterpolation # IfElseStatement
     ;
 
 ifInterpolation
@@ -39,10 +40,22 @@ elseInterpolation
     : LL ELSE RR
     ;
 
-endifInterpolation
+endIfInterpolation
     : LL SLASH IF RR
     ;
 
+forStatement
+locals [ForStatement result]
+    : forInterpolation statement+ endForInterpolation
+    ;
+
+forInterpolation
+    : LL FOR iter+=identifier IN coll+=identifier RR
+    ;
+
+endForInterpolation
+    : LL SLASH FOR RR
+    ;
 
 interpolation
 locals [Interpolation result]

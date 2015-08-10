@@ -8,9 +8,14 @@ mode INSIDE_INTERPOLATION;
 
     RR : '}}' -> popMode;
 
+    SLASH: '/';
+
     IF : 'if';
     ELSE: 'else';
-    SLASH: '/';
+
+
+    FOR: 'for';
+    IN: 'in';
 
     IDENTIFIER
         : LETTER LETTER_OR_DIGIT*

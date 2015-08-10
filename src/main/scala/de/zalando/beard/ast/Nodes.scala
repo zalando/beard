@@ -15,6 +15,8 @@ case class IdInterpolation(identifier: Identifier, identifiers: Seq[Identifier] 
 
 case class IfStatement(ifStatements: Seq[Statement], elseStatements: Seq[Statement] = Seq.empty) extends Statement
 
+case class ForStatement(iterator: Identifier, collection: Identifier, statements: Seq[Statement] = Seq.empty) extends Statement
+
 case class Attribute(key: String, value: String)
 
 case class Text(text: String) extends Statement

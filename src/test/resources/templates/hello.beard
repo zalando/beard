@@ -11,8 +11,8 @@
     <div>No users</div>
 {{else}}
     <div class="users">
-    {{for user="users"}}
+    {{ for user in users }}
         {{user.name}}{{if}},{{/if}}
-    {{endfor}}
+    {{/ for}}
     </div>
 {{/if}}
