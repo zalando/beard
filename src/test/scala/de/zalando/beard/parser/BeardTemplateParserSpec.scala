@@ -77,38 +77,61 @@ class BeardTemplateParserSpec extends FunSpec with Matchers {
       it("should allow attributes") {
         BeardTemplateParser("{{hello name=\"Dan\" color = 'blue'}}") should
           be(BeardTemplate(Seq(
-            AttrInterpolation(Identifier("hello"), Seq(Attribute("name", "Dan"), Attribute("color", "blue")))
+            AttrInterpolation(Identifier("hello"), Seq(AttributeWithValue("name", "Dan"), AttributeWithValue("color", "blue")))
           )))
       }
 
       it("should skip white spaces, tabs and new lines inside an interpolation") {
         BeardTemplateParser("{{  hello   \t name=\"Dan\" \n color = 'blue' }}") should
           be(BeardTemplate(Seq(
-            AttrInterpolation(Identifier("hello"), Seq(Attribute("name", "Dan"), Attribute("color", "blue"))
+            AttrInterpolation(Identifier("hello"), Seq(AttributeWithValue("name", "Dan"), AttributeWithValue("color", "blue"))
           ))))
       }
 
       describe("attribute values") {
 
-        it("should preserve white spaces, tabs and new lines inside of an attribute value") {
-          BeardTemplateParser("{{hello name=\"D a\tn\" color = 'bl\nue'}}") should
-            be(BeardTemplate(Seq(
-              AttrInterpolation(Identifier("hello"), Seq(Attribute("name", "D a\tn"), Attribute("color", "bl\nue")))
-            )))
+        describe("attribute values as text") {
+
+          it("should preserve white spaces, tabs and new lines inside of an attribute value") {
+            BeardTemplateParser("{{hello name=\"D a\tn\" color = 'bl\nue'}}") should
+              be(BeardTemplate(Seq(
+                AttrInterpolation(Identifier("hello"), Seq(AttributeWithValue("name", "D a\tn"), AttributeWithValue("color", "bl\nue")))
+              )))
+          }
+
+          it("should allow UTF-8 chars inside of attribute values") {
+            BeardTemplateParser("{{hello name=\"å∂ßå∑œ´˚∆˙ø¨…˚¬∆˜≥≤µøˆDan\"}}") should
+              be(BeardTemplate(Seq(
+                AttrInterpolation(Identifier("hello"), Seq(AttributeWithValue("name", "å∂ßå∑œ´˚∆˙ø¨…˚¬∆˜≥≤µøˆDan")))
+              )))
+          }
+
+          it("should allow special chars inside of attribute values except quotes and double quotes") {
+            BeardTemplateParser("{{hello name=\"~!@#$%^&*()_+|-=\\<>,.?;:[]\"}}") should
+              be(BeardTemplate(Seq(
+                AttrInterpolation(Identifier("hello"), Seq(AttributeWithValue("name", "~!@#$%^&*()_+|-=\\<>,.?;:[]")))
+              )))
+          }
         }
 
-        it("should allow UTF-8 chars inside of attribute values") {
-          BeardTemplateParser("{{hello name=\"å∂ßå∑œ´˚∆˙ø¨…˚¬∆˜≥≤µøˆDan\"}}") should
-            be(BeardTemplate(Seq(
-              AttrInterpolation(Identifier("hello"), Seq(Attribute("name", "å∂ßå∑œ´˚∆˙ø¨…˚¬∆˜≥≤µøˆDan")))
-            )))
-        }
+        describe("attribute values as compound identifiers") {
 
-        it("should allow special chars inside of attribute values except quotes and double quotes") {
-          BeardTemplateParser("{{hello name=\"~!@#$%^&*()_+|-=\\<>,.?;:[]\"}}") should
-            be(BeardTemplate(Seq(
-              AttrInterpolation(Identifier("hello"), Seq(Attribute("name", "~!@#$%^&*()_+|-=\\<>,.?;:[]")))
-            )))
+          it("should allow compound identifiers as attribute values") {
+            BeardTemplateParser("{{hello name=the.name color = the.color}}") should
+              be(BeardTemplate(Seq(
+                AttrInterpolation(Identifier("hello"), Seq(AttributeWithIdentifier("name", CompoundIdentifier("the", Seq("name"))),
+                  AttributeWithIdentifier("color", CompoundIdentifier("the", Seq("color")))))
+              )))
+          }
+
+          it("should allow mixing compound identifiers with strings as attribute values") {
+            BeardTemplateParser("{{hello name=the.name color = \"red\"}}") should
+              be(BeardTemplate(Seq(
+                AttrInterpolation(Identifier("hello"), Seq(AttributeWithIdentifier("name", CompoundIdentifier("the", Seq("name"))),
+                  AttributeWithValue("color", "red")))
+              )))
+          }
+
         }
       }
 
@@ -117,7 +140,7 @@ class BeardTemplateParserSpec extends FunSpec with Matchers {
         it("should not start with a number") {
           BeardTemplateParser("{{9hello name=\"Dan\" color = 'blue'}}") should
             be(BeardTemplate(Seq(
-              AttrInterpolation(Identifier("hello"), Seq(Attribute("name", "Dan"), Attribute("color", "blue"))
+              AttrInterpolation(Identifier("hello"), Seq(AttributeWithValue("name", "Dan"), AttributeWithValue("color", "blue"))
             ))))
         }
 
@@ -131,7 +154,7 @@ class BeardTemplateParserSpec extends FunSpec with Matchers {
         BeardTemplateParser("more {{   hello   \n name=\"  He   llo  \" color = 'blue'}} world") should
           be(BeardTemplate(Seq(
             Text("more "),
-            AttrInterpolation(Identifier("hello"), Seq(Attribute("name", "  He   llo  "), Attribute("color", "blue"))),
+            AttrInterpolation(Identifier("hello"), Seq(AttributeWithValue("name", "  He   llo  "), AttributeWithValue("color", "blue"))),
             Text(" world"))))
       }
     }
@@ -210,7 +233,7 @@ class BeardTemplateParserSpec extends FunSpec with Matchers {
         BeardTemplateParser(template) should be(
           BeardTemplate(Seq(
             Text("<div>somediv</div>\n"),
-            AttrInterpolation(Identifier("block"), Seq(Attribute("id", "navigation"))),
+            AttrInterpolation(Identifier("block"), Seq(AttributeWithValue("id", "navigation"))),
             Text("\n    <ul>\n        <li>first</li>\n    </ul>\n"),
             IdInterpolation(CompoundIdentifier("endblock")),
             Text("\n\n<p>Hello world</p>\n\n"),

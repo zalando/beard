@@ -69,15 +69,28 @@ locals [IdInterpolation result]
     : LL compoundIdentifier RR
     ;
 
-// {{address street="Ferdinand" number="1"}}
+// {{address street="Ferdinand" number="1" name=the.name}}
 attrInterpolation
 locals [AttrInterpolation result]
     : LL identifier attribute* RR
     ;
 
 attribute
-locals [scala.Tuple2<String, String> result]
+locals [Attribute result]
+    : attributeWithValue
+    | attributeWithIdentifier
+    ;
+
+// name="John"
+attributeWithValue
+locals [AttributeWithValue result]
     : identifier START_ATTR attrValue
+    ;
+
+// name = the.name.variable
+attributeWithIdentifier
+locals [AttributeWithIdentifier result]
+    : identifier START_ATTR compoundIdentifier
     ;
 
 attrValue
