@@ -13,6 +13,7 @@
     <div class="users">
     {{ for user in users }}
         {{user.name}}{{if}},{{/if}}
+        {{render "user-details" user=user class="default"}}
     {{/ for}}
     </div>
 {{/if}}

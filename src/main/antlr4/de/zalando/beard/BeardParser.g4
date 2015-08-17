@@ -23,8 +23,14 @@ locals [Statement result]
 structuredStatement
     : ifStatement
     | forStatement
+    | renderStatement
     ;
 
+// {{render "the-template" name="Dan" email=the.email.variable}}
+renderStatement
+locals [RenderStatement result]
+    : LL RENDER attrValue attribute* RR
+    ;
 
 ifStatement
 locals [IfStatement result]

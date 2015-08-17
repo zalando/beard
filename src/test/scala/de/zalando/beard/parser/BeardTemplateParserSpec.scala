@@ -226,6 +226,28 @@ class BeardTemplateParserSpec extends FunSpec with Matchers {
       }
     }
 
+    describe("render statement") {
+      it ("should return a beard template containing a simple render statement") {
+        BeardTemplateParser("""<ul>{{render  "li-template"}}</ul>""") should
+        be(BeardTemplate(Seq(
+          Text("<ul>"),
+          RenderStatement("li-template"),
+          Text("</ul>")
+        )))
+      }
+
+      it ("should return a beard template containing a render statement with attributes") {
+        BeardTemplateParser("""<ul>{{render  "li-template" name="Dan" email=the.email}}</ul>""") should
+          be(BeardTemplate(Seq(
+            Text("<ul>"),
+            RenderStatement("li-template", Seq(
+              AttributeWithValue("name", "Dan"),
+              AttributeWithIdentifier("email", CompoundIdentifier("the", Seq("email"))))),
+            Text("</ul>")
+          )))
+      }
+    }
+
     describe("from file") {
       it ("should parse the template") {
         val template = Source.fromInputStream(getClass.getResourceAsStream(s"/templates/hello.beard")).mkString
@@ -242,9 +264,11 @@ class BeardTemplateParserSpec extends FunSpec with Matchers {
               Seq(Text("\n    <div class=\"users\">\n    "),
                    ForStatement(Identifier("user"), CompoundIdentifier("users"),
                      Seq(Text("\n        "),
-                          IdInterpolation(CompoundIdentifier("user", Seq("name"))),
-                          IfStatement(Seq(Text(","))),
-                          Text("\n    ")
+                         IdInterpolation(CompoundIdentifier("user", Seq("name"))),
+                         IfStatement(Seq(Text(","))),
+                         Text("\n        "),
+                         RenderStatement("user-details", Seq(AttributeWithIdentifier("user", CompoundIdentifier("user")), AttributeWithValue("class", "default"))),
+                         Text("\n    ")
                      )
                    ),
                    Text("\n    </div>\n"))

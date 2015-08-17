@@ -10,6 +10,8 @@ mode INSIDE_INTERPOLATION;
 
     SLASH: '/';
 
+    RENDER : 'render';
+
     IF : 'if';
     ELSE: 'else';
 
