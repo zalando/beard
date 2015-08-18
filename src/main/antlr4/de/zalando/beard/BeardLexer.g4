@@ -12,9 +12,10 @@ mode INSIDE_INTERPOLATION;
 
     RENDER : 'render';
 
+    BLOCK : 'block';
+
     IF : 'if';
     ELSE: 'else';
-
 
     FOR: 'for';
     IN: 'in';

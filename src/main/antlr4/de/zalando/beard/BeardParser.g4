@@ -24,6 +24,22 @@ structuredStatement
     : ifStatement
     | forStatement
     | renderStatement
+    | blockStatement
+    ;
+
+blockStatement
+locals [BlockStatement result]
+    : blockInterpolation statement+ endBlockInterpolation
+    ;
+
+// {{ block header }}
+blockInterpolation
+    : LL BLOCK identifier RR
+    ;
+
+// {{/ block }}
+endBlockInterpolation
+    : LL SLASH BLOCK RR
     ;
 
 // {{render "the-template" name="Dan" email=the.email.variable}}

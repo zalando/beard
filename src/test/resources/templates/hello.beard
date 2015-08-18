@@ -1,9 +1,9 @@
 <div>somediv</div>
-{{block id="navigation"}}
+{{block navigation}}
     <ul>
         <li>first</li>
     </ul>
-{{endblock}}
+{{/block}}
 
 <p>Hello world</p>
 

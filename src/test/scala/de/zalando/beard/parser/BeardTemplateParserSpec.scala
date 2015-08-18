@@ -248,6 +248,19 @@ class BeardTemplateParserSpec extends FunSpec with Matchers {
       }
     }
 
+    describe("block statement") {
+      it ("should return a beard template containing a simple block statement") {
+        BeardTemplateParser("""<ul>{{block header}}<div>Hello</div>{{/block}}</ul>""") should
+          be(BeardTemplate(Seq(
+            Text("<ul>"),
+            BlockStatement(Identifier("header"), Seq(Text("<div>Hello</div>"))),
+            Text("</ul>")
+          )))
+      }
+
+      it ("should not let the block statements to be nested") {}
+    }
+
     describe("from file") {
       it ("should parse the template") {
         val template = Source.fromInputStream(getClass.getResourceAsStream(s"/templates/hello.beard")).mkString
@@ -255,9 +268,7 @@ class BeardTemplateParserSpec extends FunSpec with Matchers {
         BeardTemplateParser(template) should be(
           BeardTemplate(Seq(
             Text("<div>somediv</div>\n"),
-            AttrInterpolation(Identifier("block"), Seq(AttributeWithValue("id", "navigation"))),
-            Text("\n    <ul>\n        <li>first</li>\n    </ul>\n"),
-            IdInterpolation(CompoundIdentifier("endblock")),
+            BlockStatement(Identifier("navigation"), Seq(Text("\n    <ul>\n        <li>first</li>\n    </ul>\n"))),
             Text("\n\n<p>Hello world</p>\n\n"),
             IfStatement(
               Seq(Text("\n    <div>No users</div>\n")),
