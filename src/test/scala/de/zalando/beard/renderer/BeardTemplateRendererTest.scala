@@ -11,7 +11,11 @@ import scala.io.Source
  */
 class BeardTemplateRendererTest extends FunSpec with Matchers {
 
-  val renderer = new BeardTemplateRenderer
+  val partial = BeardTemplateParser {
+    Source.fromInputStream(getClass.getResourceAsStream(s"/templates/_partial.beard")).mkString
+  }
+
+  val renderer = new BeardTemplateRenderer(Map("partial" -> partial))
 
   describe("BeardTemplateRendererTest") {
 
@@ -49,6 +53,16 @@ class BeardTemplateRendererTest extends FunSpec with Matchers {
 
       renderer.render(template, Map("users" -> Seq(Map("name" -> "Gigi"), Map("name" -> "Gicu")))) should
         be("<div>Gigi</div><div>Gicu</div>")
+    }
+
+    it("should render a template with a render statement") {
+
+      val template = BeardTemplateParser {
+        Source.fromInputStream(getClass.getResourceAsStream(s"/templates/layout-with-partial.beard")).mkString
+      }
+
+      renderer.render(template, Map("example" -> Map("title" -> "Title", "presentations" -> Seq(Map("title" -> "Title1", "speakerName" -> "Name1", "summary" -> "Summary1"),
+        Map("title" -> "Title2", "speakerName" -> "Name2", "summary" -> "Summary2"))))) should be("")
     }
   }
 }

@@ -9,10 +9,9 @@ import scala.collection.immutable._
 /**
  * @author dpersa
  */
-class BeardTemplateRenderer {
+class BeardTemplateRenderer(partials: Map[String, BeardTemplate] = Map.empty) {
 
-
-  def render(template: BeardTemplate, context: Map[String, Any]): String = {
+  def render(template: BeardTemplate, context: Map[String, Any] = Map.empty): String = {
     val result = StringBuilder.newBuilder
 
     template.parts.map(result ++= renderStatement(_, context))
@@ -20,14 +19,19 @@ class BeardTemplateRenderer {
   }
 
   private def renderStatement(statement: Statement, context: Map[String, Any]): String = {
-    val result = StringBuilder.newBuilder
     statement match {
       case Text(text) => text
       case IdInterpolation(identifier) => {
-        ContextResolver.resolve(identifier, context)
+        ContextResolver.resolve(identifier, context).toString()
       }
+      case RenderStatement(template, localValues) =>
+        val localContext = localValues.map {
+          case attrWithId: AttributeWithIdentifier => attrWithId.key -> ContextResolver.resolve(attrWithId.id, context)
+          case attrWitValue: AttributeWithValue => attrWitValue.key -> attrWitValue.value
+        }.toMap
+        render(partials(template), localContext)
       case ForStatement(iterator, collection, statements) => {
-
+        val result = StringBuilder.newBuilder
         val seqFromContext: Seq[Any] = ContextResolver.resolveSeq(collection, context)
 
         seqFromContext.foreach { map =>

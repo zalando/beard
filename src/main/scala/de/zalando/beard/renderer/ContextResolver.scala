@@ -23,11 +23,11 @@ object ContextResolver {
 
     result match {
       case seq: Seq[_] => seq
-      case _ => throw new IllegalStateException(s"$identifier does not point to a Seq")
+      case other => throw new IllegalStateException(s"$identifier does not point to a Seq but a ${other.getClass} with value: $other")
     }
   }
 
-  def resolve(identifier: CompoundIdentifier, context: Map[String, Any]): String = {
+  def resolve(identifier: CompoundIdentifier, context: Map[String, Any]): Any = {
     context(identifier.identifierPart)
 
     val result = identifier.identifierParts.
@@ -37,7 +37,6 @@ object ContextResolver {
         case _ => throw new IllegalStateException(s"Can't resolve $identifier")
       }
     }
-
-    result.toString()
+    result
   }
 }
