@@ -1,7 +1,6 @@
 <div class="page-header">
     <h1>{{title}} - Beard</h1>
 </div>
-
 {{for presentation in presentations}}
 <div class="panel panel-default">
     <div class="panel-heading">
