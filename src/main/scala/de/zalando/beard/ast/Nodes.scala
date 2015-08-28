@@ -13,6 +13,8 @@ case class AttrInterpolation(identifier: Identifier, attributes: Seq[Attribute] 
 
 case class IdInterpolation(identifier: CompoundIdentifier) extends Interpolation
 
+case class ExtendsStatement(template: String) extends Statement
+
 case class RenderStatement(template: String, localValues: Seq[Attribute] = Seq.empty) extends Statement
 
 case class BlockStatement(identifier: Identifier, statements: Seq[Statement] = Seq.empty) extends Statement

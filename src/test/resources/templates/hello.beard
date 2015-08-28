@@ -1,3 +1,4 @@
+{{extends 'layout'}}
 <div>somediv</div>
 {{block navigation}}
     <ul>

@@ -10,7 +10,7 @@ import de.zalando.beard.ast.*;
 
 beard
 locals [scala.collection.immutable.List<Statement> result]
-      : statement*
+      : extendsStatement? statement*
       ;
 
 statement
@@ -19,6 +19,10 @@ locals [Statement result]
          | interpolation
          | text
          ;
+extendsStatement
+locals [ExtendsStatement result]
+    : LL EXTENDS attrValue RR
+    ;
 
 structuredStatement
     : ifStatement

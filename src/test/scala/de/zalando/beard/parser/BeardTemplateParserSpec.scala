@@ -248,6 +248,16 @@ class BeardTemplateParserSpec extends FunSpec with Matchers {
       }
     }
 
+    describe("extends statement") {
+      it ("should return a beard template containing an extends statement") {
+        BeardTemplateParser("""{{extends "layout"}}<div>Hello</div>""") should
+          be(BeardTemplate(Seq(
+            ExtendsStatement("layout"),
+            Text("<div>Hello</div>")
+          )))
+      }
+    }
+
     describe("block statement") {
       it ("should return a beard template containing a simple block statement") {
         BeardTemplateParser("""<ul>{{block header}}<div>Hello</div>{{/block}}</ul>""") should
@@ -267,7 +277,8 @@ class BeardTemplateParserSpec extends FunSpec with Matchers {
 
         BeardTemplateParser(template) should be(
           BeardTemplate(Seq(
-            Text("<div>somediv</div>\n"),
+            ExtendsStatement("layout"),
+            Text("\n<div>somediv</div>\n"),
             BlockStatement(Identifier("navigation"), Seq(Text("\n    <ul>\n        <li>first</li>\n    </ul>\n"))),
             Text("\n\n<p>Hello world</p>\n\n"),
             IfStatement(

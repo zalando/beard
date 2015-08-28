@@ -35,6 +35,10 @@ class BeardTemplateListener extends BeardParserBaseListener {
   override def exitAttributeWithIdentifier(ctx: AttributeWithIdentifierContext) =
     ctx.result = AttributeWithIdentifier(ctx.identifier.result.identifier, ctx.compoundIdentifier().result)
 
+
+  override def exitExtendsStatement(ctx: ExtendsStatementContext) =
+    ctx.result = ExtendsStatement(ctx.attrValue().result)
+
   override def exitRenderStatement(ctx: RenderStatementContext) =
     ctx.result = RenderStatement(ctx.attrValue().result, ctx.attribute().map(_.result).toList)
 
@@ -86,7 +90,8 @@ class BeardTemplateListener extends BeardParserBaseListener {
   }
 
   override def exitBeard(ctx: BeardContext) = {
-    val sentences: List[Statement] = ctx.statement().map(_.result).toList
+    val sentences: List[Statement] = Option(ctx.extendsStatement()).toSeq.map(_.result).toList ++
+      ctx.statement().map(_.result).toList
     ctx.result = sentences
     result = BeardTemplate(sentences)
   }

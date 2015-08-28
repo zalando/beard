@@ -1,0 +1,11 @@
+<html>
+    {{render "includes/head"}}
+    <body>
+        {{render "includes/header"}}
+        <div id="main">
+            {{yield}}
+        </div>
+        {{render "includes/footer"}}
+        {{render "includes/scripts"}}
+    </body>
+<html>

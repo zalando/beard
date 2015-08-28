@@ -1,0 +1,5 @@
+{{extends "layouts/application"}}
+
+<div class="main-column">
+    {{yield}}
+</div>

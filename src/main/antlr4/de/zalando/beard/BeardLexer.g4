@@ -10,6 +10,8 @@ mode INSIDE_INTERPOLATION;
 
     SLASH: '/';
 
+    EXTENDS : 'extends';
+
     RENDER : 'render';
 
     BLOCK : 'block';

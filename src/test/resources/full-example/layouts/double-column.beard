@@ -1,0 +1,10 @@
+{{extends "layouts/application"}}
+
+<div class="navi">
+    {{block navi}}
+        <div id="navigation">Some navi here</div>
+    {{/block}}
+</div>
+<div class="main-column">
+    {{yield}}
+</div>
