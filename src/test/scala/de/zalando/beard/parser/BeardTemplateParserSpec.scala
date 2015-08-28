@@ -35,13 +35,15 @@ class BeardTemplateParserSpec extends FunSpec with Matchers {
 
     describe("when parsing a string the contains brackets") {
       it("should return a BeardTemplate of a text and an interpolation") {
-        BeardTemplateParser("hello {{world}}") should be(BeardTemplate(Seq(Text("hello "), IdInterpolation(CompoundIdentifier("world")))))
+        BeardTemplateParser("hello {{world}}") should be(BeardTemplate(Seq(Text("hello "),
+          IdInterpolation(CompoundIdentifier("world")))))
       }
     }
 
     describe("when parsing a string the contains brackets") {
       it("should return a BeardTemplate of an interpolation and a text") {
-        BeardTemplateParser("{{hello}} world") should be(BeardTemplate(Seq(IdInterpolation(CompoundIdentifier("hello")), Text(" world"))))
+        BeardTemplateParser("{{hello}} world") should be(BeardTemplate(Seq(IdInterpolation(CompoundIdentifier("hello")),
+          Text(" world"))))
       }
     }
 
@@ -289,7 +291,8 @@ class BeardTemplateParserSpec extends FunSpec with Matchers {
                          IdInterpolation(CompoundIdentifier("user", Seq("name"))),
                          IfStatement(Seq(Text(","))),
                          Text("\n        "),
-                         RenderStatement("user-details", Seq(AttributeWithIdentifier("user", CompoundIdentifier("user")), AttributeWithValue("class", "default"))),
+                         RenderStatement("user-details", Seq(AttributeWithIdentifier("user", CompoundIdentifier("user")),
+                           AttributeWithValue("class", "default"))),
                          Text("\n    ")
                      )
                    ),
@@ -307,12 +310,16 @@ class BeardTemplateParserSpec extends FunSpec with Matchers {
 
         BeardTemplateParser(template) should be(
           BeardTemplate(Seq(
-            Text("<!DOCTYPE html>\n<html>\n<head>\n    <meta charset=\"utf-8\"/>\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"/>\n" +
+            Text("<!DOCTYPE html>\n<html>\n<head>\n    <meta charset=\"utf-8\"/>\n    <meta name=\"viewport\"" +
+              " content=\"width=device-width, initial-scale=1.0\"/>\n" +
               "    <meta http-equiv=\"X-UA-Compatible\" content=\"IE=Edge\"/>\n    <title>"),
             IdInterpolation(CompoundIdentifier("example", List("title"))),
-            Text(" - Pebble</title>\n    <link rel=\"stylesheet\" href=\"/webjars/bootstrap/3.0.1/css/bootstrap.min.css\" media=\"screen\"/>\n</head>\n<body>\n<div class=\"container\">\n    "),
-            RenderStatement("partial", List(AttributeWithIdentifier("title", CompoundIdentifier("example", List("title"))), AttributeWithIdentifier("presentations", CompoundIdentifier("example", List("presentations"))))),
-            Text("\n</div>\n<script src=\"/webjars/jquery/2.0.2/jquery.min.js\"></script>\n<script src=\"/webjars/bootstrap/3.0.1/js/bootstrap.min.js\"></script>\n</body>\n</html>")
+            Text(" - Pebble</title>\n    <link rel=\"stylesheet\" href=\"/webjars/bootstrap/3.0.1/css/bootstrap.min.css\"" +
+              " media=\"screen\"/>\n</head>\n<body>\n<div class=\"container\">\n    "),
+            RenderStatement("partial", List(AttributeWithIdentifier("title", CompoundIdentifier("example", List("title"))),
+              AttributeWithIdentifier("presentations", CompoundIdentifier("example", List("presentations"))))),
+            Text("\n</div>\n<script src=\"/webjars/jquery/2.0.2/jquery.min.js\"></script>\n<script" +
+              " src=\"/webjars/bootstrap/3.0.1/js/bootstrap.min.js\"></script>\n</body>\n</html>")
           )
           )
         )
