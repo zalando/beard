@@ -32,7 +32,7 @@ class FreemarkerPerformanceTest extends FunSpec with Matchers {
 
       val writer = new StringWriter()
 
-      time {
+      time("freemarker") {
         1 to REP foreach { i =>
           template.process(con, writer)
         }

@@ -5,13 +5,13 @@ package de.zalando.beard.performance
  */
 object Time {
 
-  val REP = 100000
+  val REP = 5
 
-  def time[R](block: => R): R = {
+  def time[R](message: String)(block: => R): R = {
     val t0 = System.nanoTime()
     val result = block    // call-by-name
     val t1 = System.nanoTime()
-    println("Elapsed time: " + (t1 - t0) / 1000000 + "ms")
+    println(s"Elapsed time $message: " + (t1 - t0) / 1000000 + "ms")
     result
   }
 }

@@ -37,7 +37,7 @@ PebblePerformanceTest extends FunSpec with Matchers {
 
       val writer = new StringWriter()
 
-      time {
+      time("pebble") {
         1 to REP foreach { i =>
           template.evaluate(writer, con)
         }

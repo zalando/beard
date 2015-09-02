@@ -26,13 +26,13 @@ class BeardPerformanceTest extends FunSpec with Matchers {
         Map("title" -> "Title2", "speakerName" -> "Name2", "summary" -> "Summary2"))))
 
       var r = ""
-      time {
+      time("beard") {
         1 to REP foreach { i =>
           renderer.render(template, context)
         }
       }
 
-      //println(s"result: ${r}")
+      println(s"result: ${r}")
     }
   }
 }
