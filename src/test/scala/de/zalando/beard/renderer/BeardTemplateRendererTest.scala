@@ -11,21 +11,17 @@ import scala.io.Source
  */
 class BeardTemplateRendererTest extends FunSpec with Matchers {
 
-  val partial = BeardTemplateParser {
-    Source.fromInputStream(getClass.getResourceAsStream(s"/templates/_partial.beard")).mkString
-  }
-
-  val renderer = new BeardTemplateRenderer(Map("partial" -> partial))
+  val templateCompiler = DefaultTemplateCompiler
+  val renderer = new BeardTemplateRenderer(templateCompiler)
 
   describe("BeardTemplateRendererTest") {
 
     it("should render a template with a simple identifier") {
-      val template = BeardTemplateParser {
-        Source.fromInputStream(getClass.getResourceAsStream(s"/templates/identifier-interpolation.beard")).mkString
+      val r = templateCompiler.compile(TemplateName("/templates/identifier-interpolation.beard"))
+        .map { template =>
+        renderer.render(template, Map("name" -> "Gigi")) should
+          be("<div>Gigi</div>")
       }
-
-      renderer.render(template, Map("name" -> "Gigi")) should
-        be("<div>Gigi</div>")
     }
 
     it("should render a template with a compound identifier") {
@@ -57,12 +53,12 @@ class BeardTemplateRendererTest extends FunSpec with Matchers {
 
     it("should render a template with a render statement") {
 
-      val template = BeardTemplateParser {
-        Source.fromInputStream(getClass.getResourceAsStream(s"/templates/layout-with-partial.beard")).mkString
-      }
+      val r = templateCompiler.compile(TemplateName("/templates/layout-with-partial.beard"))
+        .map { template =>
 
-      renderer.render(template, Map("example" -> Map("title" -> "Title", "presentations" -> Seq(Map("title" -> "Title1", "speakerName" -> "Name1", "summary" -> "Summary1"),
-        Map("title" -> "Title2", "speakerName" -> "Name2", "summary" -> "Summary2"))))) should not be("")
+        renderer.render(template, Map("example" -> Map("title" -> "Title", "presentations" -> Seq(Map("title" -> "Title1", "speakerName" -> "Name1", "summary" -> "Summary1"),
+          Map("title" -> "Title2", "speakerName" -> "Name2", "summary" -> "Summary2"))))) should not be ("")
+      }
     }
   }
 }

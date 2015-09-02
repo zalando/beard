@@ -316,7 +316,7 @@ class BeardTemplateParserSpec extends FunSpec with Matchers {
             IdInterpolation(CompoundIdentifier("example", List("title"))),
             Text(" - Pebble</title>\n    <link rel=\"stylesheet\" href=\"/webjars/bootstrap/3.0.1/css/bootstrap.min.css\"" +
               " media=\"screen\"/>\n</head>\n<body>\n<div class=\"container\">\n    "),
-            RenderStatement("partial", List(AttributeWithIdentifier("title", CompoundIdentifier("example", List("title"))),
+            RenderStatement("/templates/_partial.beard", List(AttributeWithIdentifier("title", CompoundIdentifier("example", List("title"))),
               AttributeWithIdentifier("presentations", CompoundIdentifier("example", List("presentations"))))),
             Text("\n</div>\n<script src=\"/webjars/jquery/2.0.2/jquery.min.js\"></script>\n<script" +
               " src=\"/webjars/bootstrap/3.0.1/js/bootstrap.min.js\"></script>\n</body>\n</html>")

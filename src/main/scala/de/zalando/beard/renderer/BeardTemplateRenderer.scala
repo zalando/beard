@@ -9,7 +9,7 @@ import scala.collection.immutable._
 /**
  * @author dpersa
  */
-class BeardTemplateRenderer(partials: Map[String, BeardTemplate] = Map.empty) {
+class BeardTemplateRenderer(templateCompiler: TemplateCompiler) {
 
   def render(template: BeardTemplate, context: Map[String, Any] = Map.empty): String = {
     val result = StringBuilder.newBuilder
@@ -29,7 +29,7 @@ class BeardTemplateRenderer(partials: Map[String, BeardTemplate] = Map.empty) {
           case attrWithId: AttributeWithIdentifier => attrWithId.key -> ContextResolver.resolve(attrWithId.id, context)
           case attrWitValue: AttributeWithValue => attrWitValue.key -> attrWitValue.value
         }.toMap
-        render(partials(template), localContext)
+        render(templateCompiler.compile(TemplateName(template)).get, localContext)
       case ForStatement(iterator, collection, statements) => {
         val result = StringBuilder.newBuilder
         val seqFromContext: Seq[Any] = ContextResolver.resolveSeq(collection, context)

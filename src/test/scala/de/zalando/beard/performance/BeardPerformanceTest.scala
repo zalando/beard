@@ -2,7 +2,7 @@ package de.zalando.beard.performance
 
 import de.zalando.beard.parser.BeardTemplateParser
 import de.zalando.beard.performance.Time._
-import de.zalando.beard.renderer.BeardTemplateRenderer
+import de.zalando.beard.renderer.{DefaultTemplateCompiler, BeardTemplateRenderer}
 import org.scalatest.{FunSpec, Matchers}
 
 import scala.io.Source
@@ -13,11 +13,9 @@ import scala.io.Source
 class BeardPerformanceTest extends FunSpec with Matchers {
 
   describe("beard") {
-    val partial = BeardTemplateParser {
-      Source.fromInputStream(getClass.getResourceAsStream(s"/templates/_partial.beard")).mkString
-    }
 
-    val renderer = new BeardTemplateRenderer(Map("partial" -> partial))
+    val compiler = DefaultTemplateCompiler
+    val renderer = new BeardTemplateRenderer(compiler)
 
     it ("should render the beard template") {
       val template = BeardTemplateParser {
