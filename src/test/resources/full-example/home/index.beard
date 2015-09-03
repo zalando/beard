@@ -1,1 +1,6 @@
+
+{{contentFor footer}}
+    This is some specific contentFor footer
+{{/contentFor}}
+
 <div>Hello Index</div>

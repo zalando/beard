@@ -5,7 +5,7 @@
         <div id="main">
             {{yield}}
         </div>
-        {{render "includes/footer"}}
+        {{block footer}}Some default footer{{/block}}
         {{render "includes/scripts"}}
     </body>
 <html>

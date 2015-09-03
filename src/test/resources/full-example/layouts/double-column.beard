@@ -1,5 +1,9 @@
 {{extends "layouts/application"}}
 
+{{contentFor footer}}
+    This is some contentFor footer
+{{/contentFor}}
+
 <div class="navi">
     {{block navi}}
         <div id="navigation">Some navi here</div>

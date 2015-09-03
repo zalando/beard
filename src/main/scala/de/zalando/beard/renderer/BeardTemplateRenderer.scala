@@ -42,6 +42,8 @@ class BeardTemplateRenderer(templateCompiler: TemplateCompiler) {
 
         result.toString()
       }
+      case ExtendsStatement(template) => ""
+
       case _ => ""
     }
   }

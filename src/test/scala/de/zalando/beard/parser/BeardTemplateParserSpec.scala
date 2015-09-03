@@ -258,6 +258,12 @@ class BeardTemplateParserSpec extends FunSpec with Matchers {
             Text("<div>Hello</div>")
           )))
       }
+
+      it ("should not allow two extends statements") {
+        val r = intercept[NoSuchElementException] {
+          BeardTemplateParser("""{{extends "layout"}}{{extends "layout"}}<div>Hello</div>""")
+        }
+      }
     }
 
     describe("block statement") {
