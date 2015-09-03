@@ -1,8 +1,9 @@
 package de.zalando.beard.renderer
 
-import de.zalando.beard.ast.{Statement, BeardTemplate}
+import de.zalando.beard.ast.{YieldStatement, Statement, BeardTemplate}
 import de.zalando.beard.parser.BeardTemplateParser
 
+import scala.collection.immutable.Seq
 import scala.util.{Success, Try}
 
 /**
@@ -24,14 +25,20 @@ class CustomizableTemplateCompiler(val templateLoader: TemplateLoader,
         val templateFileContent = templateLoader.load(templateName).mkString
         val beardTemplate = templateParser.parse(templateFileContent)
 
-        // is the templated extended??
-        beardTemplate.extended match {
+        val newStatements: Seq[Statement] = beardTemplate.statements.flatMap {
+          case YieldStatement() => yieldStatements
+          case statement => Seq(statement)
+        }
+
+        val yieldedBeardTemplate = BeardTemplate(newStatements, beardTemplate.extended)
+
+        yieldedBeardTemplate.extended match {
           case Some(extendsStatement) =>
-            val statements = beardTemplate.statements
+            val statements = yieldedBeardTemplate.statements
             compile(TemplateName(extendsStatement.template), statements)
           case None =>
-            templateCache.add(templateName, beardTemplate)
-            Success(beardTemplate)
+            templateCache.add(templateName, yieldedBeardTemplate)
+            Success(yieldedBeardTemplate)
         }
     }
   }
