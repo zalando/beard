@@ -5,7 +5,7 @@ package de.zalando.beard.performance
  */
 object Time {
 
-  val REP = 5
+  val REP = 100000
 
   def time[R](message: String)(block: => R): R = {
     val t0 = System.nanoTime()

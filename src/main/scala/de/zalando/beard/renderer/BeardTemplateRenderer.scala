@@ -1,6 +1,8 @@
 package de.zalando.beard.renderer
 
 import de.zalando.beard.ast._
+import rx.lang.scala.{Subject, Observable}
+import rx.lang.scala.subjects.ReplaySubject
 
 import scala.Predef
 import scala.collection.immutable._
@@ -11,40 +13,51 @@ import scala.collection.immutable._
  */
 class BeardTemplateRenderer(templateCompiler: TemplateCompiler) {
 
-  def render(template: BeardTemplate, context: Map[String, Any] = Map.empty): String = {
-    val result = StringBuilder.newBuilder
+  def render(template: BeardTemplate, context: Map[String, Any] = Map.empty): Observable[String] = {
+    val output = ReplaySubject[Observable[String]]()
 
-    template.parts.map(result ++= renderStatement(_, context))
-    result.result()
+    renderInternal(template, context, output)
+    output.onCompleted()
+
+    output.concat
   }
 
-  private def renderStatement(statement: Statement, context: Map[String, Any]): String = {
+  private def renderInternal(template: BeardTemplate,
+                     context: Map[String, Any] = Map.empty,
+                     output: Subject[Observable[String]]): Unit = {
+
+    template.parts.map(renderStatement(_, context, output))
+  }
+
+  private def onNext(output: Subject[Observable[String]], string: String) = {
+    output.onNext(Observable.just(string))
+  }
+
+  private def renderStatement(statement: Statement, context: Map[String, Any], output: Subject[Observable[String]]): Unit = {
     statement match {
-      case Text(text) => text
+      case Text(text) => onNext(output, text)
       case IdInterpolation(identifier) => {
-        ContextResolver.resolve(identifier, context).toString()
+        onNext(output, ContextResolver.resolve(identifier, context).toString())
       }
       case RenderStatement(template, localValues) =>
         val localContext = localValues.map {
           case attrWithId: AttributeWithIdentifier => attrWithId.key -> ContextResolver.resolve(attrWithId.id, context)
           case attrWitValue: AttributeWithValue => attrWitValue.key -> attrWitValue.value
         }.toMap
-        render(templateCompiler.compile(TemplateName(template)).get, localContext)
+        renderInternal(templateCompiler.compile(TemplateName(template)).get, localContext, output)
       case ForStatement(iterator, collection, statements) => {
-        val result = StringBuilder.newBuilder
         val seqFromContext: Seq[Any] = ContextResolver.resolveSeq(collection, context)
 
-        seqFromContext.foreach { map =>
-          result ++= statements.foldLeft("") { (result: String, s: Statement) =>
-            result + renderStatement(s, context.updated(iterator.identifier, map))
-          }
+        for {
+          map <- seqFromContext
+          statement <- statements
+        } yield {
+          renderStatement(statement, context.updated(iterator.identifier, map), output)
         }
-
-        result.toString()
       }
-      case ExtendsStatement(template) => ""
+      case ExtendsStatement(template) => ()
 
-      case _ => ""
+      case _ => ()
     }
   }
 }

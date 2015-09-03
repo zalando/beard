@@ -14,8 +14,7 @@ import scala.collection.JavaConverters._
 /**
  * @author dpersa
  */
-class
-PebblePerformanceTest extends FunSpec with Matchers {
+class PebblePerformanceTest extends FunSpec with Matchers {
 
   describe("pebble") {
 

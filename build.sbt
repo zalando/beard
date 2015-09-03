@@ -17,11 +17,12 @@ antlr4PackageName in Antlr4 := Some("de.zalando.beard")
 
 libraryDependencies ++= {
   Seq(
-    "org.scala-lang"            % "scala-reflect"                         % scalaVersion.value,
+    "org.scala-lang"             % "scala-reflect"                         % scalaVersion.value,
     "org.scala-lang.modules"    %% "scala-xml"                            % "1.0.4",
+    "io.reactivex"              %% "rxscala"                              % "0.25.0",
     "org.scalatest"             %% "scalatest"                            % "3.0.0-M7"       % "test",
     "org.scalamock"             %% "scalamock-scalatest-support"          % "3.2.2"          % "test",
-    "com.mitchellbosecke"       % "pebble"                                % "1.5.1"          % "test",
-    "org.freemarker"            % "freemarker"                            % "2.3.23"          % "test"
+    "com.mitchellbosecke"        % "pebble"                                % "1.5.1"          % "test",
+    "org.freemarker"             % "freemarker"                            % "2.3.23"         % "test"
   )
 }

@@ -17,11 +17,12 @@ class BeardTemplateRendererTest extends FunSpec with Matchers {
   describe("BeardTemplateRendererTest") {
 
     it("should render a template with a simple identifier") {
-      val r = templateCompiler.compile(TemplateName("/templates/identifier-interpolation.beard"))
+      templateCompiler.compile(TemplateName("/templates/identifier-interpolation.beard"))
         .map { template =>
-        renderer.render(template, Map("name" -> "Gigi")) should
+        renderer.render(template, Map("name" -> "Gigi")).toBlocking.toIterable.mkString should
           be("<div>Gigi</div>")
       }
+      ()
     }
 
     it("should render a template with a compound identifier") {
@@ -29,8 +30,8 @@ class BeardTemplateRendererTest extends FunSpec with Matchers {
         Source.fromInputStream(getClass.getResourceAsStream(s"/templates/compound-identifier-interpolation.beard")).mkString
       }
 
-      renderer.render(template, Map("user" -> Map("name" -> "Gigi", "email" -> "gigi@gicu.com"))) should
-        be("<div>gigi@gicu.com</div>")
+      renderer.render(template, Map("user" -> Map("name" -> "Gigi", "email" -> "gigi@gicu.com")))
+        .toBlocking.toIterable.mkString should be("<div>gigi@gicu.com</div>")
     }
 
     it("should render a template with a for statement") {
@@ -38,8 +39,8 @@ class BeardTemplateRendererTest extends FunSpec with Matchers {
         Source.fromInputStream(getClass.getResourceAsStream(s"/templates/for-statement.beard")).mkString
       }
 
-      renderer.render(template, Map("users" -> Seq(Map("name" -> "Gigi")))) should
-        be("<div>Hello</div>")
+      renderer.render(template, Map("users" -> Seq(Map("name" -> "Gigi"))))
+        .toBlocking.toIterable.mkString should be("<div>Hello</div>")
     }
 
     it("should render a template with a complex for statement") {
@@ -47,8 +48,8 @@ class BeardTemplateRendererTest extends FunSpec with Matchers {
         Source.fromInputStream(getClass.getResourceAsStream(s"/templates/for-complex-statement.beard")).mkString
       }
 
-      renderer.render(template, Map("users" -> Seq(Map("name" -> "Gigi"), Map("name" -> "Gicu")))) should
-        be("<div>Gigi</div><div>Gicu</div>")
+      renderer.render(template, Map("users" -> Seq(Map("name" -> "Gigi"), Map("name" -> "Gicu"))))
+        .toBlocking.toIterable.mkString should be("<div>Gigi</div><div>Gicu</div>")
     }
 
     it("should render a template with a render statement") {
@@ -56,8 +57,10 @@ class BeardTemplateRendererTest extends FunSpec with Matchers {
       val r = templateCompiler.compile(TemplateName("/templates/layout-with-partial.beard"))
         .map { template =>
 
-        renderer.render(template, Map("example" -> Map("title" -> "Title", "presentations" -> Seq(Map("title" -> "Title1", "speakerName" -> "Name1", "summary" -> "Summary1"),
-          Map("title" -> "Title2", "speakerName" -> "Name2", "summary" -> "Summary2"))))) should not be ("")
+        renderer.render(template, Map("example" -> Map("title" -> "Title", "presentations" ->
+          Seq(Map("title" -> "Title1", "speakerName" -> "Name1", "summary" -> "Summary1"),
+            Map("title" -> "Title2", "speakerName" -> "Name2", "summary" -> "Summary2")))))
+          .toBlocking.toIterable.mkString should not be ("")
       }
     }
   }

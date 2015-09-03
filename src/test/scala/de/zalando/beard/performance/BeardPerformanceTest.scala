@@ -22,17 +22,20 @@ class BeardPerformanceTest extends FunSpec with Matchers {
         Source.fromInputStream(getClass.getResourceAsStream(s"/templates/layout-with-partial.beard")).mkString
       }
 
-      val context: Map[String, Map[String, Object]] = Map("example" -> Map("title" -> "Title", "presentations" -> Seq(Map("title" -> "Title1", "speakerName" -> "Name1", "summary" -> "Summary1"),
+      val context: Map[String, Map[String, Object]] = Map("example" -> Map("title" -> "Title", "presentations" ->
+        Seq(Map("title" -> "Title1", "speakerName" -> "Name1", "summary" -> "Summary1"),
         Map("title" -> "Title2", "speakerName" -> "Name2", "summary" -> "Summary2"))))
 
-      var r = ""
       time("beard") {
         1 to REP foreach { i =>
           renderer.render(template, context)
         }
       }
 
-      println(s"result: ${r}")
+      val r = renderer.render(template, context)
+      r.subscribe(print(_))
+
+      println(s"result")
     }
   }
 }
