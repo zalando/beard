@@ -17,6 +17,8 @@
     </div>
 [/#list]
 </div>
-[@example.scripts/]
+[#include "footer.ftl"/]
+[#include "footer.ftl"/]
+[#include "footer.ftl"/]
 </body>
 </html>

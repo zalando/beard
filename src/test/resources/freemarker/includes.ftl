@@ -14,8 +14,3 @@
     <h1>${title} - Freemarker</h1>
 </div>
 [/#macro]
-
-[#macro scripts]
-<script src=/webjars/jquery/2.0.2/jquery.min.js></script>
-<script src=/webjars/bootstrap/3.0.1/js/bootstrap.min.js></script>
-[/#macro]
