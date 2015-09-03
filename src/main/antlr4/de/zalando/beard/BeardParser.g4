@@ -29,6 +29,12 @@ structuredStatement
     | forStatement
     | renderStatement
     | blockStatement
+    | yieldStatement
+    ;
+
+yieldStatement
+locals [YieldStatement result]
+    : LL YIELD RR
     ;
 
 blockStatement

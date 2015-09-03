@@ -12,6 +12,8 @@ mode INSIDE_INTERPOLATION;
 
     EXTENDS : 'extends';
 
+    YIELD : 'yield';
+
     RENDER : 'render';
 
     BLOCK : 'block';
