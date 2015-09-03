@@ -1,0 +1,5 @@
+{{extends "/extends-example/application.beard"}}
+
+<div class="main-column">
+    {{yield}}
+</div>

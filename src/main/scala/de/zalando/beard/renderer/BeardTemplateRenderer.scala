@@ -26,7 +26,7 @@ class BeardTemplateRenderer(templateCompiler: TemplateCompiler) {
                      context: Map[String, Any] = Map.empty,
                      output: Subject[Observable[String]]): Unit = {
 
-    template.parts.map(renderStatement(_, context, output))
+    template.statements.map(renderStatement(_, context, output))
   }
 
   private def onNext(output: Subject[Observable[String]], string: String) = {

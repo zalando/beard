@@ -253,10 +253,7 @@ class BeardTemplateParserSpec extends FunSpec with Matchers {
     describe("extends statement") {
       it ("should return a beard template containing an extends statement") {
         BeardTemplateParser("""{{extends "layout"}}<div>Hello</div>""") should
-          be(BeardTemplate(Seq(
-            ExtendsStatement("layout"),
-            Text("<div>Hello</div>")
-          )))
+          be(BeardTemplate(Seq(Text("<div>Hello</div>")), Some(ExtendsStatement("layout"))))
       }
 
       it ("should not allow two extends statements") {
@@ -281,11 +278,10 @@ class BeardTemplateParserSpec extends FunSpec with Matchers {
 
     describe("from file") {
       it ("should parse the template") {
-        val template = Source.fromInputStream(getClass.getResourceAsStream(s"/templates/hello.beard")).mkString
+        val template = Source.fromInputStream(getClass.getResourceAsStream("/templates/hello.beard")).mkString
 
         BeardTemplateParser(template) should be(
           BeardTemplate(Seq(
-            ExtendsStatement("layout"),
             Text("\n<div>somediv</div>\n"),
             BlockStatement(Identifier("navigation"), Seq(Text("\n    <ul>\n        <li>first</li>\n    </ul>\n"))),
             Text("\n\n<p>Hello world</p>\n\n"),
@@ -304,7 +300,7 @@ class BeardTemplateParserSpec extends FunSpec with Matchers {
                    ),
                    Text("\n    </div>\n"))
               )
-            )
+            ), Some(ExtendsStatement("layout"))
           )
         )
       }
@@ -312,7 +308,7 @@ class BeardTemplateParserSpec extends FunSpec with Matchers {
 
     describe("from file") {
       it("should parse the layout with partial") {
-        val template = Source.fromInputStream(getClass.getResourceAsStream(s"/templates/layout-with-partial.beard")).mkString
+        val template = Source.fromInputStream(getClass.getResourceAsStream("/templates/layout-with-partial.beard")).mkString
 
         BeardTemplateParser(template) should be(
           BeardTemplate(Seq(
@@ -324,8 +320,7 @@ class BeardTemplateParserSpec extends FunSpec with Matchers {
               " media=\"screen\"/>\n</head>\n<body>\n<div class=\"container\">\n    "),
             RenderStatement("/templates/_partial.beard", List(AttributeWithIdentifier("title", CompoundIdentifier("example", List("title"))),
               AttributeWithIdentifier("presentations", CompoundIdentifier("example", List("presentations"))))),
-            Text("\n</div>\n<script src=\"/webjars/jquery/2.0.2/jquery.min.js\"></script>\n<script" +
-              " src=\"/webjars/bootstrap/3.0.1/js/bootstrap.min.js\"></script>\n</body>\n</html>")
+              Text("\n</div>\n    "),RenderStatement("/templates/_footer.beard"), Text("\n</body>\n</html>")
           )
           )
         )

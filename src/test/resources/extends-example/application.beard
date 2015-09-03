@@ -1,0 +1,9 @@
+<html>
+    {{render "extends-example/head.beard"}}
+    <body>
+        {{render "includes/header.beard"}}
+        <div id="main">
+            {{yield}}
+        </div>
+    </body>
+<html>

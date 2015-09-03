@@ -90,9 +90,9 @@ class BeardTemplateListener extends BeardParserBaseListener {
   }
 
   override def exitBeard(ctx: BeardContext) = {
-    val sentences: List[Statement] = Option(ctx.extendsStatement()).toSeq.map(_.result).toList ++
-      ctx.statement().map(_.result).toList
+    val sentences: List[Statement] = ctx.statement().map(_.result).toList
     ctx.result = sentences
-    result = BeardTemplate(sentences)
+    val extended = Option(ctx.extendsStatement()).map(_.result)
+    result = BeardTemplate(sentences, extended)
   }
 }
