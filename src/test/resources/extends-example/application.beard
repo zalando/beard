@@ -1,7 +1,7 @@
 <html>
-    {{render "extends-example/head.beard"}}
+    {{render "/extends-example/head.beard"}}
     <body>
-        {{render "includes/header.beard"}}
+        {{render "/extends-example/header.beard"}}
         <div id="main">
             {{yield}}
         </div>

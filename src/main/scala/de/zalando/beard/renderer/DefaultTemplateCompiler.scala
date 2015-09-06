@@ -1,6 +1,6 @@
 package de.zalando.beard.renderer
 
-import de.zalando.beard.ast.{YieldStatement, Statement, BeardTemplate}
+import de.zalando.beard.ast.{RenderStatement, YieldStatement, Statement, BeardTemplate}
 import de.zalando.beard.parser.BeardTemplateParser
 
 import scala.collection.immutable.Seq
@@ -22,15 +22,16 @@ class CustomizableTemplateCompiler(val templateLoader: TemplateLoader,
     templateCache.get(templateName) match {
       case Some(template) => Success(template)
       case None =>
-        val templateFileContent = templateLoader.load(templateName).mkString
-        val beardTemplate = templateParser.parse(templateFileContent)
-
-        val newStatements: Seq[Statement] = beardTemplate.statements.flatMap {
-          case YieldStatement() => yieldStatements
-          case statement => Seq(statement)
+        val templateFileSource = templateLoader.load(templateName) match {
+          case Some(content) => content
+          case _ => throw new IllegalStateException(s"Could not find template with name ${templateName}")
         }
 
-        val yieldedBeardTemplate = BeardTemplate(newStatements, beardTemplate.extended)
+        val beardTemplate = templateParser.parse(templateFileSource.mkString)
+
+        compileRenderedTemplates(beardTemplate.renderStatements)
+
+        val yieldedBeardTemplate = createYieldedTemplate(beardTemplate, yieldStatements)
 
         yieldedBeardTemplate.extended match {
           case Some(extendsStatement) =>
@@ -41,6 +42,37 @@ class CustomizableTemplateCompiler(val templateLoader: TemplateLoader,
             Success(yieldedBeardTemplate)
         }
     }
+  }
+
+  /**
+   * Compiles the templates that are rendered inside of a template
+   * @param renderStatements the statements which render templates inside of an existing template
+   */
+  private def compileRenderedTemplates(renderStatements: Seq[RenderStatement]) = {
+    for {
+      statement <- renderStatements
+    } yield compile(TemplateName(statement.template))
+  }
+
+  /**
+   * Replaces the yield statements in the beard template with the ones specified as the argument
+   * Replaces the render statements without parameters with the content of the template
+   * @return a new BeardTemplate with the replaced statements
+   */
+  private def createYieldedTemplate(beardTemplate: BeardTemplate, yieldStatements: Seq[Statement]): BeardTemplate = {
+    val newStatements: Seq[Statement] = beardTemplate.statements.flatMap {
+      case YieldStatement() => yieldStatements
+      // inline the render statements without parameters
+      case renderStatement@RenderStatement(templateName, Seq()) =>
+        templateCache.get(TemplateName(templateName)) match {
+          case Some(renderedTemplate) => renderedTemplate.statements
+          case None => Seq(renderStatement)
+        }
+      case statement => Seq(statement)
+    }
+
+    val yieldedBeardTemplate = BeardTemplate(newStatements, beardTemplate.extended, beardTemplate.renderStatements)
+    yieldedBeardTemplate
   }
 }
 

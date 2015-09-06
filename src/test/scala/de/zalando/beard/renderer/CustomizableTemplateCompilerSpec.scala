@@ -13,22 +13,30 @@ class CustomizableTemplateCompilerSpec extends FunSpec with Matchers {
 
   describe("The template compiler") {
 
+    describe("render statement") {
+      it ("should inline render statements without parameters") {
+        pending
+      }
+    }
+
     describe("extended templates") {
 
-      it ("should compile the extended templates") {
+      it("should compile the extended templates") {
 
         val template = compiler.compile(TemplateName("/extends-example/index.beard")).get
 
         template should be(
           BeardTemplate(List(Text(s"<html>\n    "),
-            RenderStatement("extends-example/head.beard"),
+            Text("<div>This is the head</div>"),
             Text(s"\n    <body>\n        "),
-            RenderStatement("includes/header.beard"),
+            Text("<div>This is the header</div>"),
             Text("\n        <div id=\"main\">\n            "),
             Text("\n\n<div class=\"main-column\">\n    "),
             Text("\n\n<div>Hello Index</div>"),
             Text("\n</div>"),
-            Text("\n        </div>\n    </body>\n<html>")))
+            Text("\n        </div>\n    </body>\n<html>")),
+            None, Seq(RenderStatement("/extends-example/head.beard"),
+              RenderStatement("/extends-example/header.beard")))
         )
       }
     }

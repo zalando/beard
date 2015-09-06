@@ -23,8 +23,6 @@ class BeardPerformanceTest extends FunSpec with Matchers {
       }
 
       compiler.compile(TemplateName("/templates/layout-with-partial.beard"))
-      compiler.compile(TemplateName("/templates/_footer.beard"))
-      compiler.compile(TemplateName("/templates/_partial.beard"))
 
       val context: Map[String, Map[String, Object]] = Map("example" -> Map("title" -> "Title", "presentations" ->
         Seq(Map("title" -> "Title1", "speakerName" -> "Name1", "summary" -> "Summary1"),

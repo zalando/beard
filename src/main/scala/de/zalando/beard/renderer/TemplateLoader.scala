@@ -1,7 +1,5 @@
 package de.zalando.beard.renderer
 
-import java.io.InputStream
-
 import scala.io.Source
 
 /**
@@ -9,12 +7,17 @@ import scala.io.Source
  */
 trait TemplateLoader {
 
-  def load(templateName: TemplateName): Source
+  def load(templateName: TemplateName): Option[Source]
 }
 
 class ClasspathTemplateLoader extends TemplateLoader {
 
   override def load(templateName: TemplateName) = {
-    Source.fromInputStream(getClass.getResourceAsStream(templateName.name))
+
+    val resource = Option(getClass.getResourceAsStream(templateName.name))
+
+    resource.flatMap { res =>
+        Option(Source.fromInputStream(res))
+    }
   }
 }

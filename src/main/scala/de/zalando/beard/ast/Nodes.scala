@@ -43,7 +43,9 @@ case class AttributeWithIdentifier(key: String, id: CompoundIdentifier) extends 
 
 case class Text(text: String) extends Statement
 
-case class BeardTemplate(statements: Seq[Statement], extended: Option[ExtendsStatement] = None)
+case class BeardTemplate(statements: Seq[Statement],
+                         extended: Option[ExtendsStatement] = None,
+                         renderStatements: Seq[RenderStatement] = Seq.empty)
 
 case class CompoundIdentifier(identifierPart: String, identifierParts: Seq[String] = Seq.empty)
 

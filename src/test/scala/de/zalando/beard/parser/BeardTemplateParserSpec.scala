@@ -235,7 +235,7 @@ class BeardTemplateParserSpec extends FunSpec with Matchers {
           Text("<ul>"),
           RenderStatement("li-template"),
           Text("</ul>")
-        )))
+        ), None, Seq(RenderStatement("li-template"))))
       }
 
       it ("should return a beard template containing a render statement with attributes") {
@@ -246,7 +246,9 @@ class BeardTemplateParserSpec extends FunSpec with Matchers {
               AttributeWithValue("name", "Dan"),
               AttributeWithIdentifier("email", CompoundIdentifier("the", Seq("email"))))),
             Text("</ul>")
-          )))
+          ), None, Seq(RenderStatement("li-template", Seq(
+              AttributeWithValue("name", "Dan"),
+              AttributeWithIdentifier("email", CompoundIdentifier("the", Seq("email"))))))))
       }
     }
 
@@ -328,7 +330,8 @@ class BeardTemplateParserSpec extends FunSpec with Matchers {
             RenderStatement("/templates/_partial.beard", List(AttributeWithIdentifier("title", CompoundIdentifier("example", List("title"))),
               AttributeWithIdentifier("presentations", CompoundIdentifier("example", List("presentations"))))),
               Text("\n</div>\n    "),RenderStatement("/templates/_footer.beard"), Text("\n</body>\n</html>")
-          )
+          ), None, Seq(            RenderStatement("/templates/_partial.beard", List(AttributeWithIdentifier("title", CompoundIdentifier("example", List("title"))),
+            AttributeWithIdentifier("presentations", CompoundIdentifier("example", List("presentations"))))), RenderStatement("/templates/_footer.beard"))
           )
         )
       }
