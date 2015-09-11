@@ -1,0 +1,14 @@
+{{extends "/content-for-example/application.beard"}}
+
+{{contentFor head}}
+single column head
+{{/contentFor}}
+
+
+<div class="left-column">
+    {{block leftColumn}}double column left column{{/block}}
+</div>
+
+<div class="main-column">
+    {{yield}}
+</div>

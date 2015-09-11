@@ -258,11 +258,12 @@ class BeardTemplateParserSpec extends FunSpec with Matchers {
           be(BeardTemplate(Seq(Text("<div>Hello</div>")), Some(ExtendsStatement("layout"))))
       }
 
-      it ("should not allow two extends statements") {
-        val r = intercept[NoSuchElementException] {
-          BeardTemplateParser("""{{extends "layout"}}{{extends "layout"}}<div>Hello</div>""")
-        }
+      it ("should not consider the white space and new lines before the extends") {
+        BeardTemplateParser("  \n  {{extends \"layout\"}}<div>Hello</div>") should
+          be(BeardTemplate(Seq(Text("<div>Hello</div>")), Some(ExtendsStatement("layout"))))
       }
+
+      it ("should not allow two extends statements") { pending }
     }
 
     describe("yield statement") {
@@ -282,7 +283,33 @@ class BeardTemplateParserSpec extends FunSpec with Matchers {
           )))
       }
 
-      it ("should not let the block statements to be nested") {}
+      it ("should not let the block statements to be nested") { pending }
+    }
+
+    describe("contentFor statement") {
+      it ("should return a beard template containing a simple contentFor statement") {
+        BeardTemplateParser("""  {{contentFor header}}<div>Hello</div>{{/contentFor}}<body>Hello</body>""") should
+          be(BeardTemplate(Seq(
+            Text("<body>Hello</body>")
+          ), contentForStatements = Seq(ContentForStatement(Identifier("header"), Seq(Text("<div>Hello</div>"))))))
+      }
+
+      it ("should not consider the white spaces and new lines before the contentFor statements") {
+        BeardTemplateParser("  \n  {{contentFor header}}<div>Hello</div>{{/contentFor}}<body>Hello</body>") should
+          be(BeardTemplate(Seq(
+            Text("<body>Hello</body>")
+          ), contentForStatements = Seq(ContentForStatement(Identifier("header"), Seq(Text("<div>Hello</div>"))))))
+      }
+
+      it ("should not consider the white spaces and new lines in between extends and contentFor statements") {
+        BeardTemplateParser(" \n  {{extends \"layout\"}}  \n  {{contentFor header}}<div>Hello</div>{{/contentFor}}<body>Hello</body>") should
+          be(BeardTemplate(Seq(
+            Text("<body>Hello</body>")
+          ), extended = Some(ExtendsStatement("layout")),
+            contentForStatements = Seq(ContentForStatement(Identifier("header"), Seq(Text("<div>Hello</div>"))))))
+      }
+
+      it ("should not let the contentFor statements to be nested") { pending }
     }
 
     describe("from file") {

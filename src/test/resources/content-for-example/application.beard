@@ -1,0 +1,14 @@
+<html>
+    {{block head}}
+        <div>application head</div>
+    {{/block}}
+    <body>
+        {{block header}}
+            application header
+        {{/block}}
+        <div id="main">
+            {{yield}}
+        </div>
+        {{block footer}}application footer{{/block}}
+    </body>
+<html>

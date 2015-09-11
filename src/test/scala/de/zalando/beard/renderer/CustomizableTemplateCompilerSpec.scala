@@ -1,8 +1,8 @@
 package de.zalando.beard.renderer
 
-import de.zalando.beard.ast.{RenderStatement, Text, BeardTemplate}
+import de.zalando.beard.ast._
 import org.scalatest.{Matchers, FunSpec}
-import scala.collection.immutable.Seq
+import scala.collection.immutable.{Seq, Map}
 
 /**
  * @author dpersa
@@ -11,10 +11,33 @@ class CustomizableTemplateCompilerSpec extends FunSpec with Matchers {
 
   val compiler = DefaultTemplateCompiler
 
+  describe("#addContentForStatementsToMap") {
+    it("should add the correct statements") {
+      val contentForStatementsMap =
+        Map {
+          Identifier("hello") -> Seq(Text("one"))
+        }
+
+      val newContentForStatements = Seq(
+        ContentForStatement(Identifier("world"), Seq(Text("second"))),
+        ContentForStatement(Identifier("hello"), Seq(Text("third"))),
+        ContentForStatement(Identifier("world"), Seq(Text("fourth"))),
+        ContentForStatement(Identifier("some"), Seq(Text("fifth")))
+      )
+
+      val result = compiler.addContentForStatementsToMap(contentForStatementsMap, newContentForStatements)
+      result should be(Map(
+        Identifier("hello") -> Seq(Text("one")),
+        Identifier("world") -> Seq(Text("second")),
+        Identifier("some") -> Seq(Text("fifth"))
+      ))
+    }
+  }
+
   describe("The template compiler") {
 
     describe("render statement") {
-      it ("should inline render statements without parameters") {
+      it("should inline render statements without parameters") {
         pending
       }
     }
@@ -38,6 +61,19 @@ class CustomizableTemplateCompilerSpec extends FunSpec with Matchers {
             None, Seq(RenderStatement("/extends-example/head.beard"),
               RenderStatement("/extends-example/header.beard")))
         )
+      }
+    }
+
+    describe("extended templates with blocks") {
+
+      it("should compile the extended templates and override the blocks statements considering the contentFor statements") {
+
+        val template = compiler.compile(TemplateName("/content-for-example/index.beard")).get
+
+        template.statements should contain(BlockStatement(Identifier("head"), Seq(Text("\nsingle column head\n"))))
+        template.statements should contain(BlockStatement(Identifier("header"), Seq(Text("index header"))))
+        template.statements should contain(BlockStatement(Identifier("footer"), Seq(Text("application footer"))))
+        template.statements should contain(BlockStatement(Identifier("leftColumn"), Seq(Text("index left column"))))
       }
     }
   }

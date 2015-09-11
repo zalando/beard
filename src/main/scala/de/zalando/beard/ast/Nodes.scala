@@ -21,6 +21,8 @@ case class RenderStatement(template: String, localValues: Seq[Attribute] = Seq.e
 
 case class BlockStatement(identifier: Identifier, statements: Seq[Statement] = Seq.empty) extends Statement
 
+case class ContentForStatement(identifier: Identifier, statements: Seq[Statement] = Seq.empty) extends Statement
+
 case class IfStatement(ifStatements: Seq[Statement], elseStatements: Seq[Statement] = Seq.empty) extends Statement
 
 case class ForStatement(iterator: Identifier, collection: CompoundIdentifier, statements: Seq[Statement] = Seq.empty) extends Statement
@@ -45,7 +47,8 @@ case class Text(text: String) extends Statement
 
 case class BeardTemplate(statements: Seq[Statement],
                          extended: Option[ExtendsStatement] = None,
-                         renderStatements: Seq[RenderStatement] = Seq.empty)
+                         renderStatements: Seq[RenderStatement] = Seq.empty,
+                         contentForStatements: Seq[ContentForStatement] = Seq.empty)
 
 case class CompoundIdentifier(identifierPart: String, identifierParts: Seq[String] = Seq.empty)
 

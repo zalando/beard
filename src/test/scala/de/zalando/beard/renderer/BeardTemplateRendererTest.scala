@@ -63,5 +63,17 @@ class BeardTemplateRendererTest extends FunSpec with Matchers {
           .toString() should not be ("")
       }
     }
+
+    it ("should render a template with an export statement") {
+      pending
+    }
+
+    it ("should render a template with a block statement") {
+      pending
+    }
+
+    it ("should render a template with a contentFor statement") {
+      pending
+    }
   }
 }

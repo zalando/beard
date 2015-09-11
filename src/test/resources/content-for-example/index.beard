@@ -1,0 +1,7 @@
+{{extends "/content-for-example/double-column.beard"}}
+
+{{contentFor header}}index header{{/contentFor}}
+
+{{contentFor leftColumn}}index left column{{/contentFor}}
+
+<div>Hello Index</div>

@@ -2,7 +2,12 @@ lexer grammar BeardLexer;
 
 LL : '{{' -> pushMode(INSIDE_INTERPOLATION);
 
-TEXT : ~([{}])+;
+
+WHITE   : NL+ WHITE*
+        | WS+ WHITE*
+        ;
+
+TEXT    : ~([{}])+;
 
 mode INSIDE_INTERPOLATION;
 
@@ -17,6 +22,8 @@ mode INSIDE_INTERPOLATION;
     RENDER : 'render';
 
     BLOCK : 'block';
+
+    CONTENT_FOR : 'contentFor';
 
     IF : 'if';
     ELSE: 'else';
