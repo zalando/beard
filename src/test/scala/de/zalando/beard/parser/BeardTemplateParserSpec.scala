@@ -329,9 +329,17 @@ class BeardTemplateParserSpec extends FunSpec with Matchers {
               " media=\"screen\"/>\n</head>\n<body>\n<div class=\"container\">\n    "),
             RenderStatement("/templates/_partial.beard", List(AttributeWithIdentifier("title", CompoundIdentifier("example", List("title"))),
               AttributeWithIdentifier("presentations", CompoundIdentifier("example", List("presentations"))))),
-              Text("\n</div>\n    "),RenderStatement("/templates/_footer.beard"), Text("\n</body>\n</html>")
-          ), None, Seq(            RenderStatement("/templates/_partial.beard", List(AttributeWithIdentifier("title", CompoundIdentifier("example", List("title"))),
-            AttributeWithIdentifier("presentations", CompoundIdentifier("example", List("presentations"))))), RenderStatement("/templates/_footer.beard"))
+              Text("\n</div>\n    "),
+              RenderStatement("/templates/_footer.beard"), Text("\n    "),
+              RenderStatement("/templates/_footer.beard"), Text("\n    "),
+              RenderStatement("/templates/_footer.beard"),
+              Text("\n</body>\n</html>")
+          ), None, Seq(
+            RenderStatement("/templates/_partial.beard",List(AttributeWithIdentifier("title", CompoundIdentifier("example", List("title"))),
+            AttributeWithIdentifier("presentations", CompoundIdentifier("example", List("presentations"))))),
+            RenderStatement("/templates/_footer.beard"),
+            RenderStatement("/templates/_footer.beard"),
+            RenderStatement("/templates/_footer.beard"))
           )
         )
       }

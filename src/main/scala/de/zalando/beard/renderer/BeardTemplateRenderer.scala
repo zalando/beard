@@ -1,5 +1,7 @@
 package de.zalando.beard.renderer
 
+import java.io.StringWriter
+
 import de.zalando.beard.ast._
 import rx.lang.scala.{Subject, Observable}
 import rx.lang.scala.subjects.ReplaySubject
@@ -13,27 +15,24 @@ import scala.collection.immutable._
  */
 class BeardTemplateRenderer(templateCompiler: TemplateCompiler) {
 
-  def render(template: BeardTemplate, context: Map[String, Any] = Map.empty): Observable[String] = {
-    val output = ReplaySubject[Observable[String]]()
-
+  def render(template: BeardTemplate, context: Map[String, Any] = Map.empty): StringWriter = {
+    val output = new StringWriter()
     renderInternal(template, context, output)
-    output.onCompleted()
-
-    output.concat
+    output
   }
 
   private def renderInternal(template: BeardTemplate,
                      context: Map[String, Any] = Map.empty,
-                     output: Subject[Observable[String]]): Unit = {
+                     output: StringWriter): Unit = {
 
     template.statements.map(renderStatement(_, context, output))
   }
 
-  private def onNext(output: Subject[Observable[String]], string: String) = {
-    output.onNext(Observable.just(string))
+  private def onNext(output: StringWriter, string: String) = {
+    output.write(string)
   }
 
-  private def renderStatement(statement: Statement, context: Map[String, Any], output: Subject[Observable[String]]): Unit = {
+  private def renderStatement(statement: Statement, context: Map[String, Any], output: StringWriter): Unit = {
     statement match {
       case Text(text) => onNext(output, text)
       case IdInterpolation(identifier) => {

@@ -34,13 +34,16 @@ class PebblePerformanceTest extends FunSpec with Matchers {
       val con = new util.HashMap[String, Object]()
       con.putAll(context)
 
-      val writer = new StringWriter()
+      var writer = new StringWriter()
 
       time("pebble") {
         1 to REP foreach { i =>
           template.evaluate(writer, con)
         }
       }
+
+      writer = new StringWriter()
+      template.evaluate(writer, con)
 
       //println(s"result: ${writer.toString()}")
     }

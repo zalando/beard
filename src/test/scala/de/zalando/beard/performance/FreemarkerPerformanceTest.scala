@@ -30,7 +30,7 @@ class FreemarkerPerformanceTest extends FunSpec with Matchers {
       val con = new util.HashMap[String, Object]()
       con.putAll(context)
 
-      val writer = new StringWriter()
+      var writer = new StringWriter()
 
       time("freemarker") {
         1 to REP foreach { i =>
@@ -38,6 +38,8 @@ class FreemarkerPerformanceTest extends FunSpec with Matchers {
         }
       }
 
+      writer = new StringWriter()
+      template.process(con, writer)
       //println(s"result: ${writer.toString()}")
     }
   }
