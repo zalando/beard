@@ -4,7 +4,6 @@
 single column head
 {{/contentFor}}
 
-
 <div class="left-column">
     {{block leftColumn}}double column left column{{/block}}
 </div>

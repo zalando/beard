@@ -70,10 +70,10 @@ class CustomizableTemplateCompilerSpec extends FunSpec with Matchers {
 
         val template = compiler.compile(TemplateName("/content-for-example/index.beard")).get
 
-        template.statements should contain(BlockStatement(Identifier("head"), Seq(Text("\nsingle column head\n"))))
-        template.statements should contain(BlockStatement(Identifier("header"), Seq(Text("index header"))))
-        template.statements should contain(BlockStatement(Identifier("footer"), Seq(Text("application footer"))))
-        template.statements should contain(BlockStatement(Identifier("leftColumn"), Seq(Text("index left column"))))
+        template.statements should contain(Text("\nsingle column head\n"))
+        template.statements should contain(Text("index header"))
+        template.statements should contain(Text("application footer"))
+        template.statements should contain(Text("index left column"))
       }
     }
   }
