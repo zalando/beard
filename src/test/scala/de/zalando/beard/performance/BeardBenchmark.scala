@@ -14,26 +14,29 @@ object BeardBenchmark extends Bench.LocalTime {
   val renderer = new BeardTemplateRenderer(compiler)
 
   val template = BeardTemplateParser {
-    Source.fromInputStream(getClass.getResourceAsStream("/templates/layout-with-partial.beard")).mkString
+    Source.fromInputStream(getClass.getResourceAsStream("/beard-benchmark/index.beard")).mkString
   }
 
-  compiler.compile(TemplateName("/templates/layout-with-partial.beard"))
+  var compiledTemplate = compiler.compile(TemplateName("/beard-benchmark/index.beard")).get
 
   val context: Map[String, Map[String, Object]] = Map("example" -> Map("title" -> "Title", "presentations" ->
     Seq(Map("title" -> "Title1", "speakerName" -> "Name1", "summary" -> "Summary1"),
         Map("title" -> "Title2", "speakerName" -> "Name2", "summary" -> "Summary2"))))
 
-  val sizes = Gen.range("size")(1, 100000, 5000)
+  val sizes = Gen.range("size")(1, 100000, 20000)
   val ranges = for {
     size <- sizes
   } yield 0 until size
+
+  val result = renderer.render(compiledTemplate, context)
+  println(result)
 
   performance of "Beard" in {
     measure method "render" in {
       using(ranges) in {
         (r: Range) => {
           r.foreach { _ =>
-            renderer.render(template, context)
+            renderer.render(compiledTemplate, context)
           }
         }
       }

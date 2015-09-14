@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+{% block head %}
+<div>application head</div>
+{% endblock head %}
+<body>
+{% block header %}
+    <div>application header</div>
+{% endblock header %}
+<div class="container">
+    {% block content %}
+    {# This section is to be overriden by child templates #}
+    {% endblock content %}
+</div>
+{% include "footer" %}
+</body>
+</html>

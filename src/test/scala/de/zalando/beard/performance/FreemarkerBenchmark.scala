@@ -18,7 +18,7 @@ object FreemarkerBenchmark extends Bench.LocalTime {
 
   config.setTemplateLoader(loader)
 
-  val template = config.getTemplate("freemarker/index.ftl")
+  val template = config.getTemplate("freemarker-benchmark/index.ftl")
 
   val context = Map[String, AnyRef]("example" -> Map("title" -> "Freemarker").asJava,
     "presentations" -> Seq(Map("title" -> "Title1", "speakerName" -> "Name1", "summary" -> "Summary1").asJava,
@@ -27,7 +27,7 @@ object FreemarkerBenchmark extends Bench.LocalTime {
   val con = new util.HashMap[String, Object]()
   con.putAll(context)
 
-   val sizes = Gen.range("size")(1, 100000, 5000)
+   val sizes = Gen.range("size")(1, 100000, 20000)
    val ranges = for {
      size <- sizes
    } yield 0 until size

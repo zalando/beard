@@ -1,0 +1,28 @@
+{% extends 'application' %}
+
+{% block head %}
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
+    <title>{{ i18n("messages","example.title") }} - Pebble</title>
+    <link rel="stylesheet" href="/webjars/bootstrap/3.0.1/css/bootstrap.min.css" media="screen"/>
+</head>
+{% endblock head %}
+
+{% block content %}
+<div class="left-column">
+    {% block leftColumn %}<div>double column left column</div>{% endblock leftColumn %}
+</div>
+
+<div class="main-column">
+    {% block mainColumn %}
+    <div>double template main column</div>
+    {% endblock mainColumn%}
+</div>
+{% endblock content %}
+
+
+
+
+

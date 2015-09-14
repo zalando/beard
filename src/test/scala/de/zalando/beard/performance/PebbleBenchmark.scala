@@ -16,7 +16,7 @@ import scala.collection.JavaConverters._
 object PebbleBenchmark extends Bench.LocalTime {
   val loader = new ClasspathLoader()
   loader.setSuffix(".html")
-  loader.setPrefix("pebble")
+  loader.setPrefix("pebble-benchmark")
 
   val engine = new PebbleEngine(loader)
   engine.addExtension(new I18nExtension())
@@ -30,11 +30,15 @@ object PebbleBenchmark extends Bench.LocalTime {
   val con = new util.HashMap[String, Object]()
   con.putAll(context)
 
-  val sizes = Gen.range("size")(1, 100000, 5000)
+  val sizes = Gen.range("size")(1, 100000, 20000)
 
    val ranges = for {
      size <- sizes
    } yield 0 until size
+
+  val sr = new StringWriter()
+  template.evaluate(sr, con)
+  println(sr.toString)
 
    performance of "Pebble" in {
      measure method "render" in {
