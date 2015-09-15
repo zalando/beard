@@ -1,6 +1,6 @@
 package de.zalando.beard.performance
 
-import de.neuland.jade4j.JadeConfiguration
+import de.neuland.jade4j.{Jade4J, JadeConfiguration}
 import de.neuland.jade4j.template.ClasspathTemplateLoader
 import org.scalameter.api._
 

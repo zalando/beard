@@ -1,0 +1,26 @@
+{{extends "/beard-benchmark/double-column.beard"}}
+
+{{contentFor header}}
+<nav class="top-navi">
+    <ul>
+        <li>First Link</li>
+        <li>Second Link</li>
+        <li>Third Link</li>
+    </ul>
+</nav>
+{{/contentFor}}
+
+{{contentFor leftColumn}}
+<nav class="left-navi">
+    <ul>
+        <li>First Link</li>
+        <li>Second Link</li>
+        <li>Third Link</li>
+    </ul>
+</nav>
+{{/contentFor}}
+
+<div class="page-header">
+    <h1>{{example.title}} - Beard</h1>
+</div>
+{{render "/beard-second-benchmark/presentations.beard" presentations=example.presentations}}
