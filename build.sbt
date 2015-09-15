@@ -26,6 +26,7 @@ libraryDependencies ++= {
     "org.freemarker"             % "freemarker"                           % "2.3.23"         % "test",
     "com.github.spullara.mustache.java" % "compiler"                      % "0.9.1"          % "test",
     "com.github.jknack"          % "handlebars"                           % "2.2.2"          % "test",
+    "de.neuland-bfi"             % "jade4j"                               % "0.4.0"          % "test",
     "com.storm-enroute"         %% "scalameter"                           % "0.7"            % "test"
   )
 }
