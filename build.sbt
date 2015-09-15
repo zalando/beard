@@ -24,6 +24,7 @@ libraryDependencies ++= {
     "org.scalamock"             %% "scalamock-scalatest-support"          % "3.2.2"          % "test",
     "com.mitchellbosecke"        % "pebble"                               % "1.5.1"          % "test",
     "org.freemarker"             % "freemarker"                           % "2.3.23"         % "test",
+    "com.github.spullara.mustache.java" % "compiler"                      % "0.9.1"          % "test",
     "com.storm-enroute"         %% "scalameter"                           % "0.7"            % "test"
   )
 }
