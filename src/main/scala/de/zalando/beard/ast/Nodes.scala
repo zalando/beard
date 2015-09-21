@@ -45,6 +45,8 @@ case class AttributeWithIdentifier(key: String, id: CompoundIdentifier) extends 
 
 case class Text(text: String) extends Statement
 
+case class NewLine(times: Int) extends Statement
+
 case class BeardTemplate(statements: Seq[Statement],
                          extended: Option[ExtendsStatement] = None,
                          renderStatements: Seq[RenderStatement] = Seq.empty,

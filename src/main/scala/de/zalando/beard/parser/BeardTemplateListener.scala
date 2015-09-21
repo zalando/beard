@@ -14,6 +14,10 @@ class BeardTemplateListener extends BeardParserBaseListener {
     ctx.result = Text(Option(ctx.WHITE()).getOrElse(ctx.TEXT()).getText)
   }
 
+  override def exitNewLine(ctx: NewLineContext) = {
+    ctx.result = NewLine(ctx.NL().size())
+  }
+
   override def exitIdentifier(ctx: IdentifierContext) = {
     ctx.result = Identifier(ctx.IDENTIFIER().getText)
   }
@@ -92,6 +96,7 @@ class BeardTemplateListener extends BeardParserBaseListener {
           Option(structuredStatement.blockStatement()).toSeq.map(_.result)
       },
       Option(ctx.text()).toSeq.map(_.result),
+      Option(ctx.newLine()).toSeq.map(_.result),
       Option(ctx.interpolation()).toSeq.map(_.result))
       .flatten
     ctx.result = statements.head

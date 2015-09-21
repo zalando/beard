@@ -10,7 +10,7 @@ import de.zalando.beard.ast.*;
 
 beard
 locals [scala.collection.immutable.List<Statement> result]
-      : WHITE* extendsStatement? (WHITE* contentForStatement)* statement*
+      : (extendsStatement newLine*)? (newLine* contentForStatement)* statement*
       ;
 
 statement
@@ -18,6 +18,7 @@ locals [Statement result]
          : structuredStatement
          | interpolation
          | text
+         | newLine
          ;
 
 extendsStatement
@@ -40,7 +41,8 @@ locals [YieldStatement result]
 
 blockStatement
 locals [BlockStatement result]
-    : blockInterpolation statement* endBlockInterpolation
+    : blockInterpolation NL statement* endBlockInterpolation
+    | blockInterpolation statement* endBlockInterpolation
     ;
 
 // {{ block header }}
@@ -160,4 +162,9 @@ text
 locals [Text result]
     : TEXT
     | WHITE
+    ;
+
+newLine
+locals [NewLine result]
+    : NL+
     ;

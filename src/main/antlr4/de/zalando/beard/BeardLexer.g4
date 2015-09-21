@@ -2,12 +2,15 @@ lexer grammar BeardLexer;
 
 LL : '{{' -> pushMode(INSIDE_INTERPOLATION);
 
+NL      : '\r'? '\n';
 
-WHITE   : NL+ WHITE*
-        | WS+ WHITE*
+WHITE   : WS+
         ;
 
-TEXT    : ~([{}])+;
+WS      : [ \t]+;
+
+
+TEXT    : ~([{}] | '\n' | '\r')+;
 
 mode INSIDE_INTERPOLATION;
 
@@ -66,9 +69,9 @@ mode INSIDE_INTERPOLATION;
             {Character.isJavaIdentifierPart(Character.toCodePoint((char)_input.LA(-2), (char)_input.LA(-1)))}?
         ;
 
-    NL      :   '\r'? '\n' -> skip;
+    NLSKIP      :   '\r'? '\n' -> skip;
 
-    WS      :   [ \t]+ -> skip ;
+    WSSKIP      :   [ \t]+ -> skip ;
 
 mode INSIDE_ATTR_VALUE;
 
