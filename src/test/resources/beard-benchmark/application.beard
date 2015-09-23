@@ -7,9 +7,9 @@
 {{block header}}
     <div>application header</div>
 {{/block}}
-<div class="container">
-    {{yield}}
-</div>
-{{ render "/beard-benchmark/footer.beard" }}
+    <div class="container">
+        {{yield}}
+    </div>
+    {{ render "/beard-benchmark/footer.beard" }}
 </body>
 </html>

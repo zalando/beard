@@ -10,7 +10,7 @@ import de.zalando.beard.ast.*;
 
 beard
 locals [scala.collection.immutable.List<Statement> result]
-      : (extendsStatement newLine*)? (newLine* contentForStatement)* statement*
+      : (extendsStatement NL?)? (NL* contentForStatement)* statement*
       ;
 
 statement
@@ -37,12 +37,13 @@ structuredStatement
 
 yieldStatement
 locals [YieldStatement result]
-    : LL YIELD RR
+    : NL WS* LL YIELD RR
+    | LL YIELD RR
     ;
 
 blockStatement
 locals [BlockStatement result]
-    : blockInterpolation NL statement* endBlockInterpolation
+    : NL WS* blockInterpolation statement* NL WS* endBlockInterpolation
     | blockInterpolation statement* endBlockInterpolation
     ;
 
@@ -58,7 +59,8 @@ endBlockInterpolation
 
 contentForStatement
 locals [ContentForStatement result]
-    : contentForInterpolation statement* endContentForInterpolation
+    : contentForInterpolation statement* NL WS* endContentForInterpolation NL?
+    | contentForInterpolation statement* endContentForInterpolation NL?
     ;
 
 // {{ contentFor header }}
@@ -74,7 +76,8 @@ endContentForInterpolation
 // {{render "the-template" name="Dan" email=the.email.variable}}
 renderStatement
 locals [RenderStatement result]
-    : LL RENDER attrValue attribute* RR
+    : NL WS* LL RENDER attrValue attribute* RR
+    | LL RENDER attrValue attribute* RR
     ;
 
 ifStatement
@@ -97,7 +100,8 @@ endIfInterpolation
 
 forStatement
 locals [ForStatement result]
-    : forInterpolation statement+ endForInterpolation
+    : NL WS* forInterpolation statement+ NL WS* endForInterpolation
+    | forInterpolation statement+ endForInterpolation
     ;
 
 forInterpolation

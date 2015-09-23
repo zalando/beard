@@ -10,10 +10,11 @@
 </head>
 {{/contentFor}}
 
-<div class="left-column">
-    {{block leftColumn}}<div>double column left column</div>{{/block}}
-</div>
-
-<div class="main-column">
-    {{yield}}
-</div>
+        <div class="left-column">
+            {{block leftColumn}}
+                <div>double column left column</div>
+            {{/block}}
+        </div>
+        <div class="main-column">
+            {{yield}}
+        </div>
