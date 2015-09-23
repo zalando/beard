@@ -1,4 +1,34 @@
-1616 - beard no streaming work mac
-1311 - beard with streaming work mac
-1442 - freemarker work mac
-1376 - pebble work mac
+Beard No Streaming
+Parameters(size -> 1): 0.011441
+Parameters(size -> 20001): 45.125396
+Parameters(size -> 40001): 92.180903
+Parameters(size -> 60001): 135.307672
+Parameters(size -> 80001): 185.746955
+
+Mustache.java
+Parameters(size -> 1): 0.004849
+Parameters(size -> 20001): 71.431516
+Parameters(size -> 40001): 144.628086
+Parameters(size -> 60001): 214.869461
+Parameters(size -> 80001): 288.737725
+
+Pebble
+Parameters(size -> 1): 0.005384
+Parameters(size -> 20001): 81.740897
+Parameters(size -> 40001): 164.555768
+Parameters(size -> 60001): 247.83125
+Parameters(size -> 80001): 334.931101
+
+Freemarker
+Parameters(size -> 1): 0.005673
+Parameters(size -> 20001): 90.04892
+Parameters(size -> 40001): 183.563551
+Parameters(size -> 60001): 273.024154
+Parameters(size -> 80001): 352.930733
+
+Jade4j
+Parameters(size -> 1): 0.043619
+Parameters(size -> 20001): 875.951181
+Parameters(size -> 40001): 1791.350485
+Parameters(size -> 60001): 2680.437264
+Parameters(size -> 80001): 3577.868017

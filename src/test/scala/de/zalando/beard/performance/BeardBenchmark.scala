@@ -19,7 +19,7 @@ object BeardBenchmark extends Bench.LocalTime {
     Source.fromInputStream(getClass.getResourceAsStream("/beard-benchmark/index.beard")).mkString
   }
 
-  var compiledTemplate = compiler.compile(TemplateName("/beard-benchmark/index.beard")).get
+  val compiledTemplate = compiler.compile(TemplateName("/beard-benchmark/index.beard")).get
 
   val context: Map[String, Map[String, Object]] = Map("example" -> Map("title" -> "Title", "presentations" ->
     Seq(Map("title" -> "Title1", "speakerName" -> "Name1", "summary" -> "Summary1"),

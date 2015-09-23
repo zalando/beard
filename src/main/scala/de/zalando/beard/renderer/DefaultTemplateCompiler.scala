@@ -3,6 +3,7 @@ package de.zalando.beard.renderer
 import de.zalando.beard.ast._
 import de.zalando.beard.parser.BeardTemplateParser
 
+import scala.collection.GenTraversableOnce
 import scala.collection.immutable.Seq
 import scala.util.{Success, Try}
 
@@ -47,14 +48,45 @@ class CustomizableTemplateCompiler(val templateLoader: TemplateLoader,
             val currentYieldedStatements = mergedBeardTemplate.statements
             compile(TemplateName(extendsStatement.template), currentYieldedStatements, newContentForStatementsMap)
           case None =>
-            templateCache.add(templateName, mergedBeardTemplate)
-            Success(mergedBeardTemplate)
+            // we need to merge the texts and new lines
+            val concatTextsTemplate = mergedBeardTemplate.copy(statements = concatTexts((mergedBeardTemplate.statements)))
+
+            templateCache.add(templateName, concatTextsTemplate)
+            Success(concatTextsTemplate)
         }
     }
   }
 
+  private[renderer] def concatTextsSeq(existingTexts: Seq[HasText]): Seq[Text] =
+    Seq(existingTexts.foldLeft(Text(""))((text, next) => Text(text.text + next.text)))
+
+
+  /**
+   * Given a sequence of Statements, some of them will be of type Text and some of them of type NewLine (instance of HasText)
+   *
+   * In case we have two consecutive Statements with text, we concat them into one text
+   *
+   * @param statements initial statements
+   * @param mergedStatements here we put the result
+   * @param existingTexts if we find a text, we stack it here until we concat them
+   * @return
+   */
+  private[renderer] def concatTexts(statements: Seq[Statement],
+                                    mergedStatements: Seq[Statement] = Seq.empty,
+                                    existingTexts: Seq[HasText] = Seq.empty): Seq[Statement] = statements match {
+
+    case Nil => mergedStatements ++ concatTextsSeq(existingTexts)
+    case (head: HasText) :: tail => concatTexts(tail, mergedStatements, existingTexts :+ head)
+    case (head: ForStatement) :: tail => {
+      val concatTextsForStatement = head.copy(statements = concatTexts(head.statements))
+      concatTexts(tail, mergedStatements ++ concatTextsSeq(existingTexts) :+ concatTextsForStatement, Seq.empty)
+    }
+    // TODO concat the texts for the other statements
+    case head :: tail => concatTexts(tail, mergedStatements ++ concatTextsSeq(existingTexts) :+ head, Seq.empty)
+  }
+
   private[renderer] def addContentForStatementsToMap(contentForStatementsMap: Map[Identifier, Seq[Statement]],
-                                   newContentForStatements: Seq[ContentForStatement]): Map[Identifier, Seq[Statement]] = {
+                                                     newContentForStatements: Seq[ContentForStatement]): Map[Identifier, Seq[Statement]] = {
     newContentForStatements match {
       case Nil => {
         contentForStatementsMap

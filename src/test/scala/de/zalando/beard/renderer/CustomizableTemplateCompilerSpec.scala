@@ -34,6 +34,26 @@ class CustomizableTemplateCompilerSpec extends FunSpec with Matchers {
     }
   }
 
+  describe("#getMergedTokens") {
+    it("should merge a text with a new line") {
+      val mergeTextsStatements = compiler.concatTexts(Seq(Text("hello"), NewLine(2)))
+      mergeTextsStatements.should(be(Seq[Statement](Text("hello\n\n"))))
+    }
+
+    it("should merge more texts with a new lines") {
+      val mergeTextsStatements = compiler.concatTexts(Seq(Text("hello"), NewLine(2),
+        Text("world"), NewLine(1), NewLine(1), Text("!")))
+      mergeTextsStatements.should(be(Seq[Statement](Text("hello\n\nworld\n\n!"))))
+    }
+
+    it("should merge more texts with a new lines and statements") {
+      val mergeTextsStatements = compiler.concatTexts(Seq(Text("hello"), NewLine(2),
+        YieldStatement(), Text("world"), NewLine(1), YieldStatement(), NewLine(1), Text("!")))
+      mergeTextsStatements.should(be(Seq[Statement](Text("hello\n\n"), YieldStatement(), Text("world\n"),
+        YieldStatement(), Text("\n!"))))
+    }
+  }
+
   describe("The template compiler") {
 
     describe("render statement") {
@@ -49,15 +69,15 @@ class CustomizableTemplateCompilerSpec extends FunSpec with Matchers {
         val template = compiler.compile(TemplateName("/extends-example/index.beard")).get
 
         template should be(
-          BeardTemplate(List(Text(s"<html>\n    "),
-            Text("<div>This is the head</div>"),
-            Text(s"\n    <body>\n        "),
-            Text("<div>This is the header</div>"),
-            Text("\n        <div id=\"main\">\n            "),
-            Text("\n\n<div class=\"main-column\">\n    "),
-            Text("\n\n<div>Hello Index</div>"),
-            Text("\n</div>"),
-            Text("\n        </div>\n    </body>\n<html>")),
+          BeardTemplate(List(Text(s"<html>\n    " +
+            "<div>This is the head</div>" +
+            "\n    <body>\n        " +
+            "<div>This is the header</div>" +
+            "\n        <div id=\"main\">\n            " +
+            "<div class=\"main-column\">\n    " +
+            "<div>Hello Index</div>" +
+            "\n</div>" +
+            "\n        </div>\n    </body>\n<html>")),
             None, Seq(RenderStatement("/extends-example/head.beard"),
               RenderStatement("/extends-example/header.beard")))
         )
@@ -70,10 +90,10 @@ class CustomizableTemplateCompilerSpec extends FunSpec with Matchers {
 
         val template = compiler.compile(TemplateName("/content-for-example/index.beard")).get
 
-        template.statements should contain(Text("\nsingle column head\n"))
-        template.statements should contain(Text("index header"))
-        template.statements should contain(Text("application footer"))
-        template.statements should contain(Text("index left column"))
+        template.statements.head.asInstanceOf[Text].text should include("single column head")
+        template.statements.head.asInstanceOf[Text].text should include("index header")
+        template.statements.head.asInstanceOf[Text].text should include("application footer")
+        template.statements.head.asInstanceOf[Text].text should include("index left column")
       }
     }
   }

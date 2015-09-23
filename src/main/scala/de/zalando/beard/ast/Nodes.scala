@@ -43,9 +43,19 @@ case class AttributeWithIdentifier(key: String, id: CompoundIdentifier) extends 
   def stringValue = None
 }
 
-case class Text(text: String) extends Statement
+trait HasText {
+  def text: String
+}
 
-case class NewLine(times: Int) extends Statement
+case class Text(text: String) extends Statement with HasText
+
+case class NewLine(times: Int) extends Statement with HasText {
+  override def text: String = (1 to times).foldLeft("")((s, time) => s + "\n")
+}
+
+case class White(times: Int) extends Statement with HasText {
+  override def text: String = (1 to times).foldLeft("")((s, time) => s + " ")
+}
 
 case class BeardTemplate(statements: Seq[Statement],
                          extended: Option[ExtendsStatement] = None,
