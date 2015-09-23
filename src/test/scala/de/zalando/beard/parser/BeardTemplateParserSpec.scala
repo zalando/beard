@@ -34,30 +34,30 @@ class BeardTemplateParserSpec extends FunSpec with Matchers {
 
   describe("when parsing a string the contains brackets") {
     it("should return a BeardTemplate of a text and an interpolation") {
-      BeardTemplateParser("hello {{world}}") should be(BeardTemplate(Seq(Text("hello "),
+      BeardTemplateParser("hello {{world}}") should be(BeardTemplate(Seq(Text("hello"), White(1),
         IdInterpolation(CompoundIdentifier("world")))))
     }
   }
 
   describe("when parsing a string the contains brackets") {
     it("should return a BeardTemplate of an interpolation and a text") {
-      BeardTemplateParser("{{hello}} world") should be(BeardTemplate(Seq(IdInterpolation(CompoundIdentifier("hello")),
-        Text(" world"))))
+      BeardTemplateParser("{{hello}} world") should be(BeardTemplate(Seq(IdInterpolation(CompoundIdentifier("hello")), White(1),
+        Text("world"))))
     }
   }
 
   describe("when parsing a more complicated example") {
     it("should return a correct BeardTemplate of many interpolations and texts") {
-      BeardTemplateParser("{{hello}} world {{how}} is {{the}} weather {{today}} is it good?") should
+      BeardTemplateParser("{{hello}}world{{how}}is{{the}}weather{{today}}isitgood?") should
         be(BeardTemplate(Seq(
           IdInterpolation(CompoundIdentifier("hello")),
-          Text(" world "),
+          Text("world"),
           IdInterpolation(CompoundIdentifier("how")),
-          Text(" is "),
+          Text("is"),
           IdInterpolation(CompoundIdentifier("the")),
-          Text(" weather "),
+          Text("weather"),
           IdInterpolation(CompoundIdentifier("today")),
-          Text(" is it good?")
+          Text("isitgood?")
         )))
     }
   }
@@ -154,30 +154,30 @@ class BeardTemplateParserSpec extends FunSpec with Matchers {
     it("should return a BeardTemplate containing an interpolation with attributes") {
       BeardTemplateParser("more {{   hello   \n name=\"  He   llo  \" color = 'blue'}} world") should
         be(BeardTemplate(Seq(
-          Text("more "),
+          Text("more"), White(1),
           AttrInterpolation(Identifier("hello"), Seq(AttributeWithValue("name", "  He   llo  "), AttributeWithValue("color", "blue"))),
-          Text(" world"))))
+          White(1), Text("world"))))
     }
   }
 
   describe("if statement") {
     it("should return a BeardTemplate containing a simple if statement") {
-      BeardTemplateParser("hello {{ if }} hello {{ /if}} end") should
-        be(BeardTemplate(Seq(Text("hello "), IfStatement(Seq(Text(" hello "))), Text(" end"))))
+      BeardTemplateParser("hello{{ if }}hello{{ /if}}end") should
+        be(BeardTemplate(Seq(Text("hello"), IfStatement(Seq(Text("hello"))), Text("end"))))
     }
 
     it("should return a BeardTemplate containing a simple if-else statement") {
-      BeardTemplateParser("block1 {{ if }} block2 {{ else }} block3 {{/if}} block4") should
-        be(BeardTemplate(Seq(Text("block1 "), IfStatement(Seq(Text(" block2 ")), Seq(Text(" block3 "))), Text(" block4"))))
+      BeardTemplateParser("block1{{ if }}block2{{ else }}block3{{/if}}block4") should
+        be(BeardTemplate(Seq(Text("block1"), IfStatement(Seq(Text("block2")), Seq(Text("block3"))), Text("block4"))))
     }
 
     it("should return a BeardTemplate containing nested if statement") {
-      BeardTemplateParser("hello {{ if }} block1 {{ if }} block2 {{/if}}block3{{ /if }} end") should
-        be(BeardTemplate(Seq(Text("hello "),
-          IfStatement(Seq(Text(" block1 "),
-            IfStatement(Seq(Text(" block2 "))),
+      BeardTemplateParser("hello{{ if }}block1{{ if }}block2{{/if}}block3{{ /if }}end") should
+        be(BeardTemplate(Seq(Text("hello"),
+          IfStatement(Seq(Text("block1"),
+            IfStatement(Seq(Text("block2"))),
             Text("block3"))),
-          Text(" end"))))
+          Text("end"))))
     }
 
     it("should return a BeardTemplate containing deeper nested if statement") {
@@ -264,8 +264,8 @@ class BeardTemplateParserSpec extends FunSpec with Matchers {
 
   describe("yield statement") {
     it("should return a beard template containing an yield statement") {
-      BeardTemplateParser( """{{extends "layout"}}<div>Hello {{yield}}</div>""") should
-        be(BeardTemplate(Seq(Text("<div>Hello "), YieldStatement(), Text("</div>")), Some(ExtendsStatement("layout"))))
+      BeardTemplateParser( """{{extends "layout"}}<div>Hello{{yield}}</div>""") should
+        be(BeardTemplate(Seq(Text("<div>Hello"), YieldStatement(), Text("</div>")), Some(ExtendsStatement("layout"))))
     }
   }
 
@@ -319,22 +319,23 @@ class BeardTemplateParserSpec extends FunSpec with Matchers {
       BeardTemplateParser(template) should be(
         BeardTemplate(Seq(
           Text("<div>somediv</div>"), NewLine(1),
-          BlockStatement(Identifier("navigation"), Seq(Text("    <ul>"), NewLine(1), Text("        <li>first</li>"), NewLine(1), Text("    </ul>"), NewLine(1))),
-          NewLine(2), Text("<p>Hello world</p>"), NewLine(2),
+          BlockStatement(Identifier("navigation"), Seq(White(4), Text("<ul>"), NewLine(1), White(8), Text("<li>first</li>"),
+            NewLine(1), White(4), Text("</ul>"), NewLine(1))),
+          NewLine(2), Text("<p>Hello"), White(1), Text("world</p>"), NewLine(2),
           IfStatement(
-            Seq(NewLine(1), Text("    <div>No users</div>"), NewLine(1)),
-            Seq(NewLine(1), Text("    <div class=\"users\">"), NewLine(1), Text("    "),
+            Seq(NewLine(1), White(4), Text("<div>No"), White(1), Text("users</div>"), NewLine(1)),
+            Seq(NewLine(1), White(4), Text("<div"), White(1), Text("class=\"users\">"), NewLine(1), White(4),
               ForStatement(Identifier("user"), CompoundIdentifier("users"),
-                Seq(NewLine(1), Text("        "),
+                Seq(NewLine(1), White(8),
                   IdInterpolation(CompoundIdentifier("user", Seq("name"))),
                   IfStatement(Seq(Text(","))),
-                  NewLine(1), Text("        "),
+                  NewLine(1), White(8),
                   RenderStatement("user-details", Seq(AttributeWithIdentifier("user", CompoundIdentifier("user")),
                     AttributeWithValue("class", "default"))),
-                  NewLine(1), Text("    ")
+                  NewLine(1), White(4)
                 )
               ),
-              NewLine(1), Text("    </div>"), NewLine(1))
+              NewLine(1), White(4), Text("</div>"), NewLine(1))
           )
         ), Some(ExtendsStatement("layout"))
         )
@@ -346,29 +347,24 @@ class BeardTemplateParserSpec extends FunSpec with Matchers {
     it("should parse the layout with partial") {
       val template = Source.fromInputStream(getClass.getResourceAsStream("/templates/layout-with-partial.beard")).mkString
 
-      BeardTemplateParser(template) should be(
-        BeardTemplate(Seq(
-          Text("<!DOCTYPE html>"), NewLine(1), Text("<html>"), NewLine(1), Text("<head>"), NewLine(1),
-          Text("    <meta charset=\"utf-8\"/>"), NewLine(1), Text("    <meta name=\"viewport\"" +
-            " content=\"width=device-width, initial-scale=1.0\"/>"), NewLine(1),
-            Text("    <meta http-equiv=\"X-UA-Compatible\" content=\"IE=Edge\"/>"), NewLine(1), Text("    <title>"),
+      BeardTemplateParser(template).statements should be(
+        Seq(
+          Text("<!DOCTYPE"), White(1), Text("html>"), NewLine(1), Text("<html>"), NewLine(1), Text("<head>"), NewLine(1), White(4),
+          Text("<meta"), White(1), Text("charset=\"utf-8\"/>"), NewLine(1), White(4), Text("<meta"), White(1), Text("name=\"viewport\""), White(1),
+          Text("content=\"width=device-width,"), White(1), Text("initial-scale=1.0\"/>"), NewLine(1),
+          White(4), Text("<meta"), White(1), Text("http-equiv=\"X-UA-Compatible\""), White(1), Text("content=\"IE=Edge\"/>"), NewLine(1), White(4), Text("<title>"),
           IdInterpolation(CompoundIdentifier("example", List("title"))),
-          Text(" - Pebble</title>"), NewLine(1), Text("    <link rel=\"stylesheet\" href=\"/webjars/bootstrap/3.0.1/css/bootstrap.min.css\"" +
-            " media=\"screen\"/>"), NewLine(1), Text("</head>"), NewLine(1), Text("<body>"), NewLine(1),
-          Text("<div class=\"container\">"), NewLine(1), Text("    "),
+          White(1), Text("-"), White(1), Text("Pebble</title>"), NewLine(1), White(4), Text("<link"), White(1), Text("rel=\"stylesheet\""), White(1),
+          Text("href=\"/webjars/bootstrap/3.0.1/css/bootstrap.min.css\""),
+          White(1), Text("media=\"screen\"/>"), NewLine(1), Text("</head>"), NewLine(1), Text("<body>"), NewLine(1),
+          Text("<div"), White(1), Text("class=\"container\">"), NewLine(1), White(4),
           RenderStatement("/templates/_partial.beard", List(AttributeWithIdentifier("title", CompoundIdentifier("example", List("title"))),
             AttributeWithIdentifier("presentations", CompoundIdentifier("example", List("presentations"))))),
-          NewLine(1), Text("</div>"), NewLine(1), Text("    "),
-          RenderStatement("/templates/_footer.beard"), NewLine(1),Text("    "),
-          RenderStatement("/templates/_footer.beard"), NewLine(1),Text("    "),
+          NewLine(1), Text("</div>"), NewLine(1), White(4),
+          RenderStatement("/templates/_footer.beard"), NewLine(1), White(4),
+          RenderStatement("/templates/_footer.beard"), NewLine(1), White(4),
           RenderStatement("/templates/_footer.beard"),
           NewLine(1), Text("</body>"), NewLine(1), Text("</html>")
-        ), None, Seq(
-          RenderStatement("/templates/_partial.beard", List(AttributeWithIdentifier("title", CompoundIdentifier("example", List("title"))),
-            AttributeWithIdentifier("presentations", CompoundIdentifier("example", List("presentations"))))),
-          RenderStatement("/templates/_footer.beard"),
-          RenderStatement("/templates/_footer.beard"),
-          RenderStatement("/templates/_footer.beard"))
         )
       )
     }

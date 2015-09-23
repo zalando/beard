@@ -17,8 +17,9 @@ statement
 locals [Statement result]
          : structuredStatement
          | interpolation
-         | text
          | newLine
+         | white
+         | text
          ;
 
 extendsStatement
@@ -158,13 +159,17 @@ locals [Identifier result]
     : IDENTIFIER
     ;
 
-text
-locals [Text result]
-    : TEXT
-    | WHITE
+white
+locals [White result]
+    : WS+
     ;
 
 newLine
 locals [NewLine result]
     : NL+
+    ;
+
+text
+locals [Text result]
+    : TEXT
     ;

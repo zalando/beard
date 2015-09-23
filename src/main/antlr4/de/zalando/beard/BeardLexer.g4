@@ -4,13 +4,9 @@ LL : '{{' -> pushMode(INSIDE_INTERPOLATION);
 
 NL      : '\r'? '\n';
 
-WHITE   : WS+
-        ;
+WS      : [ \t];
 
-WS      : [ \t]+;
-
-
-TEXT    : ~([{}] | '\n' | '\r')+;
+TEXT    : ~('{' | '}' | ' ' | '\t' | '\n' | '\r')+;
 
 mode INSIDE_INTERPOLATION;
 

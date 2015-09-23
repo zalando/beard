@@ -1,9 +1,9 @@
 Beard No Streaming
-Parameters(size -> 1): 0.011441
-Parameters(size -> 20001): 45.125396
-Parameters(size -> 40001): 92.180903
-Parameters(size -> 60001): 135.307672
-Parameters(size -> 80001): 185.746955
+Parameters(size -> 1): 0.008744
+Parameters(size -> 20001): 44.330413
+Parameters(size -> 40001): 88.826521
+Parameters(size -> 60001): 137.370712
+Parameters(size -> 80001): 179.232451
 
 Mustache.java
 Parameters(size -> 1): 0.004849
