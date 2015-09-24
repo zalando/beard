@@ -17,6 +17,9 @@ antlr4PackageName in Antlr4 := Some("de.zalando.beard")
 
 libraryDependencies ++= {
   Seq(
+    "org.antlr"                  % "antlr4"                               % "4.5"
+                                                                          exclude("org.antlr", "ST4")
+                                                                          exclude("org.antlr", "antlr-runtime"),
     "org.scala-lang"             % "scala-reflect"                        % scalaVersion.value,
     "org.scala-lang.modules"    %% "scala-xml"                            % "1.0.4",
     "org.monifu"                %% "monifu"                               % "1.0-RC3",
@@ -31,4 +34,5 @@ libraryDependencies ++= {
   )
 }
 
+net.virtualvoid.sbt.graph.Plugin.graphSettings
 // testFrameworks += new TestFramework("org.scalameter.ScalaMeterFramework")

@@ -1,12 +1,7 @@
 package de.zalando.beard.performance
 
-import java.io.StringWriter
-
-import de.zalando.beard.parser.BeardTemplateParser
 import de.zalando.beard.renderer._
 import org.scalameter.api._
-
-import scala.io.Source
 
 /**
  * @author dpersa
@@ -14,11 +9,6 @@ import scala.io.Source
 object BeardBenchmark extends Bench.LocalTime {
   val compiler = DefaultTemplateCompiler
   val renderer = new BeardTemplateRenderer(compiler)
-
-  val template = BeardTemplateParser {
-    Source.fromInputStream(getClass.getResourceAsStream("/beard-benchmark/index.beard")).mkString
-  }
-
   val compiledTemplate = compiler.compile(TemplateName("/beard-benchmark/index.beard")).get
 
   val context: Map[String, Map[String, Object]] = Map("example" -> Map("title" -> "Title", "presentations" ->
@@ -30,7 +20,6 @@ object BeardBenchmark extends Bench.LocalTime {
     size <- sizes
   } yield 0 until size
 
-  val stringWriter = new StringWriter()
   val renderResult = StringWriterRenderResult()
 
   val result = renderer.render(compiledTemplate, renderResult, context)

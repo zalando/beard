@@ -1,11 +1,10 @@
 package de.zalando.beard.performance
 
 import de.zalando.beard.parser.BeardTemplateParser
-import de.zalando.beard.renderer.{MonifuRenderResult, BeardTemplateRenderer, DefaultTemplateCompiler, TemplateName}
-import monifu.reactive.Observable
-import monifu.reactive.subjects.ReplaySubject
-import org.scalameter.api._
+import de.zalando.beard.renderer.{BeardTemplateRenderer, DefaultTemplateCompiler, MonifuRenderResult, TemplateName}
 import monifu.concurrent.Implicits.globalScheduler
+import org.scalameter.api._
+
 import scala.io.Source
 
 /**
