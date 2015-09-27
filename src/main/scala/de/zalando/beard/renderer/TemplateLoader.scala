@@ -10,14 +10,15 @@ trait TemplateLoader {
   def load(templateName: TemplateName): Option[Source]
 }
 
-class ClasspathTemplateLoader extends TemplateLoader {
+class ClasspathTemplateLoader(val templatePrefix: String = "",
+                              val templateSuffix: String = "") extends TemplateLoader {
 
   override def load(templateName: TemplateName) = {
 
-    val resource = Option(getClass.getResourceAsStream(templateName.name))
+    val resource = Option(getClass.getResourceAsStream(s"${templatePrefix}${templateName.name}$templateSuffix"))
 
     resource.flatMap { res =>
-        Option(Source.fromInputStream(res))
+      Option(Source.fromInputStream(res))
     }
   }
 }

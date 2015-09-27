@@ -19,9 +19,10 @@ trait TemplateCompiler {
               contentForStatements: Map[Identifier, Seq[Statement]] = Map.empty): Try[BeardTemplate]
 }
 
-class CustomizableTemplateCompiler(val templateLoader: TemplateLoader,
-                                   templateCache: BeardTemplateCache,
-                                   templateParser: BeardTemplateParser) extends TemplateCompiler {
+class CustomizableTemplateCompiler(templateLoader: TemplateLoader = new ClasspathTemplateLoader(),
+                                   templateCache: BeardTemplateCache = new BeardTemplateCache(),
+                                   templateParser: BeardTemplateParser = new BeardTemplateParser())
+  extends TemplateCompiler {
 
   def compile(templateName: TemplateName,
               yieldedStatements: Seq[Statement] = Seq.empty,
@@ -79,10 +80,10 @@ class CustomizableTemplateCompiler(val templateLoader: TemplateLoader,
 
     case Nil => mergedStatements ++ concatTextsSeq(existingTexts)
     case (head: HasText) :: tail => concatTexts(tail, mergedStatements, existingTexts :+ head)
-        case (head: ForStatement) :: tail => {
-          val concatTextsForStatement = head.copy(statements = concatTextsRec(head.statements))
-          concatTexts(tail, mergedStatements ++ concatTextsSeq(existingTexts) :+ concatTextsForStatement, Seq.empty)
-        }
+    case (head: ForStatement) :: tail => {
+      val concatTextsForStatement = head.copy(statements = concatTextsRec(head.statements))
+      concatTexts(tail, mergedStatements ++ concatTextsSeq(existingTexts) :+ concatTextsForStatement, Seq.empty)
+    }
     // TODO concat the texts for the other statements
     case head :: tail => concatTexts(tail, mergedStatements ++ concatTextsSeq(existingTexts) :+ head, Seq.empty)
   }
