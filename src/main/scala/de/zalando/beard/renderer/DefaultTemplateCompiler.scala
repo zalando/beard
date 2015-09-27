@@ -28,34 +28,34 @@ class CustomizableTemplateCompiler(templateLoader: TemplateLoader = new Classpat
               yieldedStatements: Seq[Statement] = Seq.empty,
               contentForStatementsMap: Map[Identifier, Seq[Statement]] = Map.empty): Try[BeardTemplate] = {
 
-    templateCache.get(templateName) match {
-      case Some(template) => Success(template)
+    val beardTemplate = templateCache.get(templateName) match {
+      case Some(template) => template
       case None =>
         val templateFileSource = templateLoader.load(templateName) match {
           case Some(content) => content
           case _ => throw new IllegalStateException(s"Could not find template with name ${templateName}")
         }
 
-        val beardTemplate = templateParser.parse(templateFileSource.mkString)
+        val rawTemplate = templateParser.parse(templateFileSource.mkString)
+        templateCache.add(templateName, rawTemplate)
+        // TODO maybe do this in parallel
+        compileRenderedTemplates(rawTemplate.renderStatements)
+        rawTemplate
+    }
 
-        compileRenderedTemplates(beardTemplate.renderStatements)
+    val newContentForStatementsMap = addContentForStatementsToMap(contentForStatementsMap,
+      beardTemplate.contentForStatements)
 
-        val newContentForStatementsMap = addContentForStatementsToMap(contentForStatementsMap,
-          beardTemplate.contentForStatements)
+    val mergedBeardTemplate = createMergedTemplate(beardTemplate, yieldedStatements, newContentForStatementsMap)
 
-        val mergedBeardTemplate = createMergedTemplate(beardTemplate, yieldedStatements, newContentForStatementsMap)
-
-        mergedBeardTemplate.extended match {
-          case Some(extendsStatement) =>
-            val currentYieldedStatements = mergedBeardTemplate.statements
-            compile(TemplateName(extendsStatement.template), currentYieldedStatements, newContentForStatementsMap)
-          case None =>
-            // we need to merge the texts and new lines
-            val concatTextsTemplate = mergedBeardTemplate.copy(statements = concatTexts((mergedBeardTemplate.statements)))
-
-            templateCache.add(templateName, concatTextsTemplate)
-            Success(concatTextsTemplate)
-        }
+    mergedBeardTemplate.extended match {
+      case Some(extendsStatement) =>
+        val currentYieldedStatements = mergedBeardTemplate.statements
+        compile(TemplateName(extendsStatement.template), currentYieldedStatements, newContentForStatementsMap)
+      case None =>
+        // we need to merge the texts and new lines
+        val concatTextsTemplate = mergedBeardTemplate.copy(statements = concatTexts((mergedBeardTemplate.statements)))
+        Success(concatTextsTemplate)
     }
   }
 
@@ -129,8 +129,7 @@ class CustomizableTemplateCompiler(templateLoader: TemplateLoader = new Classpat
                                    yieldStatements: Seq[Statement],
                                    contentForStatementsMap: Map[Identifier, Seq[Statement]]): BeardTemplate = {
     val newStatements: Seq[Statement] = beardTemplate.statements.flatMap {
-      case YieldStatement() => yieldStatements
-
+      case YieldStatement() => if (yieldStatements.nonEmpty) yieldStatements else Seq(YieldStatement())
       case BlockStatement(identifier, statements) =>
         if (contentForStatementsMap.contains(identifier))
           contentForStatementsMap(identifier)

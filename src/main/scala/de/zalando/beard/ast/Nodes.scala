@@ -62,6 +62,8 @@ case class BeardTemplate(statements: Seq[Statement],
                          renderStatements: Seq[RenderStatement] = Seq.empty,
                          contentForStatements: Seq[ContentForStatement] = Seq.empty)
 
+object EmptyBeardTemplate extends BeardTemplate(Seq.empty)
+
 case class CompoundIdentifier(identifierPart: String, identifierParts: Seq[String] = Seq.empty)
 
 case class Identifier(identifier: String)

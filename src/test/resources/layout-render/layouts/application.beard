@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html>
+{{block head}}
+    <div>application head layout</div>
+{{/block}}
+<body>
+    <div class="container">
+        {{yield}}
+    </div>
+</body>
+</html>
