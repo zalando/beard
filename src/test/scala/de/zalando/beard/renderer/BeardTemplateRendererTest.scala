@@ -58,6 +58,17 @@ class BeardTemplateRendererTest extends FunSpec with Matchers {
       renderResult.result.toString() should be("<div>Gigi</div><div>Gicu</div>")
     }
 
+    it("should add the correct for related variables in the context") {
+      val template = BeardTemplateParser {
+        Source.fromInputStream(getClass.getResourceAsStream(s"/templates/for-context.beard")).mkString
+      }
+
+      val renderResult = StringWriterRenderResult()
+      renderer.render(template, renderResult, Map("users" -> Seq(Map("name" -> "Gigi"), Map("name" -> "Gicu"))))
+      renderResult.result.toString() should be("<div>isFirst:true-isLast:false-Gigi-isOdd:false-isEven:true</div>" +
+        "<div>isFirst:false-isLast:true-Gicu-isOdd:true-isEven:false</div>")
+    }
+
     it("should render a template with a render statement") {
 
       val r = templateCompiler.compile(TemplateName("/templates/layout-with-partial.beard"))

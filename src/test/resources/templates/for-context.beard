@@ -1,0 +1,3 @@
+{{for user in users}}
+<div>isFirst:{{user.isFirst}}-isLast:{{user.isLast}}-{{user.name}}-isOdd:{{user.isOdd}}-isEven:{{user.isEven}}</div>
+{{/for}}

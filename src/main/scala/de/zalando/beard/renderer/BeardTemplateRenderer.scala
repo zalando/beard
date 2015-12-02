@@ -7,8 +7,8 @@ import scala.collection.immutable._
 
 
 /**
- * @author dpersa
- */
+  * @author dpersa
+  */
 class BeardTemplateRenderer(templateCompiler: TemplateCompiler) {
 
   def render[T](template: BeardTemplate,
@@ -53,14 +53,23 @@ class BeardTemplateRenderer(templateCompiler: TemplateCompiler) {
         case attrWitValue: AttributeWithValue => attrWitValue.key -> attrWitValue.value
       }.toMap
       renderInternal(templateCompiler.compile(TemplateName(template)).get, renderResult, localContext)
-    case ForStatement(iterator, collection, statements) => {
-      val seqFromContext: Seq[Any] = ContextResolver.resolveSeq(collection, context)
+    case ForStatement(templateIterator, collection, statements) => {
+      val collectionOfContexts: Seq[Any] = ContextResolver.resolveSeq(collection, context)
 
       for {
-        map <- seqFromContext
+        index <- Range(0, collectionOfContexts.size)
         statement <- statements
       } yield {
-        renderStatement(statement, context.updated(iterator.identifier, map), renderResult, yieldedStatement)
+        val currentIteratorContext = collectionOfContexts(index)
+        val forIterationContext = ForIterationContext(globalContext = context,
+          templateIteratorIdentifier = templateIterator.identifier,
+          collectionContext = currentIteratorContext,
+          currentIndex = index, collectionOfContexts = collectionOfContexts)
+
+        renderStatement(statement,
+          ForContextFactory.create(forIterationContext),
+          renderResult,
+          yieldedStatement)
       }
     }
     // extends should be ignored at render time

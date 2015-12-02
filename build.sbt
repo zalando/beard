@@ -25,7 +25,7 @@ libraryDependencies ++= {
     "org.monifu"                %% "monifu"                               % "1.0-RC3",
     "org.scalatest"             %% "scalatest"                            % "3.0.0-M7"       % "test",
     "org.scalamock"             %% "scalamock-scalatest-support"          % "3.2.2"          % "test",
-    "com.mitchellbosecke"        % "pebble"                               % "1.5.1"          % "test",
+    "com.mitchellbosecke"        % "pebble"                               % "1.6.0"          % "test",
     "org.freemarker"             % "freemarker"                           % "2.3.23"         % "test",
     "com.github.spullara.mustache.java" % "compiler"                      % "0.9.1"          % "test",
     "com.github.jknack"          % "handlebars"                           % "2.2.2"          % "test",

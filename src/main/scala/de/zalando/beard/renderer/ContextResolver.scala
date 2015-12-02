@@ -28,8 +28,6 @@ object ContextResolver {
   }
 
   def resolve(identifier: CompoundIdentifier, context: Map[String, Any]): Any = {
-    context(identifier.identifierPart)
-
     val result = identifier.identifierParts.
       foldLeft(context(identifier.identifierPart)) { (ctx: Any, rest: String) =>
       ctx match {
