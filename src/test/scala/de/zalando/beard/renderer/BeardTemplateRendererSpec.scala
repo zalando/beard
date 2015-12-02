@@ -9,7 +9,7 @@ import scala.io.Source
 /**
  * @author dpersa
  */
-class BeardTemplateRendererTest extends FunSpec with Matchers {
+class BeardTemplateRendererSpec extends FunSpec with Matchers {
 
   val templateCompiler = DefaultTemplateCompiler
   val renderer = new BeardTemplateRenderer(templateCompiler)

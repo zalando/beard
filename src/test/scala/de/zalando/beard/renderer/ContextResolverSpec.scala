@@ -7,7 +7,7 @@ import scala.collection.immutable.Seq
 /**
  * @author dpersa
  */
-class ContextResolverTest extends FunSpec with Matchers {
+class ContextResolverSpec extends FunSpec with Matchers {
 
   val users = Seq(Map("name" -> "Gigi"), Map("name" -> "Gicu"))
   val emails = Seq("gicu@yahoo.com", "gigi@yahoo.com")
