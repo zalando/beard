@@ -82,12 +82,14 @@ locals [RenderStatement result]
 
 ifStatement
 locals [IfStatement result]
-    : ifInterpolation statement+ endIfInterpolation # IfOnlyStatement
+    : NL? WS* ifInterpolation ifStatements+=statement+ NL? WS* elseInterpolation elseStatements+=statement+ NL? WS* endIfInterpolation NL? # IfElseStatement
     | ifInterpolation ifStatements+=statement+ elseInterpolation elseStatements+=statement+ endIfInterpolation # IfElseStatement
+    | NL? WS* ifInterpolation statement+ NL? WS* endIfInterpolation NL? # IfOnlyStatement
+    | ifInterpolation statement+ endIfInterpolation # IfOnlyStatement
     ;
 
 ifInterpolation
-    : LL IF RR
+    : LL IF compoundIdentifier RR
     ;
 
 elseInterpolation

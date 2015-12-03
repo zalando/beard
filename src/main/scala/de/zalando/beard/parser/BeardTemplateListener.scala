@@ -55,14 +55,16 @@ class BeardTemplateListener extends BeardParserBaseListener {
     ctx.result = ContentForStatement(ctx.contentForInterpolation().identifier().result, ctx.statement().map(_.result).toList)
 
   override def exitIfOnlyStatement(ctx: IfOnlyStatementContext) = {
+    val condition = ctx.ifInterpolation().compoundIdentifier().result
     val statements: Seq[Statement] = ctx.statement().map(st => st.result).toList
-    ctx.result = IfStatement(statements)
+    ctx.result = IfStatement(condition, statements)
   }
 
   override def exitIfElseStatement(ctx: IfElseStatementContext) = {
+    val condition = ctx.ifInterpolation().compoundIdentifier().result
     val ifStatements = ctx.ifStatements.map(st => st.result).toList
     val elseStatements = ctx.elseStatements.map(st => st.result).toList
-    ctx.result = IfStatement(ifStatements, elseStatements)
+    ctx.result = IfStatement(condition, ifStatements, elseStatements)
   }
 
   override def exitForStatement(ctx: ForStatementContext) = {

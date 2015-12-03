@@ -84,6 +84,13 @@ class CustomizableTemplateCompiler(templateLoader: TemplateLoader = new Classpat
       val concatTextsForStatement = head.copy(statements = concatTextsRec(head.statements))
       concatTexts(tail, mergedStatements ++ concatTextsSeq(existingTexts) :+ concatTextsForStatement, Seq.empty)
     }
+    case (head: IfStatement) :: tail => {
+      val concatTextsIfStatement = head.copy(
+        head.condition,
+        ifStatements = concatTextsRec(head.ifStatements),
+        elseStatements = concatTextsRec(head.elseStatements))
+      concatTexts(tail, mergedStatements ++ concatTextsSeq(existingTexts) :+ concatTextsIfStatement, Seq.empty)
+    }
     // TODO concat the texts for the other statements
     case head :: tail => concatTexts(tail, mergedStatements ++ concatTextsSeq(existingTexts) :+ head, Seq.empty)
   }

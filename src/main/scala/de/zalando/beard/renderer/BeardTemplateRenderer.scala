@@ -77,6 +77,21 @@ class BeardTemplateRenderer(templateCompiler: TemplateCompiler) {
 
     case YieldStatement() => renderInternal(yieldedStatement, renderResult, context)
 
+    case IfStatement(condition, ifStatements, elseStatements) =>
+      val result = ContextResolver.resolve(condition, context) match {
+        case result: Boolean => result
+        case _ => throw new IllegalStateException("A condition should be of type Boolean")
+      }
+
+      if (result) {
+        for (statement <- ifStatements) {
+          renderStatement(statement, context, renderResult, yieldedStatement)
+        }
+      } else {
+        for (statement <- elseStatements) {
+          renderStatement(statement, context, renderResult, yieldedStatement)
+        }
+      }
     case _ => ()
   }
 }

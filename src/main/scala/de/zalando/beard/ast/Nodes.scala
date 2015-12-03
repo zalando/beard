@@ -23,7 +23,7 @@ case class BlockStatement(identifier: Identifier, statements: Seq[Statement] = S
 
 case class ContentForStatement(identifier: Identifier, statements: Seq[Statement] = Seq.empty) extends Statement
 
-case class IfStatement(ifStatements: Seq[Statement], elseStatements: Seq[Statement] = Seq.empty) extends Statement
+case class IfStatement(condition: CompoundIdentifier, ifStatements: Seq[Statement], elseStatements: Seq[Statement] = Seq.empty) extends Statement
 
 case class ForStatement(iterator: Identifier, collection: CompoundIdentifier, statements: Seq[Statement] = Seq.empty) extends Statement
 

@@ -1,0 +1,16 @@
+some{{if user.isCool }}
+  {{user.name}} is cool
+  {{if user.isCool }}
+    {{user.name}} is still cool
+  {{/if}}
+  some1
+{{else}}
+  some2
+  {{if user.isCool }}
+    {{user.name}} is still cool
+  {{else}}
+    {{user.name}} is not cool
+  {{/if}}
+  some3
+{{/if}}
+some4

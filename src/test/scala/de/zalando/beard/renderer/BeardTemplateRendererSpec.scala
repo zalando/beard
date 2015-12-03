@@ -19,11 +19,10 @@ class BeardTemplateRendererSpec extends FunSpec with Matchers {
     it("should render a template with a simple identifier") {
       templateCompiler.compile(TemplateName("/templates/identifier-interpolation.beard"))
         .map { template =>
-        val renderResult = StringWriterRenderResult()
-        renderer.render(template, renderResult, Map("name" -> "Gigi"))
-        renderResult.result.toString should be("<div>Gigi</div>")
-      }
-      ()
+          val renderResult = StringWriterRenderResult()
+          renderer.render(template, renderResult, Map("name" -> "Gigi"))
+          renderResult.result.toString should be("<div>Gigi</div>")
+        }
     }
 
     it("should render a template with a compound identifier") {
@@ -37,36 +36,114 @@ class BeardTemplateRendererSpec extends FunSpec with Matchers {
       renderResult.result.toString() should be("<div>gigi@gicu.com</div>")
     }
 
-    it("should render a template with a for statement") {
-      val template = BeardTemplateParser {
-        Source.fromInputStream(getClass.getResourceAsStream(s"/templates/for-statement.beard")).mkString
+    describe("render a ForStatement") {
+      it("should render a template with a for statement") {
+        val template = BeardTemplateParser {
+          Source.fromInputStream(getClass.getResourceAsStream(s"/templates/for-statement.beard")).mkString
+        }
+
+        val renderResult = StringWriterRenderResult()
+
+        renderer.render(template, renderResult, Map("users" -> Seq(Map("name" -> "Gigi"))))
+        renderResult.result.toString() should be("<div>Hello</div>")
       }
 
-      val renderResult = StringWriterRenderResult()
+      it("should render a template with a complex for statement") {
+        val template = BeardTemplateParser {
+          Source.fromInputStream(getClass.getResourceAsStream(s"/templates/for-complex-statement.beard")).mkString
+        }
 
-      renderer.render(template, renderResult, Map("users" -> Seq(Map("name" -> "Gigi"))))
-      renderResult.result.toString() should be("<div>Hello</div>")
+        val renderResult = StringWriterRenderResult()
+        renderer.render(template, renderResult, Map("users" -> Seq(Map("name" -> "Gigi"), Map("name" -> "Gicu"))))
+        renderResult.result.toString() should be("<div>Gigi</div><div>Gicu</div>")
+      }
+
+      it("should add the correct for related variables in the context") {
+        val template = BeardTemplateParser {
+          Source.fromInputStream(getClass.getResourceAsStream(s"/templates/for-context.beard")).mkString
+        }
+
+        val renderResult = StringWriterRenderResult()
+        renderer.render(template, renderResult, Map("users" -> Seq(Map("name" -> "Gigi"), Map("name" -> "Gicu"))))
+        renderResult.result.toString() should be("<div>isFirst:true-isLast:false-Gigi-isOdd:false-isEven:true</div>" +
+          "<div>isFirst:false-isLast:true-Gicu-isOdd:true-isEven:false</div>")
+      }
     }
 
-    it("should render a template with a complex for statement") {
-      val template = BeardTemplateParser {
-        Source.fromInputStream(getClass.getResourceAsStream(s"/templates/for-complex-statement.beard")).mkString
+    describe("render an IfStatement") {
+      def context(cool: Boolean) =
+        Map("user" -> Map("name" -> "Gigi", "isCool" -> cool))
+
+      val template = templateCompiler.compile(TemplateName("/templates/if-statement.beard")).get
+
+      describe("when the condition is true") {
+        it("should render the template") {
+          val renderResult = StringWriterRenderResult()
+          renderer.render(template, renderResult, context(true))
+          renderResult.result.toString should be("\nGigi is cool\n")
+        }
       }
 
-      val renderResult = StringWriterRenderResult()
-      renderer.render(template, renderResult, Map("users" -> Seq(Map("name" -> "Gigi"), Map("name" -> "Gicu"))))
-      renderResult.result.toString() should be("<div>Gigi</div><div>Gicu</div>")
+      describe("when the condition is false") {
+        it("should not render the template") {
+          val renderResult = StringWriterRenderResult()
+          renderer.render(template, renderResult, context(false))
+          renderResult.result.toString should be("")
+        }
+      }
     }
 
-    it("should add the correct for related variables in the context") {
-      val template = BeardTemplateParser {
-        Source.fromInputStream(getClass.getResourceAsStream(s"/templates/for-context.beard")).mkString
+    describe("render an IfElseStatement") {
+      def context(cool: Boolean) =
+        Map("user" -> Map("name" -> "Gigi", "isCool" -> cool))
+
+      val template = templateCompiler.compile(TemplateName("/templates/if-else-statement.beard")).get
+
+      describe("when the condition is true") {
+        it("should render the template") {
+          val renderResult = StringWriterRenderResult()
+          renderer.render(template, renderResult, context(true))
+          renderResult.result.toString should be("\nGigi is cool\n")
+        }
       }
 
-      val renderResult = StringWriterRenderResult()
-      renderer.render(template, renderResult, Map("users" -> Seq(Map("name" -> "Gigi"), Map("name" -> "Gicu"))))
-      renderResult.result.toString() should be("<div>isFirst:true-isLast:false-Gigi-isOdd:false-isEven:true</div>" +
-        "<div>isFirst:false-isLast:true-Gicu-isOdd:true-isEven:false</div>")
+      describe("when the condition is false") {
+        it("should not render the template") {
+          val renderResult = StringWriterRenderResult()
+          renderer.render(template, renderResult, context(false))
+          renderResult.result.toString should be("\nGigi is not cool\n")
+        }
+      }
+    }
+
+    describe("render an If Statement nested in a For Statement") {
+      def context(cool: Boolean) =
+        Map("users" -> Seq(Map("name" -> "Gigi"), Map("name" -> "Gicu")))
+
+      val template = templateCompiler.compile(TemplateName("/templates/if-in-for-statement.beard")).get
+
+      it("should render the template") {
+        val renderResult = StringWriterRenderResult()
+        renderer.render(template, renderResult, context(true))
+        renderResult.result.toString should be("\nGigi is not odd\nGicu is odd\n")
+      }
+    }
+
+    describe("nested If Statements") {
+      def context(cool: Boolean) =
+        Map("user" -> Map("name" -> "Gigi", "isCool" -> cool))
+
+      val template = templateCompiler.compile(TemplateName("/templates/if-nested-statements.beard")).get
+
+      it("should render the template") {
+        val renderResult = StringWriterRenderResult()
+        renderer.render(template, renderResult, context(true))
+        renderResult.result.toString should be("""some
+                                                 |  Gigi is cool
+                                                 |    Gigi is still cool
+                                                 |    some1
+                                                 |some4""".stripMargin)
+      }
     }
 
     it("should render a template with a render statement") {
