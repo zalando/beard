@@ -146,6 +146,46 @@ class BeardTemplateRendererSpec extends FunSpec with Matchers {
       }
     }
 
+    describe("If Statements to check for non empty collections") {
+      def context(cool: Boolean) =
+        Map("users" -> Seq(Map("name" -> "Gigi"), Map("name" -> "Gicu")))
+
+      val template = templateCompiler.compile(TemplateName("/templates/if-empty-collection.beard")).get
+
+      describe("users collection is empty") {
+        it("should render the template") {
+          val renderResult = StringWriterRenderResult()
+          renderer.render(template, renderResult, Map("users" -> Seq()))
+          renderResult.result.toString should be("""
+                                                   |<div>No users</div>
+                                                   |""".stripMargin)
+        }
+      }
+
+      describe("users collection does not exist") {
+        it("should not render the template") {
+          val renderResult = StringWriterRenderResult()
+
+          intercept[IllegalStateException] {
+            renderer.render(template, renderResult, Map())
+          }
+        }
+      }
+
+      describe("users collection is present") {
+        it("should render the template") {
+          val renderResult = StringWriterRenderResult()
+          renderer.render(template, renderResult, context(true))
+          renderResult.result.toString should be("""
+                                                   |<ul>
+                                                   |  <li>Gigi</li>
+                                                   |  <li>Gicu</li>
+                                                   |</ul>
+                                                   |""".stripMargin)
+        }
+      }
+    }
+
     it("should render a template with a render statement") {
 
       val r = templateCompiler.compile(TemplateName("/templates/layout-with-partial.beard"))

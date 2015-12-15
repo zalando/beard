@@ -8,6 +8,11 @@ import scala.collection.immutable.Seq
 object ForContextFactory {
 
   def create(forIterationContext: ForIterationContext): Map[String, Any] = {
+    // we verify if the collection is empty
+//    forIterationContext.collectionContext match {
+//      case
+//    }
+
     // we add the context for the current iteration from the collection on which we iterate
     val newContext = forIterationContext.globalContext.updated(forIterationContext.templateIteratorIdentifier, forIterationContext.collectionContext)
     newContext(forIterationContext.templateIteratorIdentifier) match {

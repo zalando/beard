@@ -27,12 +27,14 @@ object ContextResolver {
     }
   }
 
-  def resolve(identifier: CompoundIdentifier, context: Map[String, Any]): Any = {
+  def resolve(identifier: CompoundIdentifier, context: Map[String, Any]): Option[Any] = {
     val result = identifier.identifierParts.
-      foldLeft(context(identifier.identifierPart)) { (ctx: Any, rest: String) =>
+      foldLeft(context.get(identifier.identifierPart)) { (ctx: Option[Any], rest: String) =>
       ctx match {
-        case map: Map[String, Any] => map(rest)
-        case _ => throw new IllegalStateException(s"Can't resolve $identifier")
+        case Some(map: Map[String, Any]) => {
+          Some(map(rest))
+        }
+        case _ => None
       }
     }
     result

@@ -45,11 +45,18 @@ class BeardTemplateRenderer(templateCompiler: TemplateCompiler) {
 
     case Text(text) => onNext(renderResult, text)
     case IdInterpolation(identifier) => {
-      onNext(renderResult, ContextResolver.resolve(identifier, context).toString())
+      val id = ContextResolver.resolve(identifier, context) match {
+        case Some(value) => value.toString()
+        case _ => throw new IllegalStateException(s"The identifier ${identifier} was not resolved")
+      }
+      onNext(renderResult, id)
     }
     case RenderStatement(template, localValues) =>
       val localContext = localValues.map {
-        case attrWithId: AttributeWithIdentifier => attrWithId.key -> ContextResolver.resolve(attrWithId.id, context)
+        case attrWithId: AttributeWithIdentifier => {
+          // TOOD don't return an empty string
+          attrWithId.key -> ContextResolver.resolve(attrWithId.id, context).getOrElse("")
+        }
         case attrWitValue: AttributeWithValue => attrWitValue.key -> attrWitValue.value
       }.toMap
       renderInternal(templateCompiler.compile(TemplateName(template)).get, renderResult, localContext)
@@ -79,8 +86,13 @@ class BeardTemplateRenderer(templateCompiler: TemplateCompiler) {
 
     case IfStatement(condition, ifStatements, elseStatements) =>
       val result = ContextResolver.resolve(condition, context) match {
-        case result: Boolean => result
-        case _ => throw new IllegalStateException("A condition should be of type Boolean")
+        case Some(result: Boolean) => result
+        case Some(Seq()) => false
+        case Some(result: Seq[_]) => {
+          true
+        }
+        case Some(result) => throw new IllegalStateException(s"A condition should be of type Boolean or Seq but it has ${result.getClass} type")
+        case _ => throw new IllegalStateException("The condition was not resolved")
       }
 
       if (result) {
