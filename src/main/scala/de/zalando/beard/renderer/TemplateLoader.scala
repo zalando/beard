@@ -1,5 +1,7 @@
 package de.zalando.beard.renderer
 
+import java.io.File
+
 import scala.io.Source
 
 /**
@@ -20,5 +22,17 @@ class ClasspathTemplateLoader(val templatePrefix: String = "",
     resource.flatMap { res =>
       Option(Source.fromInputStream(res))
     }
+  }
+}
+
+class FileTemplateLoader(val directoryPath: String,
+                         val templateSuffix: String = ""
+                         ) extends TemplateLoader {
+
+  override def load(templateName: TemplateName) = {
+
+    val file = new File(s"$directoryPath/${templateName.name}$templateSuffix")
+
+    Option(Source.fromFile(file))
   }
 }
