@@ -21,7 +21,7 @@ class BeardTemplateParserSpec extends FunSpec with Matchers {
 
   describe("when parsing a template with curly brackets") {
     it("should return a BeardTemplate of an interpolation") {
-      val expected = BeardTemplate(Seq(CurlyBracket("{"), White(1), IdInterpolation(CompoundIdentifier("hello")), White(1), CurlyBracket("}")))
+      val expected = BeardTemplate(Seq(Text("{"), White(1), IdInterpolation(CompoundIdentifier("hello")), White(1), Text("}")))
       BeardTemplateParser("{ {{hello}} }") shouldBe expected
     }
   }
