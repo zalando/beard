@@ -1,5 +1,7 @@
 # The Beard Template Engine
 
+[![Build Status](https://travis-ci.org/zalando/beard.svg)](https://travis-ci.org/zalando/beard)
+
 Blazing fast logicless template engine written in Scala used to parse simple templates like this:
 
     Hello {{person name='Dan' phone="123456576"}}
