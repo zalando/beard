@@ -20,6 +20,7 @@ locals [Statement result]
          | newLine
          | white
          | text
+         | curlyBracket
          ;
 
 extendsStatement
@@ -178,4 +179,9 @@ locals [NewLine result]
 text
 locals [Text result]
     : TEXT
+    ;
+
+curlyBracket
+locals [CurlyBracket result]
+    : CURLY_BRACKET
     ;

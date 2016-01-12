@@ -49,6 +49,8 @@ trait HasText {
 
 case class Text(text: String) extends Statement with HasText
 
+case class CurlyBracket(text: String) extends Statement with HasText
+
 case class NewLine(times: Int) extends Statement with HasText {
   override def text: String = (1 to times).foldLeft("")((s, time) => s + "\n")
 }
