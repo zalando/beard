@@ -5,6 +5,8 @@ version       := "0.0.3-SNAPSHOT"
 scalaVersion := "2.11.7"
 scalacOptions := Seq("-unchecked", "-feature", "-deprecation", "-encoding", "utf8")
 
+crossScalaVersions := Seq(scalaVersion.value, "2.10.5")
+
 antlr4Settings
 
 antlr4GenListener in Antlr4 := true
@@ -21,7 +23,7 @@ libraryDependencies ++= {
                                                                           exclude("org.antlr", "ST4")
                                                                           exclude("org.antlr", "antlr-runtime"),
     "org.scala-lang"             % "scala-reflect"                        % scalaVersion.value,
-    "org.scala-lang.modules"    %% "scala-xml"                            % "1.0.4",
+    "org.scala-lang.modules"     % "scala-xml_2.11"                       % "1.0.4",
     "org.monifu"                %% "monifu"                               % "1.0-RC3",
     "org.scalatest"             %% "scalatest"                            % "3.0.0-M7"       % "test",
     "org.scalamock"             %% "scalamock-scalatest-support"          % "3.2.2"          % "test",
