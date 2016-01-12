@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/zalando/beard.svg)](https://travis-ci.org/zalando/beard)
+
 # The Beard Template Engine
 
 Blazing fast logicless template engine written in Scala used to parse simple templates like this:
