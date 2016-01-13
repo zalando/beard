@@ -26,6 +26,7 @@ class ForContextFactorySpec extends FunSpec with Matchers {
           Map("name" -> "Gicu")),
         "user" ->
           Map("name" -> "Gigi",
+            "isNotLast" -> false,
             "isFirst" -> false,
             "isLast" -> true,
             "isOdd" -> true,
