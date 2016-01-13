@@ -16,13 +16,17 @@ object ForContextFactory {
     newContext(forIterationContext.templateIteratorIdentifier) match {
       case map: Map[String, Any] => {
         val index = forIterationContext.currentIndex
-        val newMap = map.updated("isLast", index == forIterationContext.collectionOfContexts.size - 1)
-          .updated("isFirst", index == 0)
-          .updated("isOdd", index % 2 == 1)
-          .updated("isEven", index % 2 == 0)
+        val last = index == forIterationContext.collectionOfContexts.size - 1
+        val newMap = map.
+          updated("isLast", last).
+          updated("isNotLast", !last).
+          updated("isFirst", index == 0).
+          updated("isOdd", index % 2 == 1).
+          updated("isEven", index % 2 == 0)
         newContext.updated(forIterationContext.templateIteratorIdentifier, newMap)
       }
-      case _ => throw new IllegalAccessException("We need a map here")
+      case other =>
+        throw new IllegalAccessException(s"We need a map here instead of ${other.getClass} with a value $other")
     }
   }
 }
