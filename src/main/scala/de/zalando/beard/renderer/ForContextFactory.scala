@@ -1,7 +1,5 @@
 package de.zalando.beard.renderer
 
-import scala.collection.immutable.Seq
-
 /**
   * @author dpersa
   */
@@ -33,4 +31,4 @@ case class ForIterationContext(globalContext: Map[String, Any],
                                templateIteratorIdentifier: String,
                                collectionContext: Any,
                                currentIndex: Int,
-                               collectionOfContexts: Seq[Any])
+                               collectionOfContexts: Iterable[Any])

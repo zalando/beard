@@ -2,14 +2,12 @@ package de.zalando.beard.renderer
 
 import de.zalando.beard.ast.CompoundIdentifier
 
-import scala.collection.immutable.{Seq, Map}
-
 /**
  * @author dpersa
  */
 object ContextResolver {
 
-  def resolveSeq(identifier: CompoundIdentifier, context: Map[String, Any]): Seq[Any] = {
+  def resolveCollection(identifier: CompoundIdentifier, context: Map[String, Any]): Iterable[Any] = {
 
     context(identifier.identifierPart)
 
@@ -22,8 +20,8 @@ object ContextResolver {
     }
 
     result match {
-      case seq: Seq[_] => seq
-      case other => throw new IllegalStateException(s"$identifier does not point to a Seq but a ${other.getClass} with value: $other")
+      case it: Iterable[_] => it
+      case other => throw new IllegalStateException(s"$identifier does not point to a Iterable but a ${other.getClass} with value: $other")
     }
   }
 
@@ -31,9 +29,8 @@ object ContextResolver {
     val result = identifier.identifierParts.
       foldLeft(context.get(identifier.identifierPart)) { (ctx: Option[Any], rest: String) =>
       ctx match {
-        case Some(map: Map[String, Any]) => {
+        case Some(map: Map[String, Any]) =>
           Some(map(rest))
-        }
         case _ => None
       }
     }

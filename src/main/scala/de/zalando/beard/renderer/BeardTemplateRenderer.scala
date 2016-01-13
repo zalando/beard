@@ -2,10 +2,6 @@ package de.zalando.beard.renderer
 
 import de.zalando.beard.ast._
 
-import scala.Predef
-import scala.collection.immutable._
-
-
 /**
   * @author dpersa
   */
@@ -61,13 +57,12 @@ class BeardTemplateRenderer(templateCompiler: TemplateCompiler) {
       }.toMap
       renderInternal(templateCompiler.compile(TemplateName(template)).get, renderResult, localContext)
     case ForStatement(templateIterator, collection, statements) => {
-      val collectionOfContexts: Seq[Any] = ContextResolver.resolveSeq(collection, context)
+      val collectionOfContexts = ContextResolver.resolveCollection(collection, context)
 
       for {
-        index <- Range(0, collectionOfContexts.size)
+        (currentIteratorContext, index) <- collectionOfContexts.zipWithIndex
         statement <- statements
       } yield {
-        val currentIteratorContext = collectionOfContexts(index)
         val forIterationContext = ForIterationContext(globalContext = context,
           templateIteratorIdentifier = templateIterator.identifier,
           collectionContext = currentIteratorContext,
