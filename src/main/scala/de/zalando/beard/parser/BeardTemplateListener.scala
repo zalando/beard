@@ -10,9 +10,9 @@ class BeardTemplateListener extends BeardParserBaseListener {
 
   var result: BeardTemplate = BeardTemplate(List.empty)
 
-  override def exitCurlyBracket(ctx: CurlyBracketContext) = ctx.result = CurlyBracket(ctx.CURLY_BRACKET().getText)
-
-  override def exitText(ctx: TextContext) = ctx.result = Text(ctx.TEXT().getText)
+  override def exitText(ctx: TextContext) = {
+    ctx.result = Text((Option(ctx.TEXT()).map(_.getText).toSeq ++ Option(ctx.CURLY_BRACKET()).map(_.getText).toSeq).head)
+  }
 
   override def exitNewLine(ctx: NewLineContext) = ctx.result = NewLine(ctx.NL().size())
 
@@ -100,8 +100,7 @@ class BeardTemplateListener extends BeardParserBaseListener {
       Option(ctx.text()).toSeq.map(_.result),
       Option(ctx.newLine()).toSeq.map(_.result),
       Option(ctx.white()).toSeq.map(_.result),
-      Option(ctx.interpolation()).toSeq.map(_.result),
-      Option(ctx.curlyBracket()).toSeq.map(_.result))
+      Option(ctx.interpolation()).toSeq.map(_.result))
       .flatten
     ctx.result = statements.head
   }
