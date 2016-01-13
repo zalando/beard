@@ -19,15 +19,15 @@ class ContextResolverSpec extends FunSpec with Matchers {
 
     describe("resolveSeq") {
       it("should resolve a seq of maps from the context") {
-        ContextResolver.resolveSeq(CompoundIdentifier("objects", Seq("users")), context) should be(users)
+        ContextResolver.resolveCollection(CompoundIdentifier("objects", Seq("users")), context) should be(users)
       }
 
       it("should resolve a simple seq from the context") {
-        ContextResolver.resolveSeq(CompoundIdentifier("emails"), context) should be(emails)
+        ContextResolver.resolveCollection(CompoundIdentifier("emails"), context) should be(emails)
       }
 
       it("should resolve a seq with compound identifier from the context") {
-        ContextResolver.resolveSeq(CompoundIdentifier("objects", Seq("emails")), context) should be(emails)
+        ContextResolver.resolveCollection(CompoundIdentifier("objects", Seq("emails")), context) should be(emails)
       }
     }
   }
