@@ -22,7 +22,16 @@ class BeardTemplateRendererSpec extends FunSpec with Matchers {
           val renderResult = StringWriterRenderResult()
           renderer.render(template, renderResult, Map("name" -> "Gigi"))
           renderResult.result.toString should be("<div>Gigi</div>")
-        }
+        }.isSuccess shouldBe true
+    }
+
+    it("should render a scala template with a simple identifier") {
+      templateCompiler.compile(TemplateName("/templates/scala.beard"))
+        .map { template =>
+          val renderResult = StringWriterRenderResult()
+          renderer.render(template, renderResult, Map("name" -> "Gigi"))
+          renderResult.result.toString should be("object Test extends App {\n  println(\"Gigi\")\n}")
+        }.isSuccess shouldBe true
     }
 
     it("should render a template with a compound identifier") {
@@ -33,7 +42,7 @@ class BeardTemplateRendererSpec extends FunSpec with Matchers {
       val renderResult = StringWriterRenderResult()
       renderer.render(template, renderResult, Map("user" -> Map("name" -> "Gigi", "email" -> "gigi@gicu.com")))
 
-      renderResult.result.toString() should be("<div>gigi@gicu.com</div>")
+      renderResult.result.toString should be("<div>gigi@gicu.com</div>")
     }
 
     describe("render a ForStatement") {
@@ -45,7 +54,7 @@ class BeardTemplateRendererSpec extends FunSpec with Matchers {
         val renderResult = StringWriterRenderResult()
 
         renderer.render(template, renderResult, Map("users" -> Seq(Map("name" -> "Gigi"))))
-        renderResult.result.toString() should be("<div>Hello</div>")
+        renderResult.result.toString should be("<div>Hello</div>")
       }
 
       it("should render a template with a complex for statement") {
@@ -55,7 +64,7 @@ class BeardTemplateRendererSpec extends FunSpec with Matchers {
 
         val renderResult = StringWriterRenderResult()
         renderer.render(template, renderResult, Map("users" -> Seq(Map("name" -> "Gigi"), Map("name" -> "Gicu"))))
-        renderResult.result.toString() should be("<div>Gigi</div><div>Gicu</div>")
+        renderResult.result.toString should be("<div>Gigi</div><div>Gicu</div>")
       }
 
       it("should add the correct for related variables in the context") {
@@ -65,7 +74,7 @@ class BeardTemplateRendererSpec extends FunSpec with Matchers {
 
         val renderResult = StringWriterRenderResult()
         renderer.render(template, renderResult, Map("users" -> Seq(Map("name" -> "Gigi"), Map("name" -> "Gicu"))))
-        renderResult.result.toString() should be("<div>isFirst:true-isLast:false-Gigi-isOdd:false-isEven:true</div>" +
+        renderResult.result.toString should be("<div>isFirst:true-isLast:false-Gigi-isOdd:false-isEven:true</div>" +
           "<div>isFirst:false-isLast:true-Gicu-isOdd:true-isEven:false</div>")
       }
     }
@@ -194,7 +203,7 @@ class BeardTemplateRendererSpec extends FunSpec with Matchers {
         renderer.render(template, renderResult, Map("example" -> Map("title" -> "Title", "presentations" ->
           Seq(Map("title" -> "Title1", "speakerName" -> "Name1", "summary" -> "Summary1"),
             Map("title" -> "Title2", "speakerName" -> "Name2", "summary" -> "Summary2")))))
-        renderResult.result.toString() should not be ("")
+        renderResult.result.toString should not be ""
       }
     }
 

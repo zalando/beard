@@ -8,6 +8,8 @@ WS      : [ \t];
 
 TEXT    : ~('{' | '}' | ' ' | '\t' | '\n' | '\r')+;
 
+CURLY_BRACKET : '{' | '}' ;
+
 mode INSIDE_INTERPOLATION;
 
     RR : '}}' -> popMode;

@@ -1,16 +1,25 @@
-# See http://about.travis-ci.org/docs/user/build-configuration/
+# use Docker-based container (instead of OpenVZ)
+sudo: false
+
+cache:
+  directories:
+    - $HOME/.m2/repository
+    - $HOME/.sbt
+    - $HOME/.ivy2
+
 language: scala
 
-scala:
-   - 2.11.7
+script:
+  - sbt ++$TRAVIS_SCALA_VERSION test
 
-branches:
-  only:
-    - master
+  # Trick to avoid unnecessary cache updates
+  - find $HOME/.sbt -name "*.lock" | xargs rm
+
+scala:
+  - 2.11.7
+jdk:
+  - oraclejdk8
 
 notifications:
   email:
-    recipients:
-      - dan.persa@zalando.de
-jdk:
-  - oraclejdk8
+    - dan.persa@zalando.de
