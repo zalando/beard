@@ -2,6 +2,8 @@ package de.zalando.beard.renderer
 
 import de.zalando.beard.ast._
 
+import scala.annotation.tailrec
+
 /**
   * @author dpersa
   */
@@ -34,6 +36,14 @@ class BeardTemplateRenderer(templateCompiler: TemplateCompiler) {
     renderResult.write(string)
   }
 
+  private def stringRepresentation(value: Any): String = value match {
+    case null => ""
+    case Some(str) => stringRepresentation(str)
+    case None => ""
+    case i: Iterable[_] => i map stringRepresentation mkString ","
+    case other => other.toString
+  }
+
   private def renderStatement[T](statement: Statement,
                                  context: Map[String, Any],
                                  renderResult: RenderResult[T],
@@ -42,7 +52,7 @@ class BeardTemplateRenderer(templateCompiler: TemplateCompiler) {
     case Text(text) => onNext(renderResult, text)
     case IdInterpolation(identifier) => {
       val id = ContextResolver.resolve(identifier, context) match {
-        case Some(value) => value.toString()
+        case Some(value) => stringRepresentation(value)
         case _ => throw new IllegalStateException(s"The identifier ${identifier} was not resolved")
       }
       onNext(renderResult, id)
@@ -81,23 +91,17 @@ class BeardTemplateRenderer(templateCompiler: TemplateCompiler) {
 
     case IfStatement(condition, ifStatements, elseStatements) =>
       val result = ContextResolver.resolve(condition, context) match {
-        case Some(result: Boolean) => result
-        case Some(Seq()) => false
-        case Some(result: Seq[_]) => {
-          true
-        }
-        case Some(result) => throw new IllegalStateException(s"A condition should be of type Boolean or Seq but it has ${result.getClass} type")
-        case _ => throw new IllegalStateException("The condition was not resolved")
+        case Some(result: Boolean)      => result
+        case Some(result: Iterable[_])  => result.nonEmpty // includes Map as well
+        case Some(result: Option[_])    => result.nonEmpty
+        case Some(result: String)       => result.nonEmpty
+        case Some(null)                 => false
+        case Some(other) => throw new IllegalStateException(s"A condition should be of type Boolean or { def nonEmpty: Boolean } but it has ${other.getClass} type")
+        case None => false
       }
 
-      if (result) {
-        for (statement <- ifStatements) {
-          renderStatement(statement, context, renderResult, yieldedStatement)
-        }
-      } else {
-        for (statement <- elseStatements) {
-          renderStatement(statement, context, renderResult, yieldedStatement)
-        }
+      for (statement <- if (result) ifStatements else elseStatements) {
+        renderStatement(statement, context, renderResult, yieldedStatement)
       }
     case _ => ()
   }

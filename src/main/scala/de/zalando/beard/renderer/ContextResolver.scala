@@ -9,18 +9,16 @@ object ContextResolver {
 
   def resolveCollection(identifier: CompoundIdentifier, context: Map[String, Any]): Iterable[Any] = {
 
-    context(identifier.identifierPart)
-
-    val result = identifier.identifierParts.
-      foldLeft(context(identifier.identifierPart)) { (ctx: Any, rest: String) =>
-      ctx match {
-        case map: Map[String, Any] if map.contains(rest) => map(rest)
+    val result = identifier.identifierParts.foldLeft(context.get(identifier.identifierPart)) { (ctx: Option[Any], rest: String) =>
+      ctx flatMap {
+        case map: Map[String, Any] if map.contains(rest)  => map.get(rest)
+        case seq: Iterable[_] if rest.forall(_.isDigit)   => seq.drop(rest.toInt).headOption
         case map: Map[String, Any] => None
         case _ => throw new IllegalStateException(s"Can't resolve $identifier")
       }
     }
 
-    result match {
+    result.toSeq flatMap {
       case it: Iterable[_] => it
       case op: Option[_] => op.toSeq
       case other =>

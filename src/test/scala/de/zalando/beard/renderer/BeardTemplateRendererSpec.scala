@@ -172,12 +172,12 @@ class BeardTemplateRendererSpec extends FunSpec with Matchers {
       }
 
       describe("users collection does not exist") {
-        it("should not render the template") {
+        it("should render else branch in the template") {
           val renderResult = StringWriterRenderResult()
-
-          intercept[IllegalStateException] {
-            renderer.render(template, renderResult, Map())
-          }
+          renderer.render(template, renderResult, Map.empty)
+          renderResult.result.toString should be("""
+                                                   |<div>No users</div>
+                                                   |""".stripMargin)
         }
       }
 
