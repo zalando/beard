@@ -26,7 +26,8 @@ object ForContextFactory {
         newContext.updated(forIterationContext.templateIteratorIdentifier, newMap)
       }
       case other =>
-        throw new IllegalAccessException(s"We need a map here instead of ${other.getClass} with a value $other")
+        throw new IllegalAccessException(s"We need a map here instead of ${other.getClass} with a value $other " +
+          s"for iterator ${forIterationContext.templateIteratorIdentifier}:${forIterationContext.currentIndex}")
     }
   }
 }
