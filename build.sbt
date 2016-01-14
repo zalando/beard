@@ -1,6 +1,7 @@
 name          := "beard"
 organization  := "de.zalando.spearheads"
-version       := "0.0.3-SNAPSHOT"
+version       := "0.0.4-SNAPSHOT"
+licenses      += ("Apache-2.0", url("http://www.apache.org/licenses/"))
 
 scalaVersion := "2.11.7"
 scalacOptions := Seq("-unchecked", "-feature", "-deprecation", "-encoding", "utf8")

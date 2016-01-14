@@ -13,6 +13,15 @@ Uses ANTRL to compile the templates.
 Binaries are available from [bintray](https://bintray.com/zalando-spearheads/java/beard/0.0.2/view). Or simply
 add `resolvers += Resolver.bintrayRepo("zalando-spearheads", "java")` to your `build.sbt`.
 
+# Publish
+
+To login to bintray:
+
+    sbt bintrayChangeCredentials
+
+Then
+
+    sbt publish
 
 Copyright 2015 Zalando SE
 
