@@ -41,6 +41,5 @@ libraryDependencies ++= {
 net.virtualvoid.sbt.graph.Plugin.graphSettings
 // testFrameworks += new TestFramework("org.scalameter.ScalaMeterFramework")
 
-licenses      += ("Apache-2.0", url("http://www.apache.org/licenses/"))
 publishMavenStyle       := true
 bintrayOrganization     := Some("zalando")
