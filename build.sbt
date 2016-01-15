@@ -42,4 +42,4 @@ net.virtualvoid.sbt.graph.Plugin.graphSettings
 // testFrameworks += new TestFramework("org.scalameter.ScalaMeterFramework")
 
 publishMavenStyle       := true
-bintrayOrganization     := Some("zalando")
+bintrayOrganization     := Some("Zalando SE")
