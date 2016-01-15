@@ -1,6 +1,6 @@
 name          := "beard"
-organization  := "de.zalando.spearheads"
-version       := "0.0.3-SNAPSHOT"
+organization  := "de.zalando"
+version       := "0.0.4"
 
 scalaVersion := "2.11.7"
 scalacOptions := Seq("-unchecked", "-feature", "-deprecation", "-encoding", "utf8")
@@ -36,5 +36,11 @@ libraryDependencies ++= {
   )
 }
 
+
+
 net.virtualvoid.sbt.graph.Plugin.graphSettings
 // testFrameworks += new TestFramework("org.scalameter.ScalaMeterFramework")
+
+licenses                += ("MIT", url("http://opensource.org/licenses/MIT"))
+publishMavenStyle       := true
+bintrayOrganization     := Some("zalando")
