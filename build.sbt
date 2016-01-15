@@ -1,5 +1,5 @@
 name          := "beard"
-organization  := "de.zalando.spearheads"
+organization  := "de.zalando"
 version       := "0.0.5-SNAPSHOT"
 licenses      += ("Apache-2.0", url("http://www.apache.org/licenses/"))
 
@@ -37,5 +37,9 @@ libraryDependencies ++= {
   )
 }
 
+
 net.virtualvoid.sbt.graph.Plugin.graphSettings
 // testFrameworks += new TestFramework("org.scalameter.ScalaMeterFramework")
+
+publishMavenStyle       := true
+bintrayOrganization     := Some("Zalando SE")
