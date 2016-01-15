@@ -19,9 +19,9 @@ To login to bintray:
 
     sbt bintrayChangeCredentials
 
-Then
+Then for cross publish
 
-    sbt publish
+    sbt +publish
 
 Copyright 2015 Zalando SE
 
