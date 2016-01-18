@@ -8,6 +8,8 @@ Blazing fast logicless template engine written in Scala used to parse simple tem
 
 Uses ANTRL to compile the templates.
 
+More details in our [documentation](https://danpersa.gitbooks.io/beard/content/)
+
 # Gitbook
 
 Contribute to our gitbook [here](https://github.com/danpersa/beard-book).
