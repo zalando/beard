@@ -2,15 +2,13 @@ lexer grammar BeardLexer;
 
 LL : '{{' -> pushMode(INSIDE_INTERPOLATION);
 
-NL      : '\r'? '\n';
-
-WS      : [ \t];
-
-TEXT    : ~('{' | '}' | ' ' | '\t' | '\n' | '\r')+;
+NL : '\r'? '\n';
 
 CURLY_BRACKET : '{' | '}' ;
 
-COMMENT: '{{#' (LL| NL | WS | RR | TEXT)* '#}}' -> skip;
+COMMENT: '{{#' (LL| NL | ' ' | '\t' | RR | TEXT)* '#}}' -> skip;
+
+TEXT   :  ~[{}\r\n]+ ;
 
 mode INSIDE_INTERPOLATION;
 

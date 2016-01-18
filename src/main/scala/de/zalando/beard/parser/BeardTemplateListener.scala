@@ -11,12 +11,11 @@ class BeardTemplateListener extends BeardParserBaseListener {
   var result: BeardTemplate = BeardTemplate(List.empty)
 
   override def exitText(ctx: TextContext) = {
-    ctx.result = Text((Option(ctx.TEXT()).map(_.getText).toSeq ++ Option(ctx.CURLY_BRACKET()).map(_.getText).toSeq).head)
+    ctx.result = Text(
+      (Option(ctx.TEXT()).map(_.getText).toSeq ++
+        Option(ctx.CURLY_BRACKET()).map(_.getText).toSeq ++
+        Option(ctx.NL()).map(_.getText).toSeq).head)
   }
-
-  override def exitNewLine(ctx: NewLineContext) = ctx.result = NewLine(ctx.NL().size())
-
-  override def exitWhite(ctx: WhiteContext) = ctx.result = White(ctx.WS().size())
 
   override def exitIdentifier(ctx: IdentifierContext) = {
     ctx.result = Identifier(ctx.IDENTIFIER().getText)
@@ -95,11 +94,11 @@ class BeardTemplateListener extends BeardParserBaseListener {
           Option(structuredStatement.ifStatement()).toSeq.map(_.result) ++
           Option(structuredStatement.forStatement()).toSeq.map(_.result) ++
           Option(structuredStatement.renderStatement()).toSeq.map(_.result) ++
-          Option(structuredStatement.blockStatement()).toSeq.map(_.result)
+          Option(structuredStatement.blockStatement()).toSeq.map(_.result) ++
+          Option(structuredStatement.extendsStatement()).toSeq.map(_.result) ++
+          Option(structuredStatement.contentForStatement()).toSeq.map(_.result)
       },
       Option(ctx.text()).toSeq.map(_.result),
-      Option(ctx.newLine()).toSeq.map(_.result),
-      Option(ctx.white()).toSeq.map(_.result),
       Option(ctx.interpolation()).toSeq.map(_.result))
       .flatten
     ctx.result = statements.head
@@ -107,12 +106,25 @@ class BeardTemplateListener extends BeardParserBaseListener {
 
   override def exitBeard(ctx: BeardContext) = {
     val statements = ctx.statement().map(_.result).toList
+
     val renderStatements = statements.collect {
       case renderStatement: RenderStatement => renderStatement
     }
-    ctx.result = statements
-    val extended = Option(ctx.extendsStatement()).map(_.result)
-    val contentForStatements = ctx.contentForStatement().map(_.result).toList
-    result = BeardTemplate(statements, extended, renderStatements, contentForStatements)
+
+    val extended = statements.collectFirst {
+      case extendsStatement: ExtendsStatement => extendsStatement
+    }
+
+    val contentForStatements = statements.collect {
+      case contentForStatement: ContentForStatement => contentForStatement
+    }
+
+    val finalStatements = statements.reverse.takeWhile {
+      case contentForStatement: ContentForStatement => false
+      case extendsStatement: ExtendsStatement => false
+      case _ => true
+    }.reverse
+
+    result = BeardTemplate(finalStatements, extended, renderStatements, contentForStatements)
   }
 }

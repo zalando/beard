@@ -74,8 +74,8 @@ class BeardTemplateRendererSpec extends FunSpec with Matchers {
 
         val renderResult = StringWriterRenderResult()
         renderer.render(template, renderResult, Map("users" -> Seq(Map("name" -> "Gigi"), Map("name" -> "Gicu"))))
-        renderResult.result.toString should be("<div>isFirst:true-isLast:false-Gigi-isOdd:false-isEven:true</div>" +
-          "<div>isFirst:false-isLast:true-Gicu-isOdd:true-isEven:false</div>")
+        renderResult.result.toString should be("<div>isFirst:true-isLast:false-Gigi-isOdd:false-isEven:true</div>\n" +
+          "<div>isFirst:false-isLast:true-Gicu-isOdd:true-isEven:false</div>\n")
       }
     }
 
@@ -89,7 +89,7 @@ class BeardTemplateRendererSpec extends FunSpec with Matchers {
         it("should render the template") {
           val renderResult = StringWriterRenderResult()
           renderer.render(template, renderResult, context(true))
-          renderResult.result.toString should be("\nGigi is cool\n")
+          renderResult.result.toString should be("Gigi is cool\n")
         }
       }
 
@@ -112,7 +112,7 @@ class BeardTemplateRendererSpec extends FunSpec with Matchers {
         it("should render the template") {
           val renderResult = StringWriterRenderResult()
           renderer.render(template, renderResult, context(true))
-          renderResult.result.toString should be("\nGigi is cool\n")
+          renderResult.result.toString should be("Gigi is cool\n")
         }
       }
 
@@ -120,7 +120,7 @@ class BeardTemplateRendererSpec extends FunSpec with Matchers {
         it("should not render the template") {
           val renderResult = StringWriterRenderResult()
           renderer.render(template, renderResult, context(false))
-          renderResult.result.toString should be("\nGigi is not cool\n")
+          renderResult.result.toString should be("Gigi is not cool\n")
         }
       }
     }
@@ -134,7 +134,7 @@ class BeardTemplateRendererSpec extends FunSpec with Matchers {
       it("should render the template") {
         val renderResult = StringWriterRenderResult()
         renderer.render(template, renderResult, context(true))
-        renderResult.result.toString should be("\nGigi is not odd\nGicu is odd\n")
+        renderResult.result.toString should be("Gigi is not odd\nGicu is odd\n")
       }
     }
 
@@ -144,14 +144,16 @@ class BeardTemplateRendererSpec extends FunSpec with Matchers {
 
       val template = templateCompiler.compile(TemplateName("/templates/if-nested-statements.beard")).get
 
-      it("should render the template") {
+      it("should render the template xxx") {
         val renderResult = StringWriterRenderResult()
         renderer.render(template, renderResult, context(true))
+
         renderResult.result.toString should be("""some
                                                  |  Gigi is cool
                                                  |    Gigi is still cool
                                                  |    some1
-                                                 |some4""".stripMargin)
+                                                 |some4
+                                                 |""".stripMargin)
       }
     }
 
@@ -165,9 +167,7 @@ class BeardTemplateRendererSpec extends FunSpec with Matchers {
         it("should render the template") {
           val renderResult = StringWriterRenderResult()
           renderer.render(template, renderResult, Map("users" -> Seq()))
-          renderResult.result.toString should be("""
-                                                   |<div>No users</div>
-                                                   |""".stripMargin)
+          renderResult.result.toString should be("<div>No users</div>\n".stripMargin)
         }
       }
 
@@ -175,9 +175,7 @@ class BeardTemplateRendererSpec extends FunSpec with Matchers {
         it("should render else branch in the template") {
           val renderResult = StringWriterRenderResult()
           renderer.render(template, renderResult, Map.empty)
-          renderResult.result.toString should be("""
-                                                   |<div>No users</div>
-                                                   |""".stripMargin)
+          renderResult.result.toString should be("<div>No users</div>\n".stripMargin)
         }
       }
 
@@ -185,8 +183,7 @@ class BeardTemplateRendererSpec extends FunSpec with Matchers {
         it("should render the template") {
           val renderResult = StringWriterRenderResult()
           renderer.render(template, renderResult, context(true))
-          renderResult.result.toString should be("""
-                                                   |<ul>
+          renderResult.result.toString should be("""<ul>
                                                    |  <li>Gigi</li>
                                                    |  <li>Gicu</li>
                                                    |</ul>

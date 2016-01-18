@@ -11,8 +11,8 @@
 <div class="container">
     {{render "/templates/_partial.beard" title=example.title presentations=example.presentations}}
 </div>
-    {{ render "/templates/_footer.beard" }}
-    {{ render "/templates/_footer.beard" }}
-    {{ render "/templates/_footer.beard" }}
+{{ render "/templates/_footer.beard" }}
+{{ render "/templates/_footer.beard" }}
+{{ render "/templates/_footer.beard" }}
 </body>
 </html>

@@ -21,7 +21,7 @@ class BeardTemplateParserSpec extends FunSpec with Matchers {
 
   describe("when parsing a template with curly brackets") {
     it("should return a BeardTemplate of an interpolation") {
-      val expected = BeardTemplate(Seq(Text("{"), White(1), IdInterpolation(CompoundIdentifier("hello")), White(1), Text("}")))
+      val expected = BeardTemplate(Seq(Text("{"), Text(" "), IdInterpolation(CompoundIdentifier("hello")), Text(" "), Text("}")))
       BeardTemplateParser("{ {{hello}} }") shouldBe expected
     }
   }
@@ -41,15 +41,15 @@ class BeardTemplateParserSpec extends FunSpec with Matchers {
 
   describe("when parsing a string the contains brackets") {
     it("should return a BeardTemplate of a text and an interpolation") {
-      BeardTemplateParser("hello {{world}}") should be(BeardTemplate(Seq(Text("hello"), White(1),
+      BeardTemplateParser("hello {{world}}") should be(BeardTemplate(Seq(Text("hello "),
         IdInterpolation(CompoundIdentifier("world")))))
     }
   }
 
   describe("when parsing a string the contains brackets") {
     it("should return a BeardTemplate of an interpolation and a text") {
-      BeardTemplateParser("{{hello}} world") should be(BeardTemplate(Seq(IdInterpolation(CompoundIdentifier("hello")), White(1),
-        Text("world"))))
+      BeardTemplateParser("{{hello}} world") should be(BeardTemplate(Seq(IdInterpolation(CompoundIdentifier("hello")),
+        Text(" world"))))
     }
   }
 
@@ -161,9 +161,9 @@ class BeardTemplateParserSpec extends FunSpec with Matchers {
     it("should return a BeardTemplate containing an interpolation with attributes") {
       BeardTemplateParser("more {{   hello   \n name=\"  He   llo  \" color = 'blue'}} world") should
         be(BeardTemplate(Seq(
-          Text("more"), White(1),
+          Text("more "),
           AttrInterpolation(Identifier("hello"), Seq(AttributeWithValue("name", "  He   llo  "), AttributeWithValue("color", "blue"))),
-          White(1), Text("world"))))
+          Text(" world"))))
     }
   }
 
@@ -178,12 +178,12 @@ class BeardTemplateParserSpec extends FunSpec with Matchers {
 
     it("should skip Beard syntax within the comment") {
       BeardTemplateParser("Hello {{# text {{ interpolation }} #}} world") should be(
-        BeardTemplate(Seq(Text("Hello"), White(2), Text("world"))))
+        BeardTemplate(Seq(Text("Hello "), Text(" world"))))
     }
 
     it("should skip all content within the comment ") {
       BeardTemplateParser("Hello {{# text }} {{ #}} world") should be(
-        BeardTemplate(Seq(Text("Hello"), White(2), Text("world"))))
+        BeardTemplate(Seq(Text("Hello "), Text(" world"))))
     }
   }
 
@@ -309,11 +309,9 @@ class BeardTemplateParserSpec extends FunSpec with Matchers {
   describe("block statement") {
     it("should return a beard template containing a simple block statement") {
       BeardTemplateParser("<ul>{{block header}}\n<div>Hello</div>{{/block}}</ul>") should
-        be(BeardTemplate(Seq(
-          Text("<ul>"),
-          BlockStatement(Identifier("header"), Seq(NewLine(1), Text("<div>Hello</div>"))),
-          Text("</ul>")
-        )))
+      be(
+        BeardTemplate(List(Text("<ul>"), BlockStatement(Identifier("header"),List(Text("<div>Hello</div>"))), Text("</ul>")),None,List(),List())
+        )
     }
 
     it("should not let the block statements to be nested") {
@@ -351,49 +349,86 @@ class BeardTemplateParserSpec extends FunSpec with Matchers {
 
   describe("from file") {
     it("should parse the template") {
-      val template = Source.fromInputStream(getClass.getResourceAsStream("/templates/hello.beard")).mkString
+      val template = Source.fromInputStream(
+        getClass.getResourceAsStream("/templates/hello.beard")
+      ).mkString
 
       BeardTemplateParser(template).statements should be(
-        Seq(
+        List(
           Text("<div>somediv</div>"),
-          BlockStatement(Identifier("navigation"), List(NewLine(1),
-            White(4),
-            Text("<ul>"),
-            NewLine(1),
-            White(8),
-            Text("<li>first</li>"),
-            NewLine(1),
-            White(4),
-            Text("</ul>"))),
-          NewLine(2),
-          Text("<p>Hello"),
-          White(1),
-          Text("world</p>"),
-          NewLine(2),
+          Text("\n"),
+          BlockStatement(
+            Identifier("navigation"),
+            List(
+              Text("    <ul>"),
+              Text("\n"),
+              Text("        <li>first</li>"),
+              Text("\n"),
+              Text("    </ul>"),
+              Text("\n"
+              )
+            )
+          ),
+          Text("\n"),
+          Text("<p>Hello world</p>"),
+          Text("\n"),
+          Text("\n"),
           IfStatement(
-            CompoundIdentifier("usersExist"),
-            List(NewLine(1),
-            White(4),
-            Text("<div>No"),
-            White(1),
-            Text("users</div>"),
-            NewLine(1)), List(NewLine(1),
-            White(4),
-            Text("<div"),
-            White(1),
-            Text("class=\"users\">"),
-            ForStatement(Identifier("user"), CompoundIdentifier("users", List()), List(NewLine(1),
-              White(8),
-              IdInterpolation(CompoundIdentifier("user", List("name"))),
-              IfStatement(
-              CompoundIdentifier("user", Seq("isLast")),
-                List(Text(",")), List()), White(8),
-              RenderStatement("user-details", List(AttributeWithIdentifier("user", CompoundIdentifier("user", List())),
-                AttributeWithValue("class", "default"))))),
-            NewLine(1),
-            White(4),
-            Text("</div>"),
-            NewLine(1)))
+            CompoundIdentifier(
+              "usersExist",
+              List()
+            ),
+            List(
+              Text("    <div>No users</div>"),
+              Text("\n")
+            ),
+            List(
+              Text("    <div class=\"users\">"),
+              Text("\n"),
+              Text("    "),
+              ForStatement(
+                Identifier("user"),
+                CompoundIdentifier(
+                  "users",
+                  List()
+                ),
+                List(
+                  Text("        "),
+                  IdInterpolation(
+                    CompoundIdentifier(
+                      "user",
+                      List("name")
+                    )
+                  ),
+                  IfStatement(
+                    CompoundIdentifier(
+                      "user",
+                      List("isLast")
+                    ),
+                    List(Text(",")),
+                    List()
+                  ),
+                  Text("        "),
+                  RenderStatement(
+                    "user-details",
+                    List(
+                      AttributeWithIdentifier(
+                        "user",
+                        CompoundIdentifier(
+                          "user",
+                          List()
+                        )
+                      ),
+                      AttributeWithValue("class", "default"))
+                  ),
+                  Text("\n"),
+                  Text("    ")
+                )
+              ),
+              Text("    </div>"),
+              Text("\n")
+            )
+          )
         )
       )
     }
@@ -404,71 +439,78 @@ class BeardTemplateParserSpec extends FunSpec with Matchers {
       val template = Source.fromInputStream(getClass.getResourceAsStream("/templates/layout-with-partial.beard")).mkString
 
       BeardTemplateParser(template).statements should be(
-        Seq(
-          Text("<!DOCTYPE"),
-          White(1),
-          Text("html>"),
-          NewLine(1),
+        List(
+          Text("<!DOCTYPE html>"),
+          Text("\n"),
           Text("<html>"),
-          NewLine(1),
+          Text("\n"),
           Text("<head>"),
-          NewLine(1),
-          White(4),
-          Text("<meta"),
-          White(1),
-          Text("charset=\"utf-8\"/>"),
-          NewLine(1),
-          White(4),
-          Text("<meta"),
-          White(1),
-          Text("name=\"viewport\""),
-          White(1),
-          Text("content=\"width=device-width,"),
-          White(1),
-          Text("initial-scale=1.0\"/>"),
-          NewLine(1),
-          White(4),
-          Text("<meta"),
-          White(1),
-          Text("http-equiv=\"X-UA-Compatible\""),
-          White(1),
-          Text("content=\"IE=Edge\"/>"),
-          NewLine(1),
-          White(4),
-          Text("<title>"),
-          IdInterpolation(CompoundIdentifier("example", List("title"))),
-          White(1),
-          Text("-"),
-          White(1),
-          Text("Pebble</title>"),
-          NewLine(1),
-          White(4),
-          Text("<link"),
-          White(1),
-          Text("rel=\"stylesheet\""),
-          White(1),
-          Text("href=\"/webjars/bootstrap/3.0.1/css/bootstrap.min.css\""),
-          White(1),
-          Text("media=\"screen\"/>"),
-          NewLine(1),
+          Text("\n"),
+          Text("    <meta charset=\"utf-8\"/>"),
+          Text("\n"),
+          Text("    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"/>"),
+          Text("\n"),
+          Text("    <meta http-equiv=\"X-UA-Compatible\" content=\"IE=Edge\"/>"),
+          Text("\n"),
+          Text("    <title>"),
+          IdInterpolation(
+            CompoundIdentifier(
+              "example",
+              List("title")
+            )
+          ),
+          Text(" - Pebble</title>"),
+          Text("\n"),
+          Text("    <link rel=\"stylesheet\" href=\"/webjars/bootstrap/3.0.1/css/bootstrap.min.css\" media=\"screen\"/>"),
+          Text("\n"),
           Text("</head>"),
-          NewLine(1),
+          Text("\n"),
           Text("<body>"),
-          NewLine(1),
-          Text("<div"),
-          White(1),
-          Text("class=\"container\">"),
-          RenderStatement("/templates/_partial.beard", List(AttributeWithIdentifier("title", CompoundIdentifier("example", List("title"))),
-            AttributeWithIdentifier("presentations", CompoundIdentifier("example", List("presentations"))))),
-          NewLine(1),
+          Text("\n"),
+          Text("<div class=\"container\">"),
+          Text("\n"),
+          Text("    "),
+          RenderStatement(
+            "/templates/_partial.beard",
+            List(
+              AttributeWithIdentifier(
+                "title",
+                CompoundIdentifier(
+                  "example",
+                  List("title")
+                )
+              ),
+              AttributeWithIdentifier(
+                "presentations",
+                CompoundIdentifier(
+                  "example",
+                  List("presentations")
+                )
+              )
+            )
+          ),
+          Text("\n"),
           Text("</div>"),
-          RenderStatement("/templates/_footer.beard", List()),
-          RenderStatement("/templates/_footer.beard", List()),
-          RenderStatement("/templates/_footer.beard", List()),
-          NewLine(1),
+          Text("\n"),
+          RenderStatement(
+            "/templates/_footer.beard",
+            List()
+          ),
+          Text("\n"),
+          RenderStatement(
+            "/templates/_footer.beard",
+            List()
+          ),
+          Text("\n"),
+          RenderStatement(
+            "/templates/_footer.beard",
+            List()
+          ),
+          Text("\n"),
           Text("</body>"),
-          NewLine(1),
-          Text("</html>")
+          Text("\n"),
+          Text("</html>"),
+          Text("\n")
         )
       )
     }

@@ -10,21 +10,19 @@ import de.zalando.beard.ast.*;
 
 beard
 locals [scala.collection.immutable.List<Statement> result]
-      : (extendsStatement NL?)? (NL* contentForStatement)* statement*
+      : statement*
       ;
 
 statement
 locals [Statement result]
          : structuredStatement
          | interpolation
-         | newLine
-         | white
          | text
          ;
 
 extendsStatement
 locals [ExtendsStatement result]
-    : LL EXTENDS attrValue RR
+    : LL EXTENDS attrValue RR NL?
     ;
 
 structuredStatement
@@ -33,85 +31,80 @@ structuredStatement
     | renderStatement
     | blockStatement
     | yieldStatement
+    | extendsStatement
+    | contentForStatement
     ;
 
 yieldStatement
 locals [YieldStatement result]
-    : NL WS* LL YIELD RR
-    | LL YIELD RR
+    : LL YIELD RR
     ;
 
 blockStatement
 locals [BlockStatement result]
-    : NL WS* blockInterpolation statement* NL WS* endBlockInterpolation
-    | blockInterpolation statement* endBlockInterpolation
+    :  blockInterpolation statement* endBlockInterpolation
     ;
 
 // {{ block header }}
 blockInterpolation
-    : LL BLOCK identifier RR
+    : LL BLOCK identifier RR NL?
     ;
 
 // {{/ block }}
 endBlockInterpolation
-    : LL SLASH BLOCK RR
+    : LL SLASH BLOCK RR NL?
     ;
 
 contentForStatement
 locals [ContentForStatement result]
-    : contentForInterpolation statement* NL WS* endContentForInterpolation NL?
-    | contentForInterpolation statement* endContentForInterpolation NL?
+    : contentForInterpolation statement* endContentForInterpolation
     ;
 
 // {{ contentFor header }}
 contentForInterpolation
-    : LL CONTENT_FOR identifier RR
+    : LL CONTENT_FOR identifier RR NL?
     ;
 
 // {{/ contentFor }}
 endContentForInterpolation
-    : LL SLASH CONTENT_FOR RR
+    : LL SLASH CONTENT_FOR RR NL?
     ;
 
 // {{render "the-template" name="Dan" email=the.email.variable}}
 renderStatement
 locals [RenderStatement result]
-    : NL WS* LL RENDER attrValue attribute* RR
-    | LL RENDER attrValue attribute* RR
+    : LL RENDER attrValue attribute* RR
     ;
 
 ifStatement
 locals [IfStatement result]
-    : NL? WS* ifInterpolation ifStatements+=statement+ NL? WS* elseInterpolation elseStatements+=statement+ NL? WS* endIfInterpolation NL? # IfElseStatement
-    | ifInterpolation ifStatements+=statement+ elseInterpolation elseStatements+=statement+ endIfInterpolation # IfElseStatement
-    | NL? WS* ifInterpolation statement+ NL? WS* endIfInterpolation NL? # IfOnlyStatement
+    : ifInterpolation ifStatements+=statement+ elseInterpolation elseStatements+=statement+ endIfInterpolation # IfElseStatement
     | ifInterpolation statement+ endIfInterpolation # IfOnlyStatement
     ;
 
 ifInterpolation
-    : LL IF compoundIdentifier RR
+    : LL IF compoundIdentifier RR NL?
     ;
 
 elseInterpolation
-    : LL ELSE RR
+    : LL ELSE RR NL?
     ;
 
 endIfInterpolation
-    : LL SLASH IF RR
+    : LL SLASH IF RR NL?
     ;
 
 forStatement
 locals [ForStatement result]
-    : NL WS* forInterpolation statement+ NL WS* endForInterpolation
-    | forInterpolation statement+ endForInterpolation
+    : forInterpolation statement+ endForInterpolation
     ;
 
 forInterpolation
-    : LL FOR iter+=identifier IN coll+=compoundIdentifier RR
+    : LL FOR iter+=identifier IN coll+=compoundIdentifier RR NL?
     ;
 
 endForInterpolation
-    : LL SLASH FOR RR
+    : LL SLASH FOR RR NL?
     ;
 
 interpolation
@@ -165,18 +158,9 @@ locals [Identifier result]
     : IDENTIFIER
     ;
 
-white
-locals [White result]
-    : WS+
-    ;
-
-newLine
-locals [NewLine result]
-    : NL+
-    ;
-
 text
 locals [Text result]
     : TEXT
     | CURLY_BRACKET
+    | NL
     ;

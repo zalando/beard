@@ -1,3 +1,2 @@
 {{extends "/extends-example/single-column.beard"}}
-
-                <div>Hello Index</div>
+<div>Hello Index</div>
