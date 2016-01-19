@@ -80,7 +80,8 @@ class CustomizableTemplateCompilerSpec extends FunSpec with Matchers {
                     |            </div>
                     |        </div>
                     |    </body>
-                    |<html>""".stripMargin)),
+                    |</html>
+                    |""".stripMargin)),
             None, Seq(RenderStatement("/extends-example/head.beard"),
               RenderStatement("/extends-example/header.beard")))
         )
