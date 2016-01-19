@@ -167,6 +167,26 @@ class BeardTemplateParserSpec extends FunSpec with Matchers {
     }
   }
 
+  describe("when parsing a string that contains a comment") {
+    it("should return an empty BeardTemplate for an inline comment") {
+      BeardTemplateParser("{{# This is a comment #}}") should be(BeardTemplate(List.empty))
+    }
+
+    it("should return an empty BeardTemplate for a multiline comment") {
+      BeardTemplateParser("{{# This is a \n multiline comment #}}") should be(BeardTemplate(List.empty))
+    }
+
+    it("should skip Beard syntax within the comment") {
+      BeardTemplateParser("Hello {{# text {{ interpolation }} #}} world") should be(
+        BeardTemplate(Seq(Text("Hello"), White(2), Text("world"))))
+    }
+
+    it("should skip all content within the comment ") {
+      BeardTemplateParser("Hello {{# text }} {{ #}} world") should be(
+        BeardTemplate(Seq(Text("Hello"), White(2), Text("world"))))
+    }
+  }
+
   describe("if statement") {
     it("should return a BeardTemplate containing a simple if statement") {
       BeardTemplateParser("hello{{ if user.isCool }}hello{{ /if}}end") should

@@ -218,5 +218,6 @@ class BeardTemplateRendererSpec extends FunSpec with Matchers {
     it("should render a template with a contentFor statement") {
       pending
     }
+
   }
 }

@@ -10,6 +10,8 @@ TEXT    : ~('{' | '}' | ' ' | '\t' | '\n' | '\r')+;
 
 CURLY_BRACKET : '{' | '}' ;
 
+COMMENT: '{{#' (LL| NL | WS | RR | TEXT)* '#}}' -> skip;
+
 mode INSIDE_INTERPOLATION;
 
     RR : '}}' -> popMode;
