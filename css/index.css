@@ -5,8 +5,13 @@
 
 .nav {
   display: flex;
+  position: fixed;
+  right: 0;
+  left: 0;
 
-  background-color: #cc611d;
+  background-color: #ffffff;
+  border: 0;
+  box-shadow: 0 2px 8px rgba(0,0,0,.15);
 }
 
 .menu {
@@ -23,7 +28,9 @@
 
 .menu__item a {
   text-decoration: none;
-  color: #f7f7f7;
+  color: #333;
+  text-transform: uppercase;
+  font-weight: 600;
 }
 
 .header {
@@ -31,11 +38,11 @@
   align-items: center;
   justify-content: center;
 
-  padding: 2rem 0 2rem 0;
+  padding: 6rem 0 2rem 0;
   width: 100%;
   height: 100%;
 
-  background-color: #4a4a4a;
+  background-color: #e8eaeb;
 }
 
 .logo {
@@ -49,15 +56,22 @@
   width: 100%;
 }
 
-
 .intro {
   padding: 1rem;
 
-  background-color: #f7f7f7;
-  color: #4a4a4a;
+  background-color: #333;
+  color: #aaa;
 }
 
 .intro ul {
   padding: 0 1rem;
   margin: 0;
+}
+
+.intro a {
+  color: #f16a21;
+}
+
+.intro a:visited {
+  color: #cc611d;
 }
