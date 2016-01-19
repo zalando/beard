@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/normalize/3.0.2/normalize.min.css" rel="stylesheet" type="text/css" />
+    <link href="css/index.css" rel="stylesheet" type="text/css" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>JS Bin</title>
+  </head>
+  <body>
+    <div class="layout">
+
+      <div class="nav">
+        <ul class="menu">
+          <li class="menu__item">
+            <a href="https://danpersa.gitbooks.io/beard/content/" target="_blank">{{documentation}}</a>
+          </li>
+          <li class="menu__item">
+            <a href="https://github.com/zalando/beard" target="_blank">{{fork me on github}}</a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="header">
+        <div class="logo">
+          <img class="logo__image" src="assets/beard.png" />
+        </div>
+      </div>
+
+      <div class="intro">
+        <h1>Beard Template Engine</h1>
+
+        <p>Blazing fast, open source, logic-less template engine written in Scala, used to parse templates using a simple syntax:</p>
+        <pre>
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;title&gt;{{ the.title }}&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    {{ the.content }}
+  &lt;/body&gt;
+&lt;/html&gt;
+        </pre>
+        <h3>
+          What makes Beard special:</h3>
+        <ul>
+          <li>simple syntax: inspired by mustache, we only use the `` markers for tags</li>
+          <li>streaming: as soon as we have something to be rendered, we are able to stream it to the browser. This gives high user perceived performance.</li>
+          <li>fast: have benchmarked it against other jvm template engines, and we strive to keep it on top. Check out our repository to run the benchmarks.</li>
+          <li>beautiful: only using brackets for delimiters keeps it beautiful</li>
+      </div>
+
+    </div>
+  </body>
+</html>
