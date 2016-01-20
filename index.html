@@ -2,6 +2,7 @@
 <html>
   <head>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/normalize/3.0.2/normalize.min.css" rel="stylesheet" type="text/css" />
+    <link href="css/prism.css" rel="stylesheet" type="text/css" />
     <link href="css/index.css" rel="stylesheet" type="text/css" />
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width">
@@ -31,7 +32,7 @@
         <h1>Beard Template Engine</h1>
 
         <p>Blazing fast, open source, logic-less template engine written in Scala, used to parse templates using a simple syntax:</p>
-        <pre>
+        <pre><code class="language-handlebars">
 &lt;html&gt;
   &lt;head&gt;
     &lt;title&gt;{{ the.title }}&lt;/title&gt;
@@ -40,7 +41,7 @@
     {{ the.content }}
   &lt;/body&gt;
 &lt;/html&gt;
-        </pre>
+        </code></pre>
         <h3>
           What makes Beard special:</h3>
         <ul>
@@ -51,5 +52,7 @@
       </div>
 
     </div>
+
+    <script src="js/prism.js"></script>
   </body>
 </html>
