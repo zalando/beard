@@ -66,7 +66,7 @@ class BeardTemplateRenderer(templateCompiler: TemplateCompiler) {
         case attrWitValue: AttributeWithValue => attrWitValue.key -> attrWitValue.value
       }.toMap
       renderInternal(templateCompiler.compile(TemplateName(template)).get, renderResult, localContext)
-    case ForStatement(templateIterator, collection, statements) => {
+    case ForStatement(templateIterator, templateIndex, collection, statements) => {
       val collectionOfContexts = ContextResolver.resolveCollection(collection, context)
 
       for {
@@ -75,6 +75,10 @@ class BeardTemplateRenderer(templateCompiler: TemplateCompiler) {
       } yield {
         val forIterationContext = ForIterationContext(globalContext = context,
           templateIteratorIdentifier = templateIterator.identifier,
+          templateIndexIdentifier = templateIndex match {
+            case Some(index) => Option(index.identifier)
+            case None => None
+          },
           collectionContext = currentIteratorContext,
           currentIndex = index, collectionOfContexts = collectionOfContexts)
 

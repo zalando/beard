@@ -107,7 +107,7 @@ locals [ForStatement result]
     ;
 
 forInterpolation
-    : LL FOR iter+=identifier IN coll+=compoundIdentifier RR
+    : LL FOR iter+=identifier (COMMA index+=identifier)? IN coll+=compoundIdentifier RR
     ;
 
 endForInterpolation

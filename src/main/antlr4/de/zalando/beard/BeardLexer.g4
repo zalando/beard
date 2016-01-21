@@ -18,6 +18,8 @@ mode INSIDE_INTERPOLATION;
 
     SLASH: '/';
 
+    COMMA : ',';
+
     EXTENDS : 'extends';
 
     YIELD : 'yield';
