@@ -151,7 +151,7 @@ class BeardTemplateRendererSpec extends FunSpec with Matchers {
       }
     }
 
-    describe("nested If Statements") {
+    describe("render a nested If Statements") {
       def context(cool: Boolean) =
         Map("user" -> Map("name" -> "Gigi", "isCool" -> cool))
 
@@ -265,6 +265,24 @@ class BeardTemplateRendererSpec extends FunSpec with Matchers {
           }
 
         renderResult.result.toString should be(expected)
+
+      }
+    }
+
+    describe("render with escaping strategies") {
+      val context = Map("section" -> "<script>alert('attacked')</script>")
+      val template = templateCompiler.compile(TemplateName("/templates/xss-safe.beard")).get
+
+      it("should render the raw text with Vanilla Escape Strategy") {
+        val renderResult = StringWriterRenderResult()
+        renderer.render(template, renderResult, context, escapeStrategy = EscapeStrategy.vanilla)
+        renderResult.result.toString should be("<div><script>alert('attacked')</script></div>")
+      }
+
+      it("should render the escaped text with the HTML Escape Strategy") {
+        val renderResult = StringWriterRenderResult()
+        renderer.render(template, renderResult, context, escapeStrategy = EscapeStrategy.html)
+        renderResult.result.toString should be(s"<div>&lt;script&gt;alert('attacked')&lt;/script&gt;</div>")
       }
     }
   }
