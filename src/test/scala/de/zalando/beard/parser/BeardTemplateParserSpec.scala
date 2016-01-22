@@ -475,8 +475,6 @@ class BeardTemplateParserSpec extends FunSpec with Matchers {
           NewLine(1),
           Text("</div>"),
           RenderStatement("/templates/_footer.beard", List()),
-          RenderStatement("/templates/_footer.beard", List()),
-          RenderStatement("/templates/_footer.beard", List()),
           NewLine(1),
           Text("</body>"),
           NewLine(1),
