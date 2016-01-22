@@ -237,8 +237,20 @@ class BeardTemplateParserSpec extends FunSpec with Matchers {
       BeardTemplateParser("<ul>{{for user in users}}<li>{{user.name}}</li>{{/for}}</ul>") should
         be(BeardTemplate(Seq(
           Text("<ul>"),
-          ForStatement(Identifier("user"), CompoundIdentifier("users"),
+          ForStatement(Identifier("user"), None, CompoundIdentifier("users"),
             Seq(Text("<li>"), IdInterpolation(CompoundIdentifier("user", Seq("name"))), Text("</li>"))
+          ),
+          Text("</ul>")
+        ))
+        )
+    }
+
+    it("should return a beard template containing a for statement with an index") {
+      BeardTemplateParser("<ul>{{for user, index in users}}<li>{{index}}-{{user.name}}</li>{{/for}}</ul>") should
+        be(BeardTemplate(Seq(
+          Text("<ul>"),
+          ForStatement(Identifier("user"), Some(Identifier("index")), CompoundIdentifier("users"),
+            Seq(Text("<li>"), IdInterpolation(CompoundIdentifier("index")), Text("-"), IdInterpolation(CompoundIdentifier("user", Seq("name"))), Text("</li>"))
           ),
           Text("</ul>")
         ))
@@ -249,11 +261,11 @@ class BeardTemplateParserSpec extends FunSpec with Matchers {
       BeardTemplateParser("<ul>{{for user in users}}<li>{{user.name}}{{for book in user.books}}{{book.name}}{{/for}}</li>{{/for}}</ul>") should
         be(BeardTemplate(Seq(
           Text("<ul>"),
-          ForStatement(Identifier("user"), CompoundIdentifier("users"),
+          ForStatement(Identifier("user"), None, CompoundIdentifier("users"),
             Seq(
               Text("<li>"),
               IdInterpolation(CompoundIdentifier("user", Seq("name"))),
-              ForStatement(Identifier("book"), CompoundIdentifier("user", Seq("books")), Seq(
+              ForStatement(Identifier("book"), None, CompoundIdentifier("user", Seq("books")), Seq(
                 IdInterpolation(CompoundIdentifier("book", Seq("name")))
               )),
               Text("</li>"))
@@ -382,7 +394,7 @@ class BeardTemplateParserSpec extends FunSpec with Matchers {
             Text("<div"),
             White(1),
             Text("class=\"users\">"),
-            ForStatement(Identifier("user"), CompoundIdentifier("users", List()), List(NewLine(1),
+            ForStatement(Identifier("user"), None, CompoundIdentifier("users", List()), List(NewLine(1),
               White(8),
               IdInterpolation(CompoundIdentifier("user", List("name"))),
               IfStatement(

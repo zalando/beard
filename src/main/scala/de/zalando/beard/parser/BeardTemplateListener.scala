@@ -71,7 +71,8 @@ class BeardTemplateListener extends BeardParserBaseListener {
 
   override def exitForStatement(ctx: ForStatementContext) = {
     val statements: Seq[Statement] = ctx.statement().map(st => st.result).toList
-    ctx.result = ForStatement(ctx.forInterpolation().iter.head.result, ctx.forInterpolation().coll.head.result, statements)
+    ctx.result = ForStatement(ctx.forInterpolation().iter.head.result, ctx.forInterpolation().index.headOption.map(_.result),
+      ctx.forInterpolation().coll.head.result, statements)
   }
 
   override def exitAttrInterpolation(ctx: AttrInterpolationContext) = {
