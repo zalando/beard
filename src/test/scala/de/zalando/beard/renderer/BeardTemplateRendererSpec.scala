@@ -46,6 +46,8 @@ class BeardTemplateRendererSpec extends FunSpec with Matchers {
     }
 
     describe("render a ForStatement") {
+      val context = Map("users" -> Seq(Map("name" -> "Gigi"), Map("name" -> "Gicu")))
+
       it("should render a template with a for statement") {
         val template = BeardTemplateParser {
           Source.fromInputStream(getClass.getResourceAsStream(s"/templates/for-statement.beard")).mkString
@@ -53,8 +55,19 @@ class BeardTemplateRendererSpec extends FunSpec with Matchers {
 
         val renderResult = StringWriterRenderResult()
 
-        renderer.render(template, renderResult, Map("users" -> Seq(Map("name" -> "Gigi"))))
-        renderResult.result.toString should be("<div>Hello</div>")
+        renderer.render(template, renderResult, context)
+        renderResult.result.toString should be("<div>HelloGigi</div><div>HelloGicu</div>")
+      }
+
+      it("should render a template with a for statement with an index") {
+        val template = BeardTemplateParser {
+          Source.fromInputStream(getClass.getResourceAsStream(s"/templates/for-index-statement.beard")).mkString
+        }
+
+        val renderResult = StringWriterRenderResult()
+
+        renderer.render(template, renderResult, context)
+        renderResult.result.toString should be("<div>0-HelloGigi</div><div>1-HelloGicu</div>")
       }
 
       it("should render a template with a complex for statement") {
@@ -63,7 +76,7 @@ class BeardTemplateRendererSpec extends FunSpec with Matchers {
         }
 
         val renderResult = StringWriterRenderResult()
-        renderer.render(template, renderResult, Map("users" -> Seq(Map("name" -> "Gigi"), Map("name" -> "Gicu"))))
+        renderer.render(template, renderResult, context)
         renderResult.result.toString should be("<div>Gigi</div><div>Gicu</div>")
       }
 
@@ -73,7 +86,7 @@ class BeardTemplateRendererSpec extends FunSpec with Matchers {
         }
 
         val renderResult = StringWriterRenderResult()
-        renderer.render(template, renderResult, Map("users" -> Seq(Map("name" -> "Gigi"), Map("name" -> "Gicu"))))
+        renderer.render(template, renderResult, context)
         renderResult.result.toString should be("<div>isFirst:true-isLast:false-Gigi-isOdd:false-isEven:true</div>" +
           "<div>isFirst:false-isLast:true-Gicu-isOdd:true-isEven:false</div>")
       }

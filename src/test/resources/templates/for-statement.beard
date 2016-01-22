@@ -1,1 +1,1 @@
-{{for user in users}}<div>Hello</div>{{/for}}
+{{for user in users}}<div>Hello {{user.name}}</div>{{/for}}
