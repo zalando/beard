@@ -1,0 +1,10 @@
+{{extends "/templates/block-statement.beard"}}
+{{contentFor header}}
+<nav class="top-navi">
+  <ul>
+    <li>First Link</li>
+    <li>Second Link</li>
+    <li>Third Link</li>
+  </ul>
+</nav>
+{{/contentFor}}
