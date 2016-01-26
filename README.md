@@ -1,12 +1,28 @@
-# The Beard Template Engine
+# Beard Template Engine
 
 [![Build Status](https://travis-ci.org/zalando/beard.svg)](https://travis-ci.org/zalando/beard)
 
-Blazing fast logicless template engine written in Scala used to parse simple templates like this:
+Blazing fast, [open source](https://github.com/zalando/beard), logic-less template engine written in Scala, used to parse templates using a simple syntax:
 
-    Hello {{person name='Dan' phone="123456576"}}
+```html
+<html>
+  <head>
+	<title>{{ the.title }}</title>
+  </head>
+  <body>
+	{{ the.content }}
+  </body>
+</html>
+```
 
-Uses ANTRL to compile the templates.
+What makes Beard special:
+
+  - simple syntax: inspired by mustache, we only use the `{` and `}` markers for tags
+  - streaming: as soon as we have something to be rendered, we are able to stream it to the browser. This gives high user perceived performance.
+  - fast: have benchmarked it against other jvm template engines, and we strive to keep it on top. Check out our [repository](https://github.com/zalando/beard) to run the benchmarks.
+  - beautiful: only using brackets for delimiters keeps it beautiful
+
+Uses ANTRL to compile the templates which makes the compilation really fast.
 
 More details in our [documentation](https://danpersa.gitbooks.io/beard/content/)
 
