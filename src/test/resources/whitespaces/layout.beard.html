@@ -1,0 +1,23 @@
+{{# the {{block head}}, {{yield}} and {{/block}}:
+      - if before the tag there is an EOL followed by 0 or more spaces (or beginning of the file followed by 0 or more spaces) and the tag is followed by EOL
+        - should render an EOL
+      - otherwise, should not match anything but itself (keep spaces and EOLs)
+
+    the same rules should apply to the comment blocks so in this case, the rendered file should only have one EOL at the beginning
+#}}
+
+<html>
+  <body>
+    <div class="head">
+      {{block head}}
+      main
+      {{/block}}
+    </div>
+    <div class="main">
+      {{yield}}
+    </div>
+    <div class="footer">
+      {{block footer}}footer{{/block}}
+    </div>
+  </body>
+</html>

@@ -1,0 +1,15 @@
+
+
+<html>
+  <body>
+    <div class="head">
+      <div>head</div>
+    </div>
+    <div class="main">
+      <div>main div</div>
+    </div>
+    <div class="footer">
+      footer
+    </div>
+  </body>
+</html>
