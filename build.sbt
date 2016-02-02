@@ -20,20 +20,22 @@ antlr4PackageName in Antlr4 := Some("de.zalando.beard")
 
 libraryDependencies ++= {
   Seq(
-    "org.antlr"                  % "antlr4"                               % "4.5"
-                                                                          exclude("org.antlr", "ST4")
-                                                                          exclude("org.antlr", "antlr-runtime"),
-    "org.scala-lang"             % "scala-reflect"                        % scalaVersion.value,
-    "org.scala-lang.modules"     % "scala-xml_2.11"                       % "1.0.4",
-    "org.monifu"                %% "monifu"                               % "1.0-RC3",
-    "org.scalatest"             %% "scalatest"                            % "3.0.0-M7"       % "test",
-    "org.scalamock"             %% "scalamock-scalatest-support"          % "3.2.2"          % "test",
-    "com.mitchellbosecke"        % "pebble"                               % "1.6.0"          % "test",
-    "org.freemarker"             % "freemarker"                           % "2.3.23"         % "test",
-    "com.github.spullara.mustache.java" % "compiler"                      % "0.9.1"          % "test",
-    "com.github.jknack"          % "handlebars"                           % "2.2.2"          % "test",
-    "de.neuland-bfi"             % "jade4j"                               % "0.4.0"          % "test",
-    "com.storm-enroute"         %% "scalameter"                           % "0.7"            % "test"
+    "org.antlr"                    % "antlr4"                               % "4.5"
+                                                                              exclude("org.antlr", "ST4")
+                                                                              exclude("org.antlr", "antlr-runtime"),
+    "org.scala-lang"               % "scala-reflect"                        % scalaVersion.value,
+    "org.scala-lang.modules"       % "scala-xml_2.11"                       % "1.0.4",
+    "org.monifu"                  %% "monifu"                               % "1.0-RC3",
+    "com.typesafe.scala-logging"  %% "scala-logging"                        % "3.1.0",
+    "ch.qos.logback"               % "logback-classic"                      % "1.0.13",
+    "org.scalatest"               %% "scalatest"                            % "3.0.0-M7"       % "test",
+    "org.scalamock"               %% "scalamock-scalatest-support"          % "3.2.2"          % "test",
+    "com.mitchellbosecke"          % "pebble"                               % "1.6.0"          % "test",
+    "org.freemarker"               % "freemarker"                           % "2.3.23"         % "test",
+    "com.github.spullara.mustache.java"   % "compiler"                      % "0.9.1"          % "test",
+    "com.github.jknack"            % "handlebars"                           % "2.2.2"          % "test",
+    "de.neuland-bfi"               % "jade4j"                               % "0.4.0"          % "test",
+    "com.storm-enroute"           %% "scalameter"                           % "0.7"            % "test"
   )
 }
 
