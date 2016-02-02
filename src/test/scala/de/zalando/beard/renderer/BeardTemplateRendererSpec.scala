@@ -1,7 +1,7 @@
 package de.zalando.beard.renderer
 
 import de.zalando.beard.parser.BeardTemplateParser
-import org.scalatest.{FunSpec, Matchers}
+import org.scalatest.{ FunSpec, Matchers }
 
 import scala.collection.immutable.Seq
 import scala.io.Source
@@ -46,6 +46,8 @@ class BeardTemplateRendererSpec extends FunSpec with Matchers {
     }
 
     describe("render a ForStatement") {
+      val context = Map("users" -> Seq(Map("name" -> "Gigi"), Map("name" -> "Gicu")))
+
       it("should render a template with a for statement") {
         val template = BeardTemplateParser {
           Source.fromInputStream(getClass.getResourceAsStream(s"/templates/for-statement.beard")).mkString
@@ -53,8 +55,19 @@ class BeardTemplateRendererSpec extends FunSpec with Matchers {
 
         val renderResult = StringWriterRenderResult()
 
-        renderer.render(template, renderResult, Map("users" -> Seq(Map("name" -> "Gigi"))))
-        renderResult.result.toString should be("<div>Hello</div>")
+        renderer.render(template, renderResult, context)
+        renderResult.result.toString should be("<div>HelloGigi</div><div>HelloGicu</div>")
+      }
+
+      it("should render a template with a for statement with an index") {
+        val template = BeardTemplateParser {
+          Source.fromInputStream(getClass.getResourceAsStream(s"/templates/for-index-statement.beard")).mkString
+        }
+
+        val renderResult = StringWriterRenderResult()
+
+        renderer.render(template, renderResult, context)
+        renderResult.result.toString should be("<div>0-HelloGigi</div><div>1-HelloGicu</div>")
       }
 
       it("should render a template with a complex for statement") {
@@ -63,7 +76,7 @@ class BeardTemplateRendererSpec extends FunSpec with Matchers {
         }
 
         val renderResult = StringWriterRenderResult()
-        renderer.render(template, renderResult, Map("users" -> Seq(Map("name" -> "Gigi"), Map("name" -> "Gicu"))))
+        renderer.render(template, renderResult, context)
         renderResult.result.toString should be("<div>Gigi</div><div>Gicu</div>")
       }
 
@@ -73,7 +86,7 @@ class BeardTemplateRendererSpec extends FunSpec with Matchers {
         }
 
         val renderResult = StringWriterRenderResult()
-        renderer.render(template, renderResult, Map("users" -> Seq(Map("name" -> "Gigi"), Map("name" -> "Gicu"))))
+        renderer.render(template, renderResult, context)
         renderResult.result.toString should be("<div>isFirst:true-isLast:false-Gigi-isOdd:false-isEven:true</div>" +
           "<div>isFirst:false-isLast:true-Gicu-isOdd:true-isEven:false</div>")
       }
@@ -138,7 +151,7 @@ class BeardTemplateRendererSpec extends FunSpec with Matchers {
       }
     }
 
-    describe("nested If Statements") {
+    describe("render a nested If Statements") {
       def context(cool: Boolean) =
         Map("user" -> Map("name" -> "Gigi", "isCool" -> cool))
 
@@ -197,27 +210,80 @@ class BeardTemplateRendererSpec extends FunSpec with Matchers {
 
     it("should render a template with a render statement") {
 
+      val expected = Source.fromInputStream(getClass.getResourceAsStream(s"/templates/layout-with-partial.rendered")).mkString
+
+      val renderResult = StringWriterRenderResult()
       val r = templateCompiler.compile(TemplateName("/templates/layout-with-partial.beard"))
         .map { template =>
-        val renderResult = StringWriterRenderResult()
-        renderer.render(template, renderResult, Map("example" -> Map("title" -> "Title", "presentations" ->
-          Seq(Map("title" -> "Title1", "speakerName" -> "Name1", "summary" -> "Summary1"),
-            Map("title" -> "Title2", "speakerName" -> "Name2", "summary" -> "Summary2")))))
-        renderResult.result.toString should not be ""
-      }
+          renderer.render(template, renderResult, Map("example" -> Map("title" -> "Title", "presentations" ->
+            Seq(Map("title" -> "Title1", "speakerName" -> "Name1", "summary" -> "Summary1"),
+              Map("title" -> "Title2", "speakerName" -> "Name2", "summary" -> "Summary2")))))
+        }
+      renderResult.result.toString should be(expected)
     }
 
     it("should render a template with an export statement") {
       pending
     }
 
-    it("should render a template with a block statement") {
-      pending
+    it("should render a block statement") {
+      val expected = Source.fromInputStream(getClass.getResourceAsStream(s"/templates/block-statement.rendered")).mkString
+      val renderResult = StringWriterRenderResult()
+
+      val r = templateCompiler.compile(TemplateName("/templates/block-statement.beard"))
+        .map { template =>
+          renderer.render(template, renderResult, Map())
+        }
+
+      renderResult.result.toString should be(expected)
     }
 
-    it("should render a template with a contentFor statement") {
-      pending
+    describe("render contents of contentFor statement replacing a block statement") {
+
+      it("should render a list replacing contents from inherited template") {
+        val expected = Source.fromInputStream(getClass.getResourceAsStream(s"/templates/contentFor-statement.rendered")).mkString
+        val renderResult = StringWriterRenderResult()
+
+        val r = templateCompiler.compile(TemplateName("/templates/contentFor-statement.beard"))
+          .map { template =>
+            renderer.render(template, renderResult, Map())
+          }
+
+        renderResult.result.toString should be(expected)
+      }
     }
 
+    describe("render contents under yield when inheriting") {
+
+      it("should render template contents after block statement") {
+        val expected = Source.fromInputStream(getClass.getResourceAsStream(s"/templates/yield-statement.rendered")).mkString
+        val renderResult = StringWriterRenderResult()
+
+        val r = templateCompiler.compile(TemplateName("/templates/yield-statement.beard"))
+          .map { template =>
+            renderer.render(template, renderResult, Map())
+          }
+
+        renderResult.result.toString should be(expected)
+
+      }
+    }
+
+    describe("render with escaping strategies") {
+      val context = Map("section" -> "<script>alert('attacked')</script>")
+      val template = templateCompiler.compile(TemplateName("/templates/xss-safe.beard")).get
+
+      it("should render the raw text with Vanilla Escape Strategy") {
+        val renderResult = StringWriterRenderResult()
+        renderer.render(template, renderResult, context, escapeStrategy = EscapeStrategy.vanilla)
+        renderResult.result.toString should be("<div><script>alert('attacked')</script></div>")
+      }
+
+      it("should render the escaped text with the HTML Escape Strategy") {
+        val renderResult = StringWriterRenderResult()
+        renderer.render(template, renderResult, context, escapeStrategy = EscapeStrategy.html)
+        renderResult.result.toString should be(s"<div>&lt;script&gt;alert('attacked')&lt;/script&gt;</div>")
+      }
+    }
   }
 }
