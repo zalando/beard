@@ -11,5 +11,5 @@
 
     <logger name="Timing" level="info"/>
 
-    <logger name="de.zalando" level="debug"/>
+    <logger name="de.zalando" level="info"/>
 </configuration>

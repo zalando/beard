@@ -1,7 +1,5 @@
 package de.zalando.beard.renderer
 
-import java.io.File
-
 import com.typesafe.scalalogging.LazyLogging
 import org.scalatest.{FunSpec, Matchers}
 
@@ -18,11 +16,11 @@ class WhitespacesSpec extends FunSpec with Matchers with LazyLogging {
   )
 
   val templateCompiler = new CustomizableTemplateCompiler(templateLoader = loader)
-  val renderer = new BeardTemplateRenderer(templateCompiler)
+  val renderer = new BeardTemplateRenderer (templateCompiler)
 
   val example1 = templateCompiler.compile(TemplateName("example1")).get
+  val code = templateCompiler.compile(TemplateName("code")).get
   val forExample = templateCompiler.compile(TemplateName("for-example")).get
-  val simpleFor = templateCompiler.compile(TemplateName("simple-for")).get
   val layout = templateCompiler.compile(TemplateName("layout")).get
 
   describe("layout") {
@@ -32,9 +30,8 @@ class WhitespacesSpec extends FunSpec with Matchers with LazyLogging {
 
       val expected = Source.fromInputStream(getClass.getResourceAsStream(s"/whitespaces/layout.rendered")).mkString
 
-      logger.info("Result: ")
-      logger.info(result.toString)
-
+      logger.trace("Result: ")
+      logger.trace(result.toString)
 
       result.toString should be(expected)
     }
@@ -47,8 +44,8 @@ class WhitespacesSpec extends FunSpec with Matchers with LazyLogging {
 
       val expected = Source.fromInputStream(getClass.getResourceAsStream(s"/whitespaces/example1.rendered")).mkString
 
-      logger.info("Result: ")
-      logger.info(result.toString)
+      logger.trace("Result: ")
+      logger.trace(result.toString)
 
       result.toString should be(expected)
     }
@@ -61,22 +58,24 @@ class WhitespacesSpec extends FunSpec with Matchers with LazyLogging {
 
       val expected = Source.fromInputStream(getClass.getResourceAsStream(s"/whitespaces/for-example.rendered")).mkString
 
-      logger.info("Result: ")
-      logger.info(result.toString)
+      logger.trace("Result: ")
+      logger.trace(result.toString)
 
       result.toString should be(expected)
     }
   }
 
-  describe("simple-for") {
+  describe("code") {
 
     it("should render the correct file") {
-      val result = renderer.render(simpleFor, StringWriterRenderResult(), Map("users" -> Seq(Map("name" -> "Gigi"), Map("name" -> "Gicu"))))
+      val result = renderer.render(code, StringWriterRenderResult(), Map("imports" -> Seq(
+        Map("name" -> "scala.collection.immutable.Map"),
+        Map("name" -> "de.zalando.play.controllers.ArrayWrapper"))))
 
-      val expected = Source.fromInputStream(getClass.getResourceAsStream(s"/whitespaces/simple-for.rendered")).mkString
+      val expected = Source.fromInputStream(getClass.getResourceAsStream(s"/whitespaces/code.rendered")).mkString
 
-      logger.info("Result: ")
-      logger.info(result.toString)
+      logger.trace("Result: ")
+      logger.trace(result.toString)
 
       result.toString should be(expected)
     }

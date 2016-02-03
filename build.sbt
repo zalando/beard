@@ -6,6 +6,8 @@ licenses      += ("Apache-2.0", url("http://www.apache.org/licenses/"))
 scalaVersion := "2.11.7"
 scalacOptions := Seq("-unchecked", "-feature", "-deprecation", "-encoding", "utf8")
 
+val antlrVersion = "4.5.2"
+
 crossScalaVersions := Seq(scalaVersion.value, "2.10.5")
 
 antlr4Settings
@@ -14,13 +16,13 @@ antlr4GenListener in Antlr4 := true
 
 antlr4GenVisitor in Antlr4 := true
 
-antlr4Dependency in Antlr4 := "org.antlr" % "antlr4" % "4.5"
+antlr4Dependency in Antlr4 := "org.antlr" % "antlr4" % antlrVersion
 
 antlr4PackageName in Antlr4 := Some("de.zalando.beard")
 
 libraryDependencies ++= {
   Seq(
-    "org.antlr"                    % "antlr4"                               % "4.5"
+    "org.antlr"                    % "antlr4"                               % antlrVersion
                                                                               exclude("org.antlr", "ST4")
                                                                               exclude("org.antlr", "antlr-runtime"),
     "org.scala-lang"               % "scala-reflect"                        % scalaVersion.value,
