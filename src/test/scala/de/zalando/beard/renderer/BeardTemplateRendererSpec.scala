@@ -1,5 +1,6 @@
 package de.zalando.beard.renderer
 
+import com.typesafe.scalalogging.LazyLogging
 import de.zalando.beard.parser.BeardTemplateParser
 import org.scalatest.{ FunSpec, Matchers }
 
@@ -9,7 +10,7 @@ import scala.io.Source
 /**
  * @author dpersa
  */
-class BeardTemplateRendererSpec extends FunSpec with Matchers {
+class BeardTemplateRendererSpec extends FunSpec with Matchers with LazyLogging {
 
   val templateCompiler = DefaultTemplateCompiler
   val renderer = new BeardTemplateRenderer(templateCompiler)
@@ -213,12 +214,16 @@ class BeardTemplateRendererSpec extends FunSpec with Matchers {
       val expected = Source.fromInputStream(getClass.getResourceAsStream(s"/templates/layout-with-partial.rendered")).mkString
 
       val renderResult = StringWriterRenderResult()
-      val r = templateCompiler.compile(TemplateName("/templates/layout-with-partial.beard"))
+      templateCompiler.compile(TemplateName("/templates/layout-with-partial.beard"))
         .map { template =>
           renderer.render(template, renderResult, Map("example" -> Map("title" -> "Title", "presentations" ->
             Seq(Map("title" -> "Title1", "speakerName" -> "Name1", "summary" -> "Summary1"),
               Map("title" -> "Title2", "speakerName" -> "Name2", "summary" -> "Summary2")))))
         }
+
+      logger.trace("Result")
+      logger.trace(renderResult.result.toString)
+
       renderResult.result.toString should be(expected)
     }
 

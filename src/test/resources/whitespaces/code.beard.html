@@ -1,0 +1,7 @@
+import Arbitrary._
+
+{{for import in imports}}
+import {{import.name}}
+{{/for}}
+
+object Generators {
