@@ -59,16 +59,23 @@ class BeardTemplateListener extends BeardParserBaseListener {
     ctx.result = ContentForStatement(ctx.contentForInterpolation().identifier().result, ctx.statement().flatMap(_.result).toList)
 
   override def exitIfOnlyStatement(ctx: IfOnlyStatementContext) = {
+    val startingSpaceStatements = ctx.startingSpace.toList.map(_.result)
+    val ifSpaceStatements = ctx.ifSpace.toList.map(_.result)
+
     val condition = ctx.ifInterpolation().compoundIdentifier().result
     val statements: Seq[Statement] = ctx.statement().flatMap(st => st.result).toList
-    ctx.result = IfStatement(condition, statements)
+    ctx.result = startingSpaceStatements ++ Seq(IfStatement(condition, statements ++ ifSpaceStatements))
   }
 
   override def exitIfElseStatement(ctx: IfElseStatementContext) = {
+    val startingSpeceStatements = ctx.startingSpace.toList.map(_.result)
+    val ifSpaceStatements = ctx.ifSpace.toList.map(_.result)
+    val elseSpaceStatements = ctx.elseSpace.toList.map(_.result)
+
     val condition = ctx.ifInterpolation().compoundIdentifier().result
     val ifStatements = ctx.ifStatements.flatMap(st => st.result).toList
     val elseStatements = ctx.elseStatements.flatMap(st => st.result).toList
-    ctx.result = IfStatement(condition, ifStatements, elseStatements)
+    ctx.result = startingSpeceStatements ++ Seq(IfStatement(condition, ifStatements ++ ifSpaceStatements, elseStatements ++ elseSpaceStatements))
   }
 
   override def exitForStatement(ctx: ForStatementContext) = {
@@ -99,7 +106,7 @@ class BeardTemplateListener extends BeardParserBaseListener {
     val statements: List[Statement] = List(
       Option(ctx.structuredStatement()).toSeq.flatMap { structuredStatement =>
         Option(structuredStatement.yieldStatement()).toSeq.map(_.result) ++
-          Option(structuredStatement.ifStatement()).toSeq.map(_.result) ++
+          Option(structuredStatement.ifStatement()).toSeq.flatMap(_.result) ++
           Option(structuredStatement.forStatement()).toSeq.flatMap(_.result) ++
           Option(structuredStatement.renderStatement()).toSeq.map(_.result) ++
           Option(structuredStatement.blockStatement()).toSeq.map(_.result)
