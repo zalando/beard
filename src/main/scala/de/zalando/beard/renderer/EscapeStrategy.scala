@@ -1,9 +1,7 @@
 package de.zalando.beard.renderer
 
-import xml.Utility
-
 /**
-  * @autor cesarla
+  * @author cesarla
   */
 trait EscapeStrategy {
 
