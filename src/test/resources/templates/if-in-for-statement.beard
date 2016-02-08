@@ -2,5 +2,6 @@
 {{if user.isOdd}}
 {{user.name}} is odd
 {{else}}
-{{user.name}} is not odd{{/if}}
+{{user.name}} is not odd
+{{/if}}
 {{/for}}

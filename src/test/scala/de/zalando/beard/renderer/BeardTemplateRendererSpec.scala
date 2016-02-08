@@ -148,7 +148,7 @@ class BeardTemplateRendererSpec extends FunSpec with Matchers with LazyLogging {
       it("should render the template") {
         val renderResult = StringWriterRenderResult()
         renderer.render(template, renderResult, context(true))
-        renderResult.result.toString should be("\nGigi is not odd\nGicu is odd\n")
+        renderResult.result.toString should be("\nGigi is not odd\n\nGicu is odd\n")
       }
     }
 
@@ -161,10 +161,11 @@ class BeardTemplateRendererSpec extends FunSpec with Matchers with LazyLogging {
       it("should render the template") {
         val renderResult = StringWriterRenderResult()
         renderer.render(template, renderResult, context(true))
+        logger.info(renderResult.result.toString)
         renderResult.result.toString should be("""some
                                                  |  Gigi is cool
                                                  |    Gigi is still cool
-                                                 |    some1
+                                                 |  some1
                                                  |some4""".stripMargin)
       }
     }

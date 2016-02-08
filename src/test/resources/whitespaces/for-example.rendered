@@ -20,21 +20,21 @@
   <div>Gicu</div>
 </div>
 
-<div class="fi">
+<div class="fifth">
   <div>Gigi</div>
 
   <div>Gicu</div>
 
 </div>
 
-<div class="third">
+<div class="sixth">
 
   <div>Gigi</div>
 
   <div>Gicu</div>
 </div>
 
-<div class="fourth">
+<div class="seventh">
 
   <div>Gigi</div>
 
@@ -42,3 +42,6 @@
   <div>Gicu</div>
 
 </div>
+
+<div>Hello Gigi</div>
+<div>Hello Gicu</div>
