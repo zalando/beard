@@ -1,15 +1,14 @@
 package de.zalando.beard.renderer
 
-import com.typesafe.scalalogging.LazyLogging
-import de.zalando.beard.ast.BeardTemplate
 import org.scalatest.{FunSpec, Matchers}
-
-import scala.io.Source
+import org.slf4j.LoggerFactory
 
 /**
   * @author dpersa
   */
-class WhitespacesSpec extends FunSpec with Matchers with LazyLogging {
+class WhitespacesSpec extends FunSpec with Matchers {
+
+  val logger = LoggerFactory.getLogger(this.getClass)
 
   val loader = new ClasspathTemplateLoader(
     templatePrefix = "/whitespaces/",

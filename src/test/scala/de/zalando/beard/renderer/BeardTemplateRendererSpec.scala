@@ -1,8 +1,8 @@
 package de.zalando.beard.renderer
 
-import com.typesafe.scalalogging.LazyLogging
 import de.zalando.beard.parser.BeardTemplateParser
 import org.scalatest.{ FunSpec, Matchers }
+import org.slf4j.LoggerFactory
 
 import scala.collection.immutable.Seq
 import scala.io.Source
@@ -10,7 +10,9 @@ import scala.io.Source
 /**
  * @author dpersa
  */
-class BeardTemplateRendererSpec extends FunSpec with Matchers with LazyLogging {
+class BeardTemplateRendererSpec extends FunSpec with Matchers {
+
+  val logger = LoggerFactory.getLogger(this.getClass)
 
   val templateCompiler = DefaultTemplateCompiler
   val renderer = new BeardTemplateRenderer(templateCompiler)

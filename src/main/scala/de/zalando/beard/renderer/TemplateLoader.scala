@@ -2,7 +2,6 @@ package de.zalando.beard.renderer
 
 import java.io.File
 
-import com.typesafe.scalalogging.LazyLogging
 import org.slf4j.LoggerFactory
 
 import scala.io.Source
@@ -16,7 +15,9 @@ trait TemplateLoader {
 }
 
 class ClasspathTemplateLoader(val templatePrefix: String = "",
-                              val templateSuffix: String = "") extends TemplateLoader with LazyLogging {
+                              val templateSuffix: String = "") extends TemplateLoader {
+  
+  private val logger = LoggerFactory.getLogger(this.getClass)
 
   override def load(templateName: TemplateName) = {
 
