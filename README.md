@@ -2,12 +2,12 @@
 
 [![Build Status](https://travis-ci.org/zalando/beard.svg)](https://travis-ci.org/zalando/beard)
 
-Beard is an open-source, logic-less templating engine, written in Scala and inspired by [Mustache](https://mustache.github.io/). You can use it out-of-the-box; it has no dependencies (see Requirements list below). 
+Beard is an open-source, logic-less templating engine, written in Scala and inspired by [Mustache](https://mustache.github.io/). You can use it out-of-the-box; (see Requirements list below). 
 
 What makes Beard powerful:
 
   - Streaming. As soon as you need to render something, you can stream it to the browser. This provides high user-perceived performance.
-  - Speed. We've benchmarked it against other template engines for the JVM, and Beard performed twice as fast in terms of rendering time. (We invite you to run your own benchmarks to see if you get the same results.) It also uses ANTRL to make template compilation fast.
+  - Speed. We've benchmarked it against other template engines for the JVM, and Beard performed faster in terms of rendering time. (We invite you to run your own benchmarks to see if you get the same results.) It also uses ANTRL to make template compilation fast.
   - It offers template inheritance
   - Its simple, beautiful syntax. A la Mustache, it uses only the `{` and `}` markers for tags and delimiters.
   
@@ -33,8 +33,9 @@ If you're using SBT, add this line to your build.sbt file:
 
     libraryDependencies += "de.zalando" %% "beard" % "0.0.6"
 
-Binaries are available from [bintray](https://bintray.com/zalando-spearheads/java/beard/0.0.2/view). Or simply
-add `resolvers += Resolver.bintrayRepo("zalando-spearheads", "java")` to your `build.sbt`.
+    resolvers ++= Seq(
+      "zalando-maven" at "https://dl.bintray.com/zalando/maven"
+    )
 
 If you're using Maven, run this:
 
@@ -43,12 +44,6 @@ If you're using Maven, run this:
     	<artifactId>beard</artifactId>
     	<version>0.0.6</version>
     </dependency>
-
-Or simply add:
-
-    resolvers ++= Seq(
-    "zalando-maven" at "https://dl.bintray.com/zalando/maven"
-    	)
  
 Binaries are available from [bintray](https://bintray.com/zalando/maven/beard/0.0.6/view).
    
