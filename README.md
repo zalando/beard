@@ -2,14 +2,14 @@
 
 [![Build Status](https://travis-ci.org/zalando/beard.svg)](https://travis-ci.org/zalando/beard)
 
-Beard is an open-source, logic-less templating engine, written in Scala and inspired by [Mustache](https://mustache.github.io/). You can use it out-of-the-box; (see Requirements list below). 
+Beard is an open-source, logic-less templating engine, written in Scala and inspired by [Mustache](https://mustache.github.io/). You can use it out-of-the-box; see the Requirements list below. 
 
 What makes Beard powerful:
 
-  - Streaming. As soon as you need to render something, you can stream it to the browser. This provides high user-perceived performance.
-  - Speed. We've benchmarked it against other template engines for the JVM, and Beard performed faster in terms of rendering time. (We invite you to run your own benchmarks to see if you get the same results.) It also uses ANTRL to make template compilation fast.
-  - It offers template inheritance
-  - Its simple, beautiful syntax. A la Mustache, it uses only the `{` and `}` markers for tags and delimiters.
+  - **Streaming**. As soon as you need to render something, you can stream it to the browser. This provides high user-perceived performance.
+  - **Speed**. We've benchmarked it against other template engines for the JVM, and Beard performed much faster in terms of rendering time. (We invite you to run your own benchmarks to see if you get the same results.) It also uses [ANTRL](http://www.antlr.org/) to make template compilation fast.
+  - It offers **template inheritance**.
+  - Its **simple, beautiful syntax**. A la Mustache, it uses only the `{` and `}` markers for tags and delimiters.
   
 Here's a code snippet to show you how simply Beard can parse templates:
 
@@ -29,7 +29,7 @@ Here's a code snippet to show you how simply Beard can parse templates:
 - a package manager like sbt or Maven
 
 ## Installing
-If you're using SBT, add this line to your build.sbt file:
+If you're using sbt, add this line to your build.sbt file:
 
     libraryDependencies += "de.zalando" %% "beard" % "0.0.6"
 
@@ -53,7 +53,7 @@ To login to bintray:
 
     sbt bintrayChangeCredentials
 
-Then, for cross publish:
+Then, for cross-publish:
 
     sbt +publish
 
@@ -69,6 +69,6 @@ You can contribute to this documentation [here](https://github.com/danpersa/bear
 
 ##Contributing/TODO List
 We gladly welcome contributions—just submit a pull request with a short note summarizing briefly (1-2 sentences) what you've done. If you'd like to make a substantial contribution to Beard, we could use your help with these items:
-- adding filters: ind handlebars, angular, twig, etc.
-- providing more meaningful Error messages
-- XSS prevention [see related issue](https://github.com/zalando/beard/issues/11)
+- adding filters: ind Handlebars, Angular, Twig, etc.
+- providing more meaningful error messages
+- XSS prevention; [see related issue](https://github.com/zalando/beard/issues/11)
