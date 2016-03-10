@@ -13,26 +13,6 @@ class BeardTemplateParserSpec extends FunSpec with Matchers {
     }
   }
 
-  describe("when parsing a string in brackets") {
-    it("should return a BeardTemplate of an interpolation") {
-      BeardTemplateParser("{{hello}}") should be(BeardTemplate(Seq(IdInterpolation(CompoundIdentifier("hello")))))
-    }
-  }
-
-  describe("when parsing a template with curly brackets") {
-    it("should return a BeardTemplate of an interpolation") {
-      val expected = BeardTemplate(Seq(Text("{"), White(1), IdInterpolation(CompoundIdentifier("hello")), White(1), Text("}")))
-      BeardTemplateParser("{ {{hello}} }") shouldBe expected
-    }
-  }
-
-  describe("when parsing a string with dots in brackets") {
-    it("should return a BeardTemplate of an interpolation") {
-      BeardTemplateParser("{{hello.world}}") should
-        be(BeardTemplate(Seq(IdInterpolation(CompoundIdentifier("hello", Seq("world"))))))
-    }
-  }
-
   describe("when parsing a simple string") {
     it("should return a BeardTemplate of a text") {
       BeardTemplateParser("hello") should be(BeardTemplate(Seq(Text("hello"))))
@@ -78,6 +58,40 @@ class BeardTemplateParserSpec extends FunSpec with Matchers {
   describe("when parsing a string the contains UTF-8 chars") {
     it("should return a BeardTemplate containing a text with those UTF-8 chars") {
       BeardTemplateParser("å∂ßå∑œ´˚∆˙ø¨…˚¬∆˜≥≤µøˆ") should be(BeardTemplate(Seq(Text("å∂ßå∑œ´˚∆˙ø¨…˚¬∆˜≥≤µøˆ"))))
+    }
+  }
+
+  describe("id interpolation") {
+    describe("when parsing a string in brackets") {
+      it("should return a BeardTemplate of an interpolation") {
+        BeardTemplateParser("{{hello}}") should be(BeardTemplate(Seq(IdInterpolation(CompoundIdentifier("hello")))))
+      }
+    }
+
+    describe("when parsing a template with curly brackets") {
+      it("should return a BeardTemplate of an interpolation") {
+        val expected = BeardTemplate(Seq(Text("{"), White(1), IdInterpolation(CompoundIdentifier("hello")), White(1), Text("}")))
+        BeardTemplateParser("{ {{hello}} }") shouldBe expected
+      }
+    }
+
+    describe("when parsing a string with dots in brackets") {
+      it("should return a BeardTemplate of an interpolation") {
+        BeardTemplateParser("{{hello.world}}") should
+          be(BeardTemplate(Seq(IdInterpolation(CompoundIdentifier("hello", Seq("world"))))))
+      }
+    }
+
+    describe("when parsing an identifier with filters") {
+      it("should return a BeardTemplate of an interpolation") {
+        BeardTemplateParser("{{hello.world | currency symbol='EUR' | lowercase}}") should
+          be(BeardTemplate(Seq(IdInterpolation(
+            CompoundIdentifier("hello", Seq("world")),
+            filters = Seq(
+              FilterNode(Identifier("currency"), parameters = Seq(AttributeWithValue("symbol", "EUR"))),
+              FilterNode(Identifier("lowercase")))
+          ))))
+      }
     }
   }
 

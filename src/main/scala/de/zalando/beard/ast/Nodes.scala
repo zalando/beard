@@ -11,7 +11,9 @@ case class AttrInterpolation(identifier: Identifier, attributes: Seq[Attribute] 
   def attributeMap = attributes.map(attr => attr.key -> attr.stringValue).toMap
 }
 
-case class IdInterpolation(identifier: CompoundIdentifier) extends Interpolation
+case class IdInterpolation(identifier: CompoundIdentifier,
+                           filters: Seq[FilterNode] = Seq.empty) 
+     extends Interpolation
 
 case class YieldStatement() extends Statement
 
@@ -27,6 +29,8 @@ case class IfStatement(condition: CompoundIdentifier, ifStatements: Seq[Statemen
 
 case class ForStatement(iterator: Identifier, index: Option[Identifier], collection: CompoundIdentifier,
                         statements: Seq[Statement] = Seq.empty, addNewLine: Boolean = false) extends Statement
+
+case class FilterNode(identifier: Identifier, parameters: Seq[Attribute] = Seq.empty)
 
 sealed trait Attribute {
   def key: String

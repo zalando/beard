@@ -125,10 +125,17 @@ locals [Interpolation result]
     | attrInterpolation
     ;
 
-// {{address.street.number}}
+// {{address.street.number | lowercase}}
 idInterpolation
 locals [IdInterpolation result]
-    : LL compoundIdentifier RR
+    : LL compoundIdentifier filter* RR
+    ;
+
+// | currency symbol=the.symbol.from.model fractionSize="2"
+// | number format="0.0"
+filter
+locals [FilterNode result]
+    : BAR identifier attribute*
     ;
 
 // {{address street="Ferdinand" number="1" name=the.name}}

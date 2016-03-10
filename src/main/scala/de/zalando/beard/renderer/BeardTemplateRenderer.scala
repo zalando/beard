@@ -1,13 +1,16 @@
 package de.zalando.beard.renderer
 
 import de.zalando.beard.ast._
+import de.zalando.beard.filter.{FilterNotFound, FilterResolver, DefaultFilterResolver}
 
 import scala.annotation.tailrec
+import scala.collection.immutable.Seq
 
 /**
   * @author dpersa
   */
-class BeardTemplateRenderer(templateCompiler: TemplateCompiler) {
+class BeardTemplateRenderer(templateCompiler: TemplateCompiler,
+                            filterResolver: FilterResolver = DefaultFilterResolver()) {
 
   def render[T](template: BeardTemplate,
                 result: RenderResult[T],
@@ -54,12 +57,13 @@ class BeardTemplateRenderer(templateCompiler: TemplateCompiler) {
                                  escapeStrategy: EscapeStrategy): Unit = statement match {
 
     case Text(text) => onNext(renderResult, text)
-    case IdInterpolation(identifier) => {
-      val id = ContextResolver.resolve(identifier, context) match {
+    case IdInterpolation(identifier, filters) => {
+      val identifierValue = ContextResolver.resolve(identifier, context) match {
         case Some(value) => stringRepresentation(value, escapeStrategy)
         case _ => throw new IllegalStateException(s"The identifier ${identifier} was not resolved")
       }
-      onNext(renderResult, id)
+      val filteredIdentifierValue = filter(identifierValue, filters)
+      onNext(renderResult, filteredIdentifierValue)
     }
     case RenderStatement(template, localValues) =>
       val localContext = localValues.map {
@@ -113,5 +117,23 @@ class BeardTemplateRenderer(templateCompiler: TemplateCompiler) {
         renderStatement(statement, context, renderResult, yieldedStatement, escapeStrategy)
       }
     case _ => ()
+  }
+
+  private[this] def filter[T](identifierValue: String, filters: Seq[FilterNode], context: Map[String, Any]): String = {
+    filters.foldLeft(identifierValue) { 
+      case (prevValue, filterNode) => {
+        val filterIdentifier = filterNode.identifier.identifier
+        val filter = DefaultFilterResolver().resolve(filterIdentifier, Set.empty) match {
+          case Some(filter) => filter
+          case None => throw FilterNotFound(filterIdentifier)
+        }
+        val parameters = filterNode.parameters.map { 
+          case attr: AttributeWithIdentifier => (attr.key, ContextResolver.resolve(attr.id, context))
+          case attr: AttributeWithValue => (attr.key, attr.value)
+        }.toMap
+        filter.apply(identifierValue, parameters)
+        identifierValue
+      }
+    }
   }
 }

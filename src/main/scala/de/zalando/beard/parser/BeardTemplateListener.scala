@@ -1,5 +1,6 @@
 package de.zalando.beard.parser
 
+import com.sun.scenario.effect.FilterContext
 import de.zalando.beard.BeardParser._
 import de.zalando.beard.BeardParserBaseListener
 import de.zalando.beard.ast._
@@ -28,6 +29,11 @@ class BeardTemplateListener extends BeardParserBaseListener {
     val identifiers = ctx.IDENTIFIER().map(id => id.getText).toList
 
     ctx.result = CompoundIdentifier(identifiers.head, identifiers.tail)
+  }
+
+  override def exitFilter(ctx: FilterContext) = {
+    val parameters = ctx.attribute().toList.map(_.result)
+    ctx.result = FilterNode(ctx.identifier().result, parameters)
   }
 
   override def exitAttrValue(ctx: AttrValueContext) = ctx.result = ctx.ATTR_TEXT().getText
@@ -95,8 +101,10 @@ class BeardTemplateListener extends BeardParserBaseListener {
       AttrInterpolation(ctx.identifier().result, attributes)
   }
 
-  override def exitIdInterpolation(ctx: IdInterpolationContext) =
-    ctx.result = IdInterpolation(ctx.compoundIdentifier().result)
+  override def exitIdInterpolation(ctx: IdInterpolationContext) = {
+    val filters = ctx.filter().toList.map(_.result)
+    ctx.result = IdInterpolation(ctx.compoundIdentifier().result, filters)
+  }
 
   override def exitInterpolation(ctx: InterpolationContext) = {
     ctx.result = List(Option(ctx.attrInterpolation()).toSeq.map(_.result), Option(ctx.idInterpolation()).toSeq.map(_.result)).flatten.head
