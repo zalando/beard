@@ -62,7 +62,7 @@ class BeardTemplateRenderer(templateCompiler: TemplateCompiler,
         case Some(value) => stringRepresentation(value, escapeStrategy)
         case _ => throw new IllegalStateException(s"The identifier ${identifier} was not resolved")
       }
-      val filteredIdentifierValue = filter(identifierValue, filters)
+      val filteredIdentifierValue = filter(identifierValue, filters, context)
       onNext(renderResult, filteredIdentifierValue)
     }
     case RenderStatement(template, localValues) =>
