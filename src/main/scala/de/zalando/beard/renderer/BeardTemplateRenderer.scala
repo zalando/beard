@@ -132,7 +132,6 @@ class BeardTemplateRenderer(templateCompiler: TemplateCompiler,
           case attr: AttributeWithValue => (attr.key, attr.value)
         }.toMap
         filter.apply(identifierValue, parameters)
-        identifierValue
       }
     }
   }
