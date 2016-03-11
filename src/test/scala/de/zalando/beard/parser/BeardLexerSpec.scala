@@ -10,7 +10,7 @@ class BeardLexerSpec extends FunSpec with Matchers {
 
   describe("BeardLexer") {
     it("should parse the correct tokens") {
-      val stream = new ANTLRInputStream("more {{   hello   \n name='  He   llo  '}} { world   | }")
+      val stream = new ANTLRInputStream("more {{   hello   \n name='  He   llo  '}} { world   } {{ val | filter }}")
       val lexer = new BeardLexer(stream)
       val tokens = lexer.getAllTokens.map(token => (token.getText, lexer.getTokenNames.toList(token.getType))).toList
       val expected = List(
@@ -31,9 +31,13 @@ class BeardLexerSpec extends FunSpec with Matchers {
         (" ", "WS"),
         (" ", "WS"),
         (" ", "WS"),
-        ("|", "BAR"),
+        ("}", "CURLY_BRACKET"),
         (" ", "WS"),
-        ("}", "CURLY_BRACKET"))
+        ("{{", "'{{'"),
+        ("val", "IDENTIFIER"),
+        ("|", "'|'"),
+        ("filter", "IDENTIFIER"),
+        ("}}", "'}}'"))
       tokens shouldBe expected
     }
   }
