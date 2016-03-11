@@ -1,6 +1,5 @@
 package de.zalando.beard.parser
 
-import com.sun.scenario.effect.FilterContext
 import de.zalando.beard.BeardParser._
 import de.zalando.beard.BeardParserBaseListener
 import de.zalando.beard.ast._

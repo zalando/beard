@@ -214,8 +214,8 @@ class BeardTemplateParserSpec extends FunSpec with Matchers {
       BeardTemplateParser("block1{{ if user.isCool }}block2{{ else }}block3{{/if}}block4") should
         be(BeardTemplate(Seq(Text("block1"),
           IfStatement(
-          CompoundIdentifier("user", Seq("isCool")),
-          Seq(Text("block2")), Seq(Text("block3"))), Text("block4"))))
+            CompoundIdentifier("user", Seq("isCool")),
+            Seq(Text("block2")), Seq(Text("block3"))), Text("block4"))))
     }
 
     it("should return a BeardTemplate containing nested if statement") {
@@ -399,25 +399,25 @@ class BeardTemplateParserSpec extends FunSpec with Matchers {
           IfStatement(
             CompoundIdentifier("usersExist"),
             List(White(4),
-            Text("<div>No"),
-            White(1),
-            Text("users</div>"),
-            NewLine(1)), List(White(4),
-            Text("<div"),
-            White(1),
-            Text("class=\"users\">"),
-            NewLine(1),
-            ForStatement(Identifier("user"), None, CompoundIdentifier("users", List()),
-              List(White(8),
-              IdInterpolation(CompoundIdentifier("user", List("name"))),
-              IfStatement(
-              CompoundIdentifier("user", Seq("isLast")),
-                List(Text(",")), List()),
-              RenderStatement("user-details", List(AttributeWithIdentifier("user", CompoundIdentifier("user", List())),
-                AttributeWithValue("class", "default")))), true),
-            White(4),
-            Text("</div>"),
-            NewLine(1)))
+              Text("<div>No"),
+              White(1),
+              Text("users</div>"),
+              NewLine(1)), List(White(4),
+              Text("<div"),
+              White(1),
+              Text("class=\"users\">"),
+              NewLine(1),
+              ForStatement(Identifier("user"), None, CompoundIdentifier("users", List()),
+                List(White(8),
+                  IdInterpolation(CompoundIdentifier("user", List("name"))),
+                  IfStatement(
+                    CompoundIdentifier("user", Seq("isLast")),
+                    List(Text(",")), List()),
+                  RenderStatement("user-details", List(AttributeWithIdentifier("user", CompoundIdentifier("user", List())),
+                    AttributeWithValue("class", "default")))), true),
+              White(4),
+              Text("</div>"),
+              NewLine(1)))
         )
       )
     }
@@ -493,6 +493,41 @@ class BeardTemplateParserSpec extends FunSpec with Matchers {
           Text("</html>")
         )
       )
+    }
+  }
+
+  describe("with filters") {
+    it("should parse one filter correctly") {
+      BeardTemplateParser("{{ someIdentifier | filter }}") should
+        be(BeardTemplate
+        (Seq(IdInterpolation
+        (CompoundIdentifier("someIdentifier"),
+          Seq(FilterNode(Identifier("filter")))))))
+    }
+
+    it("should parse a filter chain correctly") {
+      BeardTemplateParser("{{ someIdentifier | filter1 | filter2 | filter3 | filter4 }}") should
+        be(BeardTemplate
+        (Seq(IdInterpolation
+        (CompoundIdentifier("someIdentifier"),
+          Seq(FilterNode(Identifier("filter1")), FilterNode(Identifier("filter2")), FilterNode(Identifier("filter3")), FilterNode(Identifier("filter4")))))))
+    }
+
+    it("should parse named filter parameters correctly") {
+      BeardTemplateParser("""{{ someIdentifier | filter param="value" }}""") should
+        be(BeardTemplate
+        (Seq(IdInterpolation
+        (CompoundIdentifier("someIdentifier"),
+          Seq(FilterNode(Identifier("filter"), Seq(AttributeWithValue("param", "value"))))))))
+    }
+
+    it("should parse filter chains with named parameters correctly") {
+      BeardTemplateParser("""{{ someIdentifier | filter1 param="value" | filter2 param2=compound.id }}""") should
+        be(BeardTemplate
+        (Seq(IdInterpolation
+        (CompoundIdentifier("someIdentifier"),
+          Seq(FilterNode(Identifier("filter1"), Seq(AttributeWithValue("param", "value"))),
+            FilterNode(Identifier("filter2"), Seq(AttributeWithIdentifier("param2", CompoundIdentifier("compound", Seq("id"))))))))))
     }
   }
 }
