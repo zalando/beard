@@ -169,21 +169,33 @@ class BeardTemplateParserSpec extends FunSpec with Matchers {
 
   describe("when parsing a string that contains a comment") {
     it("should return an empty BeardTemplate for an inline comment") {
-      BeardTemplateParser("{{# This is a comment #}}") should be(BeardTemplate(List.empty))
+      BeardTemplateParser("{{- This is a comment -}}") should be(BeardTemplate(List.empty))
     }
 
     it("should return an empty BeardTemplate for a multiline comment") {
-      BeardTemplateParser("{{# This is a \n multiline comment #}}") should be(BeardTemplate(List.empty))
+      BeardTemplateParser("{{- This is a \n multiline comment -}}") should be(BeardTemplate(List.empty))
     }
 
     it("should skip Beard syntax within the comment") {
-      BeardTemplateParser("Hello {{# text {{ interpolation }} #}} world") should be(
+      BeardTemplateParser("Hello {{- text {{ interpolation }} -}} world") should be(
         BeardTemplate(Seq(Text("Hello"), White(2), Text("world"))))
     }
 
     it("should skip all content within the comment ") {
-      BeardTemplateParser("Hello {{# text }} {{ #}} world") should be(
+      BeardTemplateParser("Hello {{- text }} {{ -}} world") should be(
         BeardTemplate(Seq(Text("Hello"), White(2), Text("world"))))
+    }
+
+    it("comments might be nested") {
+      BeardTemplateParser("Hello {{- it is {{- nested comment -}} a comment -}} world") should be(
+        BeardTemplate(Seq(Text("Hello"), White(2), Text("world")))
+      )
+    }
+
+    it("should be two comments and a text in between") {
+      BeardTemplateParser("{{- first comment -}} Hello world {{- second comment -}}") should be(
+        BeardTemplate(Seq(White(1), Text("Hello"), White(1), Text("world"), White(1)))
+      )
     }
   }
 
