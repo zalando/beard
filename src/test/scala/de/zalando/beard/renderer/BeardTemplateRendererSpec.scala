@@ -293,5 +293,25 @@ class BeardTemplateRendererSpec extends FunSpec with Matchers {
         renderResult.result.toString should be(s"<div>&lt;script&gt;alert('attacked')&lt;/script&gt;</div>")
       }
     }
+
+    describe("render with filters") {
+      val context = Map("name" -> "Gigi")
+      val template = templateCompiler.compile(TemplateName("/templates/filters/single-filter-uppercase.beard")).get
+      it("should render the filtered interpolation result") {
+        val renderResult = StringWriterRenderResult()
+        renderer.render(template, renderResult, context)
+        renderResult.result.toString should be ("<div>GIGI</div>")
+      }
+    }
+
+    describe("render with multiple filters") {
+      val context = Map("name" -> "Gigi")
+      val template = templateCompiler.compile(TemplateName("/templates/filters/multiple-filter-upper-lowercase.beard")).get
+      it("should render the filtered interpolation result") {
+        val renderResult = StringWriterRenderResult()
+        renderer.render(template, renderResult, context)
+        renderResult.result.toString should be ("<div>GIGI</div><div>gigi</div>")
+      }
+    }
   }
 }
