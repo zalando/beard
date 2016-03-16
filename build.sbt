@@ -30,6 +30,8 @@ libraryDependencies ++= {
     "org.monifu"                  %% "monifu"                               % "1.0-RC3",
     "org.slf4j"                    % "slf4j-api"                            % "1.7.7",
     "ch.qos.logback"               % "logback-classic"                      % "1.0.13",
+    "org.scalaz"                  %% "scalaz-core"                          % "7.2.1",
+    "org.scalaz"                  %% "scalaz-effect"                        % "7.2.1",
     "org.scalatest"               %% "scalatest"                            % "3.0.0-M7"       % "test",
     "org.scalamock"               %% "scalamock-scalatest-support"          % "3.2.2"          % "test",
     "com.mitchellbosecke"          % "pebble"                               % "1.6.0"          % "test",
