@@ -66,3 +66,13 @@ object DateFormatFilter {
   def apply(): DateFormatFilter = new DateFormatFilter()
 }
 
+class CapitalizeFilter extends Filter {
+  override def name = "capitalize"
+
+  override def apply(value: String, parameters: Map[String, Any]) : String =
+    value.capitalize
+}
+
+object CapitalizeFilter {
+  def apply(): CapitalizeFilter = new CapitalizeFilter()
+}
