@@ -1,17 +1,48 @@
+<div class="zero">{{for user in users}}<div>{{user.name}}</div>{{/for}}</div>
 
 <div class="first">
   {{for user in users}}<div>{{user.name}}</div>{{/for}}
 </div>
 
-{{- this for should render an end of line after each line in the iteration -}}
 <div class="second">
+  {{for user in users}}
+  <div>Hello {{user.name}}</div>
+  {{/for}}
+</div>
+
+<div class="third">
+  {{for user in users}}
+  <div>{{user.name}}</div>{{/for}}
+</div>
+
+<div class="fourth">
   {{for user in users}}
   <div>{{user.name}}</div>
   {{/for}}
 </div>
 
-{{- this for is similar with the first one -}}
-<div class="third">
-    {{for user in users}}
-    <div>{{user.name}}</div>{{/for}}
+<div class="fifth">
+  {{for user in users}}
+  <div>{{user.name}}</div>
+
+  {{/for}}
 </div>
+
+<div class="sixth">
+  {{for user in users}}
+
+  <div>{{user.name}}</div>
+  {{/for}}
+</div>
+
+<div class="seventh">
+  {{for user in users}}
+
+  <div>{{user.name}}</div>
+
+  {{/for}}
+</div>
+
+{{for user in users}}
+<div>Hello {{user.name}}</div>
+{{/for}}

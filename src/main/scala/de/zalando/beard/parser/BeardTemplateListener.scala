@@ -16,6 +16,8 @@ class BeardTemplateListener extends BeardParserBaseListener {
 
   override def exitNewLine(ctx: NewLineContext) = ctx.result = NewLine(ctx.NL().size())
 
+  override def exitLeadingSpace(ctx: LeadingSpaceContext) = ctx.result = NewLine(ctx.NL().size())
+
   override def exitWhite(ctx: WhiteContext) = ctx.result = White(ctx.WS().size())
 
   override def exitIdentifier(ctx: IdentifierContext) = {
@@ -51,28 +53,39 @@ class BeardTemplateListener extends BeardParserBaseListener {
     ctx.result = RenderStatement(ctx.attrValue().result, ctx.attribute().map(_.result).toList)
 
   override def exitBlockStatement(ctx: BlockStatementContext) =
-    ctx.result = BlockStatement(ctx.blockInterpolation().identifier().result, ctx.statement().map(_.result).toList)
+    ctx.result = BlockStatement(ctx.blockInterpolation().identifier().result, ctx.statement().flatMap(_.result).toList)
 
   override def exitContentForStatement(ctx: ContentForStatementContext) =
-    ctx.result = ContentForStatement(ctx.contentForInterpolation().identifier().result, ctx.statement().map(_.result).toList)
+    ctx.result = ContentForStatement(ctx.contentForInterpolation().identifier().result, ctx.statement().flatMap(_.result).toList)
 
   override def exitIfOnlyStatement(ctx: IfOnlyStatementContext) = {
+    val startingSpaceStatements = ctx.startingSpace.toList.map(_.result)
+    val ifSpaceStatements = ctx.ifSpace.toList.map(_.result)
+
     val condition = ctx.ifInterpolation().compoundIdentifier().result
-    val statements: Seq[Statement] = ctx.statement().map(st => st.result).toList
-    ctx.result = IfStatement(condition, statements)
+    val statements: Seq[Statement] = ctx.statement().flatMap(st => st.result).toList
+    ctx.result = startingSpaceStatements ++ Seq(IfStatement(condition, statements ++ ifSpaceStatements))
   }
 
   override def exitIfElseStatement(ctx: IfElseStatementContext) = {
+    val startingSpeceStatements = ctx.startingSpace.toList.map(_.result)
+    val ifSpaceStatements = ctx.ifSpace.toList.map(_.result)
+    val elseSpaceStatements = ctx.elseSpace.toList.map(_.result)
+
     val condition = ctx.ifInterpolation().compoundIdentifier().result
-    val ifStatements = ctx.ifStatements.map(st => st.result).toList
-    val elseStatements = ctx.elseStatements.map(st => st.result).toList
-    ctx.result = IfStatement(condition, ifStatements, elseStatements)
+    val ifStatements = ctx.ifStatements.flatMap(st => st.result).toList
+    val elseStatements = ctx.elseStatements.flatMap(st => st.result).toList
+    ctx.result = startingSpeceStatements ++ Seq(IfStatement(condition, ifStatements ++ ifSpaceStatements, elseStatements ++ elseSpaceStatements))
   }
 
   override def exitForStatement(ctx: ForStatementContext) = {
-    val statements: Seq[Statement] = ctx.statement().map(st => st.result).toList
-    ctx.result = ForStatement(ctx.forInterpolation().iter.head.result, ctx.forInterpolation().index.headOption.map(_.result),
-      ctx.forInterpolation().coll.head.result, statements)
+    val statements: Seq[Statement] = ctx.statement().flatMap(st => st.result).toList
+
+    val leadingSpaceStatements = Option(ctx.leadingSpace()).toSeq.map(_.result).toList
+
+    ctx.result = leadingSpaceStatements ++
+      List(ForStatement(ctx.forInterpolation().iter.head.result, ctx.forInterpolation().index.headOption.map(_.result),
+        ctx.forInterpolation().coll.head.result, statements, !leadingSpaceStatements.isEmpty))
   }
 
   override def exitAttrInterpolation(ctx: AttrInterpolationContext) = {
@@ -93,8 +106,8 @@ class BeardTemplateListener extends BeardParserBaseListener {
     val statements: List[Statement] = List(
       Option(ctx.structuredStatement()).toSeq.flatMap { structuredStatement =>
         Option(structuredStatement.yieldStatement()).toSeq.map(_.result) ++
-          Option(structuredStatement.ifStatement()).toSeq.map(_.result) ++
-          Option(structuredStatement.forStatement()).toSeq.map(_.result) ++
+          Option(structuredStatement.ifStatement()).toSeq.flatMap(_.result) ++
+          Option(structuredStatement.forStatement()).toSeq.flatMap(_.result) ++
           Option(structuredStatement.renderStatement()).toSeq.map(_.result) ++
           Option(structuredStatement.blockStatement()).toSeq.map(_.result)
       },
@@ -103,11 +116,11 @@ class BeardTemplateListener extends BeardParserBaseListener {
       Option(ctx.white()).toSeq.map(_.result),
       Option(ctx.interpolation()).toSeq.map(_.result))
       .flatten
-    ctx.result = statements.head
+    ctx.result = statements
   }
 
   override def exitBeard(ctx: BeardContext) = {
-    val statements = ctx.statement().map(_.result).toList
+    val statements = ctx.statement().flatMap(_.result).toList
     val renderStatements = statements.collect {
       case renderStatement: RenderStatement => renderStatement
     }

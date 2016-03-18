@@ -1,8 +1,17 @@
-# Beard Template Engine
+# Beard: A Blazing-Fast Template Engine
 
 [![Build Status](https://travis-ci.org/zalando/beard.svg)](https://travis-ci.org/zalando/beard)
 
-Blazing fast, [open source](https://github.com/zalando/beard), logic-less template engine written in Scala, used to parse templates using a simple syntax:
+Beard is an open-source, logic-less templating engine, written in Scala and inspired by [Mustache](https://mustache.github.io/). You can use it out-of-the-box; see the Requirements list below. 
+
+What makes Beard powerful:
+
+  - **Streaming**. As soon as you need to render something, you can stream it to the browser. This provides high user-perceived performance.
+  - **Speed**. We've benchmarked it against other template engines for the JVM, and Beard performed much faster in terms of rendering time. (We invite you to run your own benchmarks to see if you get the same results.) It also uses [ANTLR](http://www.antlr.org/) to make template compilation fast.
+  - It offers **template inheritance**.
+  - Its **simple, beautiful syntax**. A la Mustache, it uses only the `{` and `}` markers for tags and delimiters.
+  
+Here's a code snippet to show you how simply Beard can parse templates:
 
 ```html
 <html>
@@ -15,46 +24,51 @@ Blazing fast, [open source](https://github.com/zalando/beard), logic-less templa
 </html>
 ```
 
-What makes Beard special:
+## Requirements
+- Scala 2.10 or 2.11
+- a package manager like sbt or Maven
 
-  - simple syntax: inspired by mustache, we only use the `{` and `}` markers for tags
-  - streaming: as soon as we have something to be rendered, we are able to stream it to the browser. This gives high user perceived performance.
-  - fast: have benchmarked it against other jvm template engines, and we strive to keep it on top. Check out our [repository](https://github.com/zalando/beard) to run the benchmarks.
-  - beautiful: only using brackets for delimiters keeps it beautiful
+## Installing
+If you're using sbt, add this line to your build.sbt file:
 
-Uses ANTRL to compile the templates which makes the compilation really fast.
+    libraryDependencies += "de.zalando" %% "beard" % "0.0.6"
 
-More details in our [documentation](https://danpersa.gitbooks.io/beard/content/)
+    resolvers ++= Seq(
+      "zalando-maven" at "https://dl.bintray.com/zalando/maven"
+    )
 
-# Gitbook
+If you're using Maven, run this:
 
-Contribute to our gitbook [here](https://github.com/danpersa/beard-book).
-
-# Downloads
+    <dependency>
+    	<groupId>de.zalando</groupId>
+    	<artifactId>beard</artifactId>
+    	<version>0.0.6</version>
+    </dependency>
  
-Binaries are available from [bintray](https://bintray.com/zalando-spearheads/java/beard/0.0.2/view). Or simply
-add `resolvers += Resolver.bintrayRepo("zalando-spearheads", "java")` to your `build.sbt`.
-
-# Publish
+Binaries are available from [bintray](https://bintray.com/zalando/maven/beard/0.0.6/view).
+   
+## Publishing
 
 To login to bintray:
 
     sbt bintrayChangeCredentials
 
-Then for cross publish
+Then, for cross-publish:
 
     sbt +publish
 
-Copyright 2015 Zalando SE
+##Additional Documentation
+We've started a [Gitbook](https://danpersa.gitbooks.io/beard/content/) for additional docs. There, you'll find more information on:
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
+- [Basic Usage](https://danpersa.gitbooks.io/beard/content/chapter-1-basic-usage.html): rendering an `index` template
+- [Control Flow](https://danpersa.gitbooks.io/beard/content/chapter-2-control-flow.html): If statements and For statements
+- [Template Inheritance](https://danpersa.gitbooks.io/beard/content/chapter-3-template-inheritance.html): layout templates and templates-to-be-rendered
+- [Quick Reference](https://danpersa.gitbooks.io/beard/content/chapter-4-quick-reference.html): with details and code on interpolation, comment statements, block statements, yield statements, and more
 
-    http://www.apache.org/licenses/LICENSE-2.0
+You can contribute to this documentation [here](https://github.com/danpersa/beard-book).
 
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
+##Contributing/TODO List
+We gladly welcome contributions—just submit a pull request with a short note summarizing briefly (1-2 sentences) what you've done. If you'd like to make a substantial contribution to Beard, we could use your help with these items:
+- adding filters: ind Handlebars, Angular, Twig, etc.
+- providing more meaningful error messages
+- XSS prevention; [see related issue](https://github.com/zalando/beard/issues/11)

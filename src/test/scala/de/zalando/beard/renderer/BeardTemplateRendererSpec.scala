@@ -2,6 +2,7 @@ package de.zalando.beard.renderer
 
 import de.zalando.beard.parser.BeardTemplateParser
 import org.scalatest.{ FunSpec, Matchers }
+import org.slf4j.LoggerFactory
 
 import scala.collection.immutable.Seq
 import scala.io.Source
@@ -10,6 +11,8 @@ import scala.io.Source
  * @author dpersa
  */
 class BeardTemplateRendererSpec extends FunSpec with Matchers {
+
+  val logger = LoggerFactory.getLogger(this.getClass)
 
   val templateCompiler = DefaultTemplateCompiler
   val renderer = new BeardTemplateRenderer(templateCompiler)
@@ -147,7 +150,7 @@ class BeardTemplateRendererSpec extends FunSpec with Matchers {
       it("should render the template") {
         val renderResult = StringWriterRenderResult()
         renderer.render(template, renderResult, context(true))
-        renderResult.result.toString should be("\nGigi is not odd\nGicu is odd\n")
+        renderResult.result.toString should be("\nGigi is not odd\n\nGicu is odd\n")
       }
     }
 
@@ -160,10 +163,11 @@ class BeardTemplateRendererSpec extends FunSpec with Matchers {
       it("should render the template") {
         val renderResult = StringWriterRenderResult()
         renderer.render(template, renderResult, context(true))
+        logger.info(renderResult.result.toString)
         renderResult.result.toString should be("""some
                                                  |  Gigi is cool
                                                  |    Gigi is still cool
-                                                 |    some1
+                                                 |  some1
                                                  |some4""".stripMargin)
       }
     }
@@ -213,12 +217,16 @@ class BeardTemplateRendererSpec extends FunSpec with Matchers {
       val expected = Source.fromInputStream(getClass.getResourceAsStream(s"/templates/layout-with-partial.rendered")).mkString
 
       val renderResult = StringWriterRenderResult()
-      val r = templateCompiler.compile(TemplateName("/templates/layout-with-partial.beard"))
+      templateCompiler.compile(TemplateName("/templates/layout-with-partial.beard"))
         .map { template =>
           renderer.render(template, renderResult, Map("example" -> Map("title" -> "Title", "presentations" ->
             Seq(Map("title" -> "Title1", "speakerName" -> "Name1", "summary" -> "Summary1"),
               Map("title" -> "Title2", "speakerName" -> "Name2", "summary" -> "Summary2")))))
         }
+
+      logger.trace("Result")
+      logger.trace(renderResult.result.toString)
+
       renderResult.result.toString should be(expected)
     }
 
