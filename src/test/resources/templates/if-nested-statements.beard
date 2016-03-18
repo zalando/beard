@@ -1,4 +1,5 @@
-some{{if user.isCool }}
+some
+{{if user.isCool }}
   {{user.name}} is cool
   {{if user.isCool }}
     {{user.name}} is still cool

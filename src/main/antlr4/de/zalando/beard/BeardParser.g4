@@ -14,13 +14,18 @@ locals [scala.collection.immutable.List<Statement> result]
       ;
 
 statement
-locals [Statement result]
+locals [scala.collection.immutable.List<Statement> result]
          : structuredStatement
          | interpolation
          | newLine
          | white
          | text
          ;
+
+
+leadingSpace
+locals [NewLine result]
+              :NL+ WS*;
 
 extendsStatement
 locals [ExtendsStatement result]
@@ -81,10 +86,10 @@ locals [RenderStatement result]
     ;
 
 ifStatement
-locals [IfStatement result]
-    : NL? WS* ifInterpolation ifStatements+=statement+ NL? WS* elseInterpolation elseStatements+=statement+ NL? WS* endIfInterpolation NL? # IfElseStatement
+locals [scala.collection.immutable.List<Statement> result]
+    : startingSpace+=leadingSpace ifInterpolation NL ifStatements+=statement+ ifSpace+=leadingSpace elseInterpolation NL elseStatements+=statement+ elseSpace+=leadingSpace endIfInterpolation NL? # IfElseStatement
     | ifInterpolation ifStatements+=statement+ elseInterpolation elseStatements+=statement+ endIfInterpolation # IfElseStatement
-    | NL? WS* ifInterpolation statement+ NL? WS* endIfInterpolation NL? # IfOnlyStatement
+    | startingSpace+=leadingSpace ifInterpolation NL statement+ ifSpace+=leadingSpace endIfInterpolation NL? # IfOnlyStatement
     | ifInterpolation statement+ endIfInterpolation # IfOnlyStatement
     ;
 
@@ -101,8 +106,8 @@ endIfInterpolation
     ;
 
 forStatement
-locals [ForStatement result]
-    : NL WS* forInterpolation statement+ NL WS* endForInterpolation
+locals [scala.collection.immutable.List<Statement> result]
+    : leadingSpace forInterpolation NL statement+ NL WS* endForInterpolation NL?
     | forInterpolation statement+ endForInterpolation
     ;
 
