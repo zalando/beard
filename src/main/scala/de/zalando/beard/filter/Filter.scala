@@ -1,7 +1,9 @@
 package de.zalando.beard.filter
 
+import java.text.{NumberFormat, DecimalFormatSymbols, DecimalFormat}
 import java.time.format.DateTimeFormatter
 
+import scala.Predef
 import scala.collection.immutable.Map
 
 /**
@@ -66,3 +68,54 @@ object DateFormatFilter {
   def apply(): DateFormatFilter = new DateFormatFilter()
 }
 
+class NumberFilter extends Filter {
+  override def name: String = "number"
+
+  override def apply(value: String, parameters: Predef.Map[String, Any]): String = {
+    val number = BigDecimal(value)
+    parameters.get("format") match {
+      case Some(format: String) => {
+        val formatter = new DecimalFormat(format)
+        formatter.format(number)
+      }
+      case Some(thing) => throw WrongParameterTypeException("format", "String")
+      case _ => NumberFormat.getNumberInstance.format(number)
+    }
+  }
+}
+
+object NumberFilter {
+  def apply(): NumberFilter = new NumberFilter()
+}
+
+class MoneyFilter extends Filter {
+  override def name: String = "money"
+
+  override def apply(value: String, parameters: Predef.Map[String, Any]): String = {
+    val number = BigDecimal(value)
+    val currency = parameters.get("currency") match {
+      case Some(symbol: String) => {
+        Option(symbol)
+      }
+      case Some(thing) => throw WrongParameterTypeException("currency", "String")
+      case _ => None
+    }
+    val formatter =  parameters.get("format") match {
+      case Some(format: String) => {
+        new DecimalFormat(format)
+      }
+      case Some(thing) => throw WrongParameterTypeException("format", "String")
+      case _ => NumberFormat.getCurrencyInstance().asInstanceOf[DecimalFormat]
+    }
+    if (!currency.isEmpty) {
+      val dfs = new DecimalFormatSymbols()
+      dfs.setCurrencySymbol(currency.get)
+      formatter.setDecimalFormatSymbols(dfs)
+    }
+    formatter.format(number)
+  }
+}
+
+object MoneyFilter {
+  def apply(): MoneyFilter = new MoneyFilter()
+}
