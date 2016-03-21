@@ -1,9 +1,7 @@
 package de.zalando.beard.filter
 
-import java.text.{NumberFormat, DecimalFormatSymbols, DecimalFormat}
 import java.time.format.DateTimeFormatter
 
-import scala.Predef
 import scala.collection.immutable.Map
 
 /**
@@ -118,4 +116,14 @@ class MoneyFilter extends Filter {
 
 object MoneyFilter {
   def apply(): MoneyFilter = new MoneyFilter()
+}
+class CapitalizeFilter extends Filter {
+  override def name = "capitalize"
+
+  override def apply(value: String, parameters: Map[String, Any]) : String =
+    value.capitalize
+}
+
+object CapitalizeFilter {
+  def apply(): CapitalizeFilter = new CapitalizeFilter()
 }
