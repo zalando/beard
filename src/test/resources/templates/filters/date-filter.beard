@@ -1,1 +1,1 @@
-<div>{{ now | date format=formatString }}</div>
+<div>{{ now | date format=format.string }}</div>

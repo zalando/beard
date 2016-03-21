@@ -35,7 +35,7 @@ class DateFormatFilter extends Filter {
     }
 
   def resolveDateFormatting(value: String, formatter: DateTimeFormatter): String = {
-    if(value.matches("^[0-9]*$")) {
+    if(value.matches("^\\d*$")) {
       getFormatFromMillis(value, formatter)
     } else {
       getFormatFromISO(value, formatter)

@@ -317,16 +317,18 @@ class BeardTemplateRendererSpec extends FunSpec with Matchers {
     }
 
     describe("render with date") {
-
+      // date -> 02/03/2016
+      val millis = 1454454000000l
+      val isoString = "2016-02-03T00:00:00.00Z"
       val template = templateCompiler.compile(TemplateName("/templates/filters/date-filter.beard")).get
       it("should render the date for epoch milliseconds accordingly") {
-        val context = Map("now" -> System.currentTimeMillis(), "formatString" -> "yyyy")
+        val context = Map("now" -> millis, "format" -> Map("string" -> "yyyy"))
         val renderResult = StringWriterRenderResult()
         renderer.render(template, renderResult, context)
         renderResult.result.toString should be ("<div>2016</div>")
       }
       it("should render the date for ISO formatted date accordingly") {
-        val context = Map("now" -> Instant.now().toString, "formatString" -> "yyyy")
+        val context = Map("now" -> isoString, "format" -> Map("string" -> "yyyy"))
         val renderResult = StringWriterRenderResult()
         renderer.render(template, renderResult, context)
         renderResult.result.toString should be ("<div>2016</div>")
