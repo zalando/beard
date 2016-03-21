@@ -1,5 +1,7 @@
 package de.zalando.beard.renderer
 
+import java.time.Instant
+
 import de.zalando.beard.parser.BeardTemplateParser
 import org.scalatest.{ FunSpec, Matchers }
 import org.slf4j.LoggerFactory
@@ -311,6 +313,23 @@ class BeardTemplateRendererSpec extends FunSpec with Matchers {
         val renderResult = StringWriterRenderResult()
         renderer.render(template, renderResult, context)
         renderResult.result.toString should be ("<div>GIGI</div><div>gigi</div>")
+      }
+    }
+
+    describe("render with date") {
+
+      val template = templateCompiler.compile(TemplateName("/templates/filters/date-filter.beard")).get
+      it("should render the date for epoch milliseconds accordingly") {
+        val context = Map("now" -> System.currentTimeMillis(), "formatString" -> "yyyy")
+        val renderResult = StringWriterRenderResult()
+        renderer.render(template, renderResult, context)
+        renderResult.result.toString should be ("<div>2016</div>")
+      }
+      it("should render the date for ISO formatted date accordingly") {
+        val context = Map("now" -> Instant.now().toString, "formatString" -> "yyyy")
+        val renderResult = StringWriterRenderResult()
+        renderer.render(template, renderResult, context)
+        renderResult.result.toString should be ("<div>2016</div>")
       }
     }
   }

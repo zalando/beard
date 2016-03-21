@@ -1,8 +1,8 @@
 package de.zalando.beard.filter
 
+import de.zalando.beard.filter.implementations.DateFormatFilter
 import org.slf4j.LoggerFactory
 
-import de.zalando.beard.ast.Identifier
 import scala.collection.immutable.{Set, Seq, Map}
 
 /**
