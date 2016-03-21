@@ -6,6 +6,7 @@ import java.time.format.DateTimeFormatter
 import de.zalando.beard.filter._
 
 import scala.collection.immutable.Map
+import scala.util.matching.Regex
 import scala.util.{Success, Try}
 
 /**
@@ -34,8 +35,11 @@ class DateFormatFilter extends Filter {
     }
 
   def resolveDateFormatting(value: String, formatter: DateTimeFormatter): String = {
-    
-    return ""
+    if(value.matches("^[0-9]*$")) {
+      getFormatFromMillis(value, formatter)
+    } else {
+      getFormatFromISO(value, formatter)
+    }
   }
 
   def getFormatFromMillis(millisAsString: String, formatter: DateTimeFormatter): String = {

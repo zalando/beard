@@ -3,5 +3,6 @@
     {{block header}}
       application header
     {{/block}}
+    {{yield}}
   </body>
 <html>
