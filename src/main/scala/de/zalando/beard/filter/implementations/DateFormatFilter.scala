@@ -1,13 +1,11 @@
 package de.zalando.beard.filter.implementations
 
-import java.time.{ZoneId, LocalDateTime, Instant}
 import java.time.format.DateTimeFormatter
+import java.time.{Instant, LocalDateTime, ZoneId}
 
 import de.zalando.beard.filter._
 
 import scala.collection.immutable.Map
-import scala.util.matching.Regex
-import scala.util.{Success, Try}
 
 /**
   * Created by rweyand on 3/15/16.

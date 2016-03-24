@@ -1,7 +1,9 @@
 package de.zalando.beard.performance
 
+import java.util.{Locale, ResourceBundle}
+
 import de.zalando.beard.parser.BeardTemplateParser
-import de.zalando.beard.renderer.{BeardTemplateRenderer, DefaultTemplateCompiler, MonifuRenderResult, TemplateName}
+import de.zalando.beard.renderer._
 import monifu.concurrent.Implicits.globalScheduler
 import org.scalameter.api._
 
@@ -31,7 +33,7 @@ object BeardSecondBenchmark extends Bench.LocalTime {
 
   val renderResult = new MonifuRenderResult()
 
-  val result = renderer.render(compiledTemplate, renderResult, context)
+  val result = renderer.render(compiledTemplate, renderResult, context, None, EscapeStrategy.vanilla)
   result.foreach(print)
 
   performance of "Beard" in {
@@ -39,7 +41,7 @@ object BeardSecondBenchmark extends Bench.LocalTime {
       using(ranges) in {
         (r: Range) => {
           r.foreach { _ =>
-            renderer.render(compiledTemplate, MonifuRenderResult(), context)
+            renderer.render(compiledTemplate, MonifuRenderResult(), context, None, EscapeStrategy.vanilla)
           }
         }
       }

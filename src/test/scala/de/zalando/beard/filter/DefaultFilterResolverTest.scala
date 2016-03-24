@@ -1,6 +1,5 @@
 package de.zalando.beard.filter
 
-import de.zalando.beard.ast.Identifier
 import org.scalatest.FunSpec
 import org.slf4j.LoggerFactory
 

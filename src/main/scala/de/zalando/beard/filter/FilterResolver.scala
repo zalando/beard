@@ -1,16 +1,17 @@
 package de.zalando.beard.filter
 
 import de.zalando.beard.filter.implementations.DateFormatFilter
+import de.zalando.beard.filter.implementations.TranslationFilter
 import org.slf4j.LoggerFactory
 
-import scala.collection.immutable.{Set, Seq, Map}
+import scala.collection.immutable.{Map, Seq, Set}
 
 /**
   * @author dpersa
   */
 trait FilterResolver {
 
-  def registeredFilters = Seq(LowercaseFilter(), UppercaseFilter(), DateFormatFilter())
+  def registeredFilters = Seq(LowercaseFilter(), UppercaseFilter(), DateFormatFilter(), TranslationFilter())
 
   def filters: Map[String, Filter]
 

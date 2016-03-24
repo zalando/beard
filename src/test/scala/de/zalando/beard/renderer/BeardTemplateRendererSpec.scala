@@ -1,9 +1,11 @@
 package de.zalando.beard.renderer
 
 import java.time.Instant
+import java.util.Locale
 
+import de.zalando.beard.ast.BeardTemplate
 import de.zalando.beard.parser.BeardTemplateParser
-import org.scalatest.{ FunSpec, Matchers }
+import org.scalatest.{FunSpec, Matchers}
 import org.slf4j.LoggerFactory
 
 import scala.collection.immutable.Seq
@@ -25,7 +27,7 @@ class BeardTemplateRendererSpec extends FunSpec with Matchers {
       templateCompiler.compile(TemplateName("/templates/identifier-interpolation.beard"))
         .map { template =>
           val renderResult = StringWriterRenderResult()
-          renderer.render(template, renderResult, Map("name" -> "Gigi"))
+          renderer.render(template, renderResult, Map("name" -> "Gigi"), None, EscapeStrategy.vanilla)
           renderResult.result.toString should be("<div>Gigi</div>")
         }.isSuccess shouldBe true
     }
@@ -332,6 +334,35 @@ class BeardTemplateRendererSpec extends FunSpec with Matchers {
         val renderResult = StringWriterRenderResult()
         renderer.render(template, renderResult, context)
         renderResult.result.toString should be ("<div>2016</div>")
+      }
+    }
+
+    describe("render with translation") {
+      val template = templateCompiler.compile(TemplateName("/templates/filters/translation.beard")).get
+      it("should render the appropriate message from the resource bundles") {
+        var renderResult = StringWriterRenderResult()
+        renderer.render(template, renderResult, Map("messageKey" -> "example.title"),
+          None,
+          EscapeStrategy.vanilla,
+          Locale.forLanguageTag("it"),
+          "messages")
+        renderResult.result.toString should be ("<div>Ciao</div>")
+
+        renderResult = StringWriterRenderResult()
+        renderer.render(template, renderResult, Map("messageKey" -> "example.title"),
+          None,
+          EscapeStrategy.vanilla,
+          Locale.forLanguageTag("en"),
+          "messages")
+        renderResult.result.toString should be ("<div>Hello</div>")
+
+        renderResult = StringWriterRenderResult()
+        renderer.render(template, renderResult, Map("messageKey" -> "example.title"),
+          None,
+          EscapeStrategy.vanilla,
+          Locale.forLanguageTag("de"),
+          "messages")
+        renderResult.result.toString should be ("<div>Hallo</div>")
       }
     }
   }
