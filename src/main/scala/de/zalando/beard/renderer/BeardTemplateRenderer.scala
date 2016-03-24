@@ -2,8 +2,6 @@ package de.zalando.beard.renderer
 
 import de.zalando.beard.ast._
 import de.zalando.beard.filter.{FilterNotFound, FilterResolver, DefaultFilterResolver}
-
-import scala.annotation.tailrec
 import scala.collection.immutable.Seq
 
 /**
@@ -127,10 +125,13 @@ class BeardTemplateRenderer(templateCompiler: TemplateCompiler,
           case Some(filter) => filter
           case None => throw FilterNotFound(filterIdentifier)
         }
-        val parameters = filterNode.parameters.map { 
-          case attr: AttributeWithIdentifier => (attr.key, ContextResolver.resolve(attr.id, context))
-          case attr: AttributeWithValue => (attr.key, attr.value)
-        }.toMap
+        val parameters = filterNode.parameters.map {
+          case AttributeWithIdentifier(key, id) => (key, ContextResolver.resolve(id, context))
+          case AttributeWithValue(key, value) => (key, Option(value))
+        }.filter(_._2.isDefined)
+          .map{ case (k, v) => (k, v.get) }
+          .toMap
+
         filter.apply(identifierValue, parameters)
       }
     }

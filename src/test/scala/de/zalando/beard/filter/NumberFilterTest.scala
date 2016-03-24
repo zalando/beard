@@ -56,7 +56,7 @@ class NumberFilterTest extends FunSpec with Matchers {
 
         val r = templateCompiler.compile(TemplateName("/filters/number-filter.beard"))
           .map { template =>
-            renderer.render(template, renderResult, Map("transaction" -> Map("amount" -> 12.26, "currency" -> "GBP")))
+            renderer.render(template, renderResult, Map("transaction" -> Map("amount" -> 12.29)))
           }
 
         renderResult.result.toString should be(expected)

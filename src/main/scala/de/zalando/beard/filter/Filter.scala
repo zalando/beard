@@ -1,5 +1,6 @@
 package de.zalando.beard.filter
 
+import java.text.{DecimalFormatSymbols, NumberFormat, DecimalFormat}
 import java.time.format.DateTimeFormatter
 
 import scala.collection.immutable.Map
@@ -105,7 +106,7 @@ class MoneyFilter extends Filter {
       case Some(thing) => throw WrongParameterTypeException("format", "String")
       case _ => NumberFormat.getCurrencyInstance().asInstanceOf[DecimalFormat]
     }
-    if (!currency.isEmpty) {
+    if (currency.isDefined) {
       val dfs = new DecimalFormatSymbols()
       dfs.setCurrencySymbol(currency.get)
       formatter.setDecimalFormatSymbols(dfs)
@@ -117,6 +118,7 @@ class MoneyFilter extends Filter {
 object MoneyFilter {
   def apply(): MoneyFilter = new MoneyFilter()
 }
+
 class CapitalizeFilter extends Filter {
   override def name = "capitalize"
 

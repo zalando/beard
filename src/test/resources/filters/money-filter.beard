@@ -5,7 +5,7 @@
 {{transaction.amount | money currency="GBP"}}
 </div>
 <div class="amount3">
-{{transaction.amount | money format="#.0 ¤"}}
+{{transaction.amount | money format="#.0 ¤" currency=transaction.currency}}
 </div>
 <div class="amount4">
 {{transaction.amount | money format="#.00 ¤" currency="€"}}
