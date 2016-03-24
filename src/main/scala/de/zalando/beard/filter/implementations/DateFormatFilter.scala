@@ -6,7 +6,6 @@ import java.time.format.DateTimeFormatter
 import de.zalando.beard.filter._
 
 import scala.collection.immutable.Map
-import scala.util.{Success, Try}
 import scala.util.matching.Regex
 
 /**
@@ -71,7 +70,6 @@ class DateFormatFilter extends Filter {
     val pattern = new Regex(datePatterns.values.mkString("^((", ")|(", "))$"))
     val a = pattern.findFirstMatchIn(value)
 
-    println(pattern + " - " + value)
     if (a.isDefined) {
       val patternIndex = a.get.subgroups.indexOf(value, 1)
       val formatIn = datePatterns.slice(patternIndex-1, patternIndex).keys.mkString
@@ -92,7 +90,6 @@ class DateFormatFilter extends Filter {
   }
 
   def getFormatFrom(data: String, formatIn: String, formatter: DateTimeFormatter): String = {
-    println(formatIn + " === " + data)
     try {
       val date = DateTimeFormatter.ofPattern(formatIn).parse(data)
       formatter.format(date)
