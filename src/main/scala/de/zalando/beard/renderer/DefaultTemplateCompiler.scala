@@ -54,7 +54,7 @@ class CustomizableTemplateCompiler(templateLoader: TemplateLoader = new Classpat
         compile(TemplateName(extendsStatement.template), currentYieldedStatements, newContentForStatementsMap)
       case None =>
         // we need to merge the texts and new lines
-        val concatTextsTemplate = mergedBeardTemplate.copy(statements = concatTexts((mergedBeardTemplate.statements)))
+        val concatTextsTemplate = mergedBeardTemplate.copy(statements = concatTexts(mergedBeardTemplate.statements))
         Success(concatTextsTemplate)
     }
   }
