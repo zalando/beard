@@ -1,6 +1,6 @@
 package de.zalando.beard.filter.implementations
 
-import java.time.{ZoneId, LocalDateTime, Instant}
+import java.time.{ZoneId, LocalDateTime, OffsetDateTime, Instant}
 import java.time.format.DateTimeFormatter
 
 import de.zalando.beard.filter._
@@ -35,49 +35,61 @@ class DateFormatFilter extends Filter {
 
 
   def resolveDateFormatting(value: String, formatOut: DateTimeFormatter): String = {
-    val datePatterns: Map[String, String] = Map(
     // All formatters supported by DateTimeFormatter may be added in a form:
-    // "FORMATTER" -> """REGEX"""
+    //  """REGEX""" -> "FORMATTER"
     // Grouping is not allowed: '(', ')' chars must be escaped, if used
-    // EPOCH formatter is handled differently
-      "EPOCH" -> """\d{8,}""",
-      // yyyy-MM-dd
-      "yyyy-MM-dd" -> """\d\d\d\d-\d\d-\d\d""",
-      // yyyy-MM-dd HH:mm:ss
-      "yyyy-MM-dd HH:mm:ss" -> """\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d""",
-      // 20110203
-      "BASIC_ISO_DATE" -> """\d{8}""",
-      // 2011-2-13
-      "yyyy-M-dd" -> """\d\d\d\d-\d-\d\d""",
-      // 2011-12-3
-      "yyyy-MM-d" -> """\d\d\d\d-\d\d-\d""",
-      // 2011-2-3
-      "yyyy-M-d" -> """\d\d\d\d-\d-\d""",
-      // 03-02-2011
-      "dd-MM-yyyy" -> """\d\d-\d\d-\d\d\d\d""",
-      // 3-12-2011
-      "d-MM-yyyy" -> """\d-\d\d-\d\d\d\d""",
-      // 13-2-2011
-      "dd-M-yyyy" -> """\d\d-\d-\d\d\d\d""",
-      // 3-2-2011
-      "d-M-yyyy" -> """\d-\d-\d\d\d\d""",
+    val datePatterns: Map[String, String] = Map (
+      // 981173106
+      """\d{9,10}""" -> "EPOCH",
+      // 981173106987
+      """\d{12,13}""" -> "EPOCH_MILLI",
+      // 2001-02-03
+      """\d\d\d\d-\d\d-\d\d""" -> "yyyy-MM-dd",
+      // 2001-02-03 04:05:06
+      """\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d""" -> "yyyy-MM-dd HH:mm:ss",
+      // 20010203
+      """\d{8}""" -> "yyyyMMdd",
+      // 2001-02-03T04:05:06
+      """\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\d""" -> "ISO_LOCAL_DATE_TIME",
+      // 2001-02-03T04:05:06+01:00'
+      """\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\d[+\-]?\d\d:?\d\d""" -> "ISO_OFFSET_DATE_TIME",
+      // '2001-02-03T04:05:06.789Z'
+      """\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{1,3}Z""" -> "ISO_INSTANT",
+      // '2001-02-03T04:05:06Z'
+      """\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\dZ""" -> "ISO_INSTANT",
+      // 2001-2-13
+      """\d\d\d\d-\d-\d\d""" -> "yyyy-M-dd",
+      // 2001-12-3
+      """\d\d\d\d-\d\d-\d""" -> "yyyy-MM-d",
+      // 2001-2-3
+      """\d\d\d\d-\d-\d""" -> "yyyy-M-d",
+      // 03-02-2001
+      """\d\d-\d\d-\d\d\d\d""" -> "dd-MM-yyyy",
+      // 3-12-2001
+      """\d-\d\d-\d\d\d\d""" -> "d-MM-yyyy",
+      // 13-2-2001
+      """\d\d-\d-\d\d\d\d""" -> "dd-M-yyyy",
+      // 3-2-2001
+      """\d-\d-\d\d\d\d""" -> "d-M-yyyy",
       // 04:05:06
-      "HH:mm:ss" -> """\d\d:\d\d:\d\d""",
-      // 4:5:6
-      "H:m:s" -> """\d:\d:\d"""
+      """\d\d:\d\d:\d\d""" -> "HH:mm:ss"
     )
 
-    val pattern = new Regex(datePatterns.values.mkString("^((", ")|(", "))$"))
+    val pattern = new Regex(datePatterns.keys.mkString("^((", ")|(", "))$"))
     val a = pattern.findFirstMatchIn(value)
 
     if (a.isDefined) {
       val patternIndex = a.get.subgroups.indexOf(value, 1)
-      val formatIn = datePatterns.slice(patternIndex-1, patternIndex).keys.mkString
+      val formatIn = datePatterns.slice(patternIndex-1, patternIndex).values.mkString
 
-      if (formatIn == "EPOCH")
-        return getFormatFromMillis(value, formatOut)
-
-      return getFormatFrom(value, formatIn, formatOut)
+      return formatIn match {
+        case "EPOCH" => getFormatFromEpoch(value, formatOut)
+        case "EPOCH_MILLI" => getFormatFromMillis(value, formatOut)        
+        case "ISO_INSTANT" => getFormatFromInstant(value, formatOut)
+        case "ISO_LOCAL_DATE_TIME" => getFormatFromLocal(value, formatOut)
+        case "ISO_OFFSET_DATE_TIME" => getFormatFromOffset(value, formatOut)
+        case _ => getFormatFromPattern(value, formatIn, formatOut)
+      }
     }
 
     throw new DateFormatNotSupportedException(value)
@@ -89,9 +101,33 @@ class DateFormatFilter extends Filter {
     formattedDate
   }
 
-  def getFormatFrom(data: String, formatIn: String, formatter: DateTimeFormatter): String = {
+  def getFormatFromEpoch(epoch: String, formatter: DateTimeFormatter): String = {
+    val dateTime: Instant = Instant.ofEpochSecond(epoch.toLong)
+    val formattedDate = formatter.format(LocalDateTime.ofInstant(dateTime, ZoneId.systemDefault()))
+    formattedDate
+  }
+
+  def getFormatFromInstant(dateSrc: String, formatter: DateTimeFormatter): String = {
+    val dateTime: Instant = Instant.parse(dateSrc)
+    val formattedDate = formatter.format(LocalDateTime.ofInstant(dateTime, ZoneId.systemDefault()))
+    formattedDate
+  }
+
+  def getFormatFromLocal(dateSrc: String, formatter: DateTimeFormatter): String = {
+    val dateTime: LocalDateTime = LocalDateTime.parse(dateSrc)
+    val formattedDate = formatter.format(dateTime)
+    formattedDate
+  }
+
+  def getFormatFromOffset(dateSrc: String, formatter: DateTimeFormatter): String = {
+    val dateTime: OffsetDateTime = OffsetDateTime.parse(dateSrc)
+    val formattedDate = formatter.format(dateTime)
+    formattedDate
+  }
+
+  def getFormatFromPattern(dateSrc: String, formatIn: String, formatter: DateTimeFormatter): String = {
     try {
-      val date = DateTimeFormatter.ofPattern(formatIn).parse(data)
+      val date = DateTimeFormatter.ofPattern(formatIn).parse(dateSrc)
       formatter.format(date)
     } catch {
       case e: Exception => throw new DateFormatNotSupportedException(formatIn)
