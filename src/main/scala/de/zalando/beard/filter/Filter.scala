@@ -8,7 +8,6 @@ import scala.collection.immutable.Map
   * @author dpersa
   */
 trait Filter {
-
   def name: String
   
   def apply(value: String, parameters: Map[String, Any] = Map.empty): String
