@@ -85,7 +85,7 @@ class BeardTemplateListener extends BeardParserBaseListener {
 
     ctx.result = leadingSpaceStatements ++
       List(ForStatement(ctx.forInterpolation().iter.head.result, ctx.forInterpolation().index.headOption.map(_.result),
-        ctx.forInterpolation().coll.head.result, statements, !leadingSpaceStatements.isEmpty))
+        ctx.forInterpolation().coll.head.result, statements, leadingSpaceStatements.nonEmpty))
   }
 
   override def exitAttrInterpolation(ctx: AttrInterpolationContext) = {
