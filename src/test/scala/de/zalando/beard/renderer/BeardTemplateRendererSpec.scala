@@ -1,7 +1,11 @@
 package de.zalando.beard.renderer
 
+import java.time.Instant
+import java.util.Locale
+
+import de.zalando.beard.ast.BeardTemplate
 import de.zalando.beard.parser.BeardTemplateParser
-import org.scalatest.{ FunSpec, Matchers }
+import org.scalatest.{FunSpec, Matchers}
 import org.slf4j.LoggerFactory
 
 import scala.collection.immutable.Seq
@@ -23,7 +27,7 @@ class BeardTemplateRendererSpec extends FunSpec with Matchers {
       templateCompiler.compile(TemplateName("/templates/identifier-interpolation.beard"))
         .map { template =>
           val renderResult = StringWriterRenderResult()
-          renderer.render(template, renderResult, Map("name" -> "Gigi"))
+          renderer.render(template, renderResult, Map("name" -> "Gigi"), None, EscapeStrategy.vanilla)
           renderResult.result.toString should be("<div>Gigi</div>")
         }.isSuccess shouldBe true
     }
@@ -291,6 +295,74 @@ class BeardTemplateRendererSpec extends FunSpec with Matchers {
         val renderResult = StringWriterRenderResult()
         renderer.render(template, renderResult, context, escapeStrategy = EscapeStrategy.html)
         renderResult.result.toString should be(s"<div>&lt;script&gt;alert('attacked')&lt;/script&gt;</div>")
+      }
+    }
+
+    describe("render with filters") {
+      val context = Map("name" -> "Gigi")
+      val template = templateCompiler.compile(TemplateName("/templates/filters/single-filter-uppercase.beard")).get
+      it("should render the filtered interpolation result") {
+        val renderResult = StringWriterRenderResult()
+        renderer.render(template, renderResult, context)
+        renderResult.result.toString should be ("<div>GIGI</div>")
+      }
+    }
+
+    describe("render with multiple filters") {
+      val context = Map("name" -> "Gigi")
+      val template = templateCompiler.compile(TemplateName("/templates/filters/multiple-filter-upper-lowercase.beard")).get
+      it("should render the filtered interpolation result") {
+        val renderResult = StringWriterRenderResult()
+        renderer.render(template, renderResult, context)
+        renderResult.result.toString should be ("<div>GIGI</div><div>gigi</div>")
+      }
+    }
+
+    describe("render with date") {
+      // date -> 02/03/2016
+      val millis = 1454454000000l
+      val isoString = "2016-02-03T00:00:00.00Z"
+      val template = templateCompiler.compile(TemplateName("/templates/filters/date-filter.beard")).get
+      it("should render the date for epoch milliseconds accordingly") {
+        val context = Map("now" -> millis, "format" -> Map("string" -> "yyyy"))
+        val renderResult = StringWriterRenderResult()
+        renderer.render(template, renderResult, context)
+        renderResult.result.toString should be ("<div>2016</div>")
+      }
+      it("should render the date for ISO formatted date accordingly") {
+        val context = Map("now" -> isoString, "format" -> Map("string" -> "yyyy"))
+        val renderResult = StringWriterRenderResult()
+        renderer.render(template, renderResult, context)
+        renderResult.result.toString should be ("<div>2016</div>")
+      }
+    }
+
+    describe("render with translation") {
+      val template = templateCompiler.compile(TemplateName("/templates/filters/translation.beard")).get
+      it("should render the appropriate message from the resource bundles") {
+        var renderResult = StringWriterRenderResult()
+        renderer.render(template, renderResult, Map("messageKey" -> "example.title"),
+          None,
+          EscapeStrategy.vanilla,
+          Locale.forLanguageTag("it"),
+          "messages")
+        renderResult.result.toString should be ("<div>Ciao</div>")
+
+        renderResult = StringWriterRenderResult()
+        renderer.render(template, renderResult, Map("messageKey" -> "example.title"),
+          None,
+          EscapeStrategy.vanilla,
+          Locale.forLanguageTag("en"),
+          "messages")
+        renderResult.result.toString should be ("<div>Hello</div>")
+
+        renderResult = StringWriterRenderResult()
+        renderer.render(template, renderResult, Map("messageKey" -> "example.title"),
+          None,
+          EscapeStrategy.vanilla,
+          Locale.forLanguageTag("de"),
+          "messages")
+        renderResult.result.toString should be ("<div>Hallo</div>")
       }
     }
   }

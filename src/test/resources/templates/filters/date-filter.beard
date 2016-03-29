@@ -1,0 +1,1 @@
+<div>{{ now | date format=format.string }}</div>

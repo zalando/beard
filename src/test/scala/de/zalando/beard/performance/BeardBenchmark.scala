@@ -1,5 +1,7 @@
 package de.zalando.beard.performance
 
+import java.util.{Locale, ResourceBundle}
+
 import de.zalando.beard.renderer._
 import org.scalameter.api._
 
