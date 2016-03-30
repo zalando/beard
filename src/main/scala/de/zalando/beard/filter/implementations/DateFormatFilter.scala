@@ -103,11 +103,11 @@ class DateFormatFilter extends Filter {
   }
 
   def getFormatFromMillis(millisAsString: String, formatter: DateTimeFormatter): String = {
-    formatter.format(LocalDateTime.ofInstant(Instant.ofEpochMilli(millisAsString.toLong), ZoneId.systemDefault()))
+    formatter.format(LocalDateTime.ofInstant(Instant.ofEpochMilli(millisAsString.toLong), ZoneId.of("GMT")))
   }
 
   def getFormatFromEpoch(epoch: String, formatter: DateTimeFormatter): String = {
-    formatter.format(LocalDateTime.ofInstant(Instant.ofEpochSecond(epoch.toLong), ZoneId.systemDefault()))
+    formatter.format(LocalDateTime.ofInstant(Instant.ofEpochSecond(epoch.toLong), ZoneId.of("GMT")))
   }
 
   def getFormatFromInstant(dateSrc: String, formatter: DateTimeFormatter): String = {
