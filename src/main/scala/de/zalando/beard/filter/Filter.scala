@@ -9,21 +9,16 @@ import scala.collection.immutable.Map
   * @author dpersa
   */
 trait Filter {
-
   def name: String
-
+  
   def apply(value: String, parameters: Map[String, Any] = Map.empty): String
 }
 
-class FilterException extends RuntimeException
-
-case class ParameterMissingException(parameterName: String) extends FilterException
-
-case class WrongParameterTypeException(parameterName: String, paramterType: String) extends FilterException
-
-case class TypeNotSupportedException(filterName: String, className: String) extends FilterException
-
-case class FilterNotFound(filterName: String) extends FilterException
+class FilterException(message: String) extends RuntimeException(message)
+case class ParameterMissingException(parameterName: String) extends FilterException(parameterName)
+case class WrongParameterTypeException(parameterName: String, paramterType: String) extends FilterException(parameterName)
+case class TypeNotSupportedException(filterName: String, className: String) extends FilterException(filterName)
+case class FilterNotFound(filterName: String) extends FilterException(filterName)
 
 case class InputFormatException(filterName: String, message: String) extends FilterException
 
@@ -55,3 +50,13 @@ object UppercaseFilter {
 
 
 
+class CapitalizeFilter extends Filter {
+  override def name = "capitalize"
+
+  override def apply(value: String, parameters: Map[String, Any]) : String =
+    value.capitalize
+}
+
+object CapitalizeFilter {
+  def apply(): CapitalizeFilter = new CapitalizeFilter()
+}
