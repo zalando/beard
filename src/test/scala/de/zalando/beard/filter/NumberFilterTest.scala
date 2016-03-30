@@ -1,5 +1,7 @@
 package de.zalando.beard.filter
 
+import java.util.Locale
+
 import de.zalando.beard.renderer.{TemplateName, StringWriterRenderResult, BeardTemplateRenderer, DefaultTemplateCompiler}
 import org.scalatest.{Matchers, FunSpec}
 
@@ -9,7 +11,7 @@ import scala.io.Source
   * Created by afurdylo on 11/03/16.
   */
 class NumberFilterTest extends FunSpec with Matchers {
-
+  Locale.setDefault(Locale.US)
   describe("NumberFilterTest") {
     val filter = new NumberFilter
     it("Should format integer") {
@@ -33,10 +35,10 @@ class NumberFilterTest extends FunSpec with Matchers {
     }
 
     it("Should format money") {
-      filter.apply("23045", Map("format" -> "#.00 ¤")) should be("23045.00 EUR")
+      filter.apply("23045", Map("format" -> "#.00 ¤")) should be("23045.00 $")
     }
     it("Should format money with rounding") {
-      filter.apply("23.46789", Map("format" -> "#.00 ¤")) should be("23.47 EUR")
+      filter.apply("23.46789", Map("format" -> "#.00 ¤")) should be("23.47 $")
     }
 
     it("Should format money with currency GBP") {
