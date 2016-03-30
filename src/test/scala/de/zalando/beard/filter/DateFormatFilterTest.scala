@@ -15,7 +15,7 @@ class DateFormatFilterTest extends FunSpec with Matchers {
     it("should recognize epoch: 981169506") {
       filter.apply("981169506", Map("format" -> "d-M-yy H:m:s.SSS")) shouldBe "3-2-01 4:5:6.000"
     }
-    it("should recognize yyyy-MM-dd: 2001-02-032001-02-03") {
+    it("should recognize yyyy-MM-dd: 2001-02-03") {
       filter.apply("2001-02-03", Map("format" -> "dd-MM-yyyy")) shouldBe "03-02-2001"
     }
     it("should recognize dd-MM-yyyy HH:mm:ss: 2001-02-03 04:05:06") {
@@ -31,10 +31,10 @@ class DateFormatFilterTest extends FunSpec with Matchers {
       filter.apply("2001-02-03T04:05:06+01:00", Map("format" -> "dd-MM-yyyy HH:mm:ss")) shouldBe "03-02-2001 04:05:06"
     }
     it("should recognize ISO_INSTANT: 2001-02-03T04:05:06.789Z") {
-      filter.apply("2001-02-03T04:05:06.789Z", Map("format" -> "dd-MM-yyyy HH:mm:ss.SSS")) shouldBe "03-02-2001 05:05:06.789"
+      filter.apply("2001-02-03T04:05:06.789Z", Map("format" -> "MM-yyyy mm:ss.SSS")) shouldBe "02-2001 05:06.789"
     }
     it("should recognize ISO_INSTANT: 2001-02-03T04:05:06Z") {
-      filter.apply("2001-02-03T04:05:06Z", Map("format" -> "dd-MM-yyyy HH:mm:ss")) shouldBe "03-02-2001 05:05:06"
+      filter.apply("2001-02-03T04:05:06Z", Map("format" -> "MM-yyyy mm:ss")) shouldBe "02-2001 05:06"
     }
     it("should recognize yyyy-M-dd: 2001-2-03") {
       filter.apply("2001-2-13", Map("format" -> "dd-MM-yyyy")) shouldBe "13-02-2001"
@@ -47,6 +47,9 @@ class DateFormatFilterTest extends FunSpec with Matchers {
     }
     it("should recognize dd-MM-yyyy: 03-02-2001") {
       filter.apply("03-02-2001", Map("format" -> "yyyy-MM-dd")) shouldBe "2001-02-03"
+    }
+    it("should recognize dd-MM-yyyy HH:mm:ss: 03-02-2001 04:05:06") {
+      filter.apply("03-02-2001 04:05:06", Map("format" -> "yyyy-MM-dd ss:mm:HH")) shouldBe "2001-02-03 06:05:04"
     }
     it("should recognize d-MM-yyyy: 3-12-2001") {
       filter.apply("3-12-2001", Map("format" -> "yyyy-MM-dd")) shouldBe "2001-12-03"
