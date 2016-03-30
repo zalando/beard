@@ -10,10 +10,10 @@ class DateFormatFilterTest extends FunSpec with Matchers {
   describe("DateFormat filter test") {
     val filter = DateFormatFilter()
     it("should recognize epoch: 981169506") {
-      filter.apply("981169506", Map("format" -> "d-M-yy H:m:s.SSS")) shouldBe "3-2-01 4:5:6.000"
+      filter.apply("981173106", Map("format" -> "d-M-yy H:m:s.SSS")) shouldBe "3-2-01 4:5:6.000"
     }
     it("should recognize millis: 981169506987") {
-      filter.apply("981169506987", Map("format" -> "dd-MM-yyyy HH:mm:ss.SSS")) shouldBe "03-02-2001 04:05:06.987"
+      filter.apply("981173106987", Map("format" -> "dd-MM-yyyy HH:mm:ss.SSS")) shouldBe "03-02-2001 04:05:06.987"
     }
     it("should recognize yyyyMMdd: 20010203") {
       filter.apply("20010203", Map("format" -> "dd-MM-yyyy")) shouldBe "03-02-2001"
