@@ -20,7 +20,7 @@ case class WrongParameterTypeException(parameterName: String, paramterType: Stri
 case class TypeNotSupportedException(filterName: String, className: String) extends FilterException(filterName)
 case class FilterNotFound(filterName: String) extends FilterException(filterName)
 
-case class InputFormatException(filterName: String, message: String) extends FilterException
+case class InputFormatException(filterName: String, message: String) extends FilterException(message)
 
 class LowercaseFilter extends Filter {
 

@@ -1,7 +1,11 @@
 package de.zalando.beard.renderer
 
+import java.util.Locale
+
 import de.zalando.beard.ast._
-import de.zalando.beard.filter.{Filter, FilterNotFound, FilterResolver, DefaultFilterResolver}
+import de.zalando.beard.filter.implementations.TranslationFilter
+import de.zalando.beard.filter.{DefaultFilterResolver, Filter, FilterNotFound, FilterResolver}
+
 import scala.collection.immutable.Seq
 
 /**
@@ -15,13 +19,16 @@ class BeardTemplateRenderer(templateCompiler: TemplateCompiler,
                 result: RenderResult[T],
                 context: Map[String, Any] = Map.empty,
                 layout: Option[BeardTemplate] = None,
-                escapeStrategy: EscapeStrategy = EscapeStrategy.vanilla): T = {
+                escapeStrategy: EscapeStrategy = EscapeStrategy.vanilla,
+                locale: Locale = Locale.getDefault,
+                resourceBundleName: String = ""
+                ): T = {
 
     layout match {
       case Some(layoutTemplate) =>
-        renderInternal(layoutTemplate, result, context, escapeStrategy, template)
+        renderInternal(layoutTemplate, result, context, escapeStrategy, locale, resourceBundleName, template)
       case None =>
-        renderInternal(template, result, context, escapeStrategy)
+        renderInternal(template, result, context, escapeStrategy, locale, resourceBundleName)
     }
 
     result.complete()
@@ -32,9 +39,11 @@ class BeardTemplateRenderer(templateCompiler: TemplateCompiler,
                                 renderResult: RenderResult[T],
                                 context: Predef.Map[String, Any] = Map.empty,
                                 escapeStrategy: EscapeStrategy,
+                                locale: Locale,
+                                resourceBundleName: String,
                                 yieldedTemplate: BeardTemplate = EmptyBeardTemplate) = {
 
-    template.statements.map(renderStatement(_, context, renderResult, yieldedTemplate, escapeStrategy))
+    template.statements.map(renderStatement(_, context, renderResult, yieldedTemplate, escapeStrategy, locale, resourceBundleName))
   }
 
   private def onNext[T](renderResult: RenderResult[T], string: String) = {
@@ -53,7 +62,9 @@ class BeardTemplateRenderer(templateCompiler: TemplateCompiler,
                                  context: Map[String, Any],
                                  renderResult: RenderResult[T],
                                  yieldedStatement: BeardTemplate,
-                                 escapeStrategy: EscapeStrategy): Unit = statement match {
+                                 escapeStrategy: EscapeStrategy,
+                                 locale: Locale,
+                                 resourceBundleName: String): Unit = statement match {
 
     case Text(text) => onNext(renderResult, text)
     case IdInterpolation(identifier, filters) => {
@@ -61,7 +72,7 @@ class BeardTemplateRenderer(templateCompiler: TemplateCompiler,
         case Some(value) => stringRepresentation(value, escapeStrategy)
         case _ => throw new IllegalStateException(s"The identifier ${identifier} was not resolved")
       }
-      val filteredIdentifierValue = filter(identifierValue, filters, context)
+      val filteredIdentifierValue = filter(identifierValue, filters, context, locale, resourceBundleName)
       onNext(renderResult, filteredIdentifierValue)
     }
     case RenderStatement(template, localValues) =>
@@ -72,7 +83,7 @@ class BeardTemplateRenderer(templateCompiler: TemplateCompiler,
         }
         case attrWitValue: AttributeWithValue => attrWitValue.key -> attrWitValue.value
       }.toMap
-      renderInternal(templateCompiler.compile(TemplateName(template)).get, renderResult, localContext, escapeStrategy)
+      renderInternal(templateCompiler.compile(TemplateName(template)).get, renderResult, localContext, escapeStrategy, locale, resourceBundleName)
     case ForStatement(templateIterator, templateIndex, collection, statements, addNewLine) => {
       val collectionOfContexts = ContextResolver.resolveCollection(collection, context)
 
@@ -93,13 +104,15 @@ class BeardTemplateRenderer(templateCompiler: TemplateCompiler,
           ForContextFactory.create(forIterationContext),
           renderResult,
           yieldedStatement,
-          escapeStrategy)
+          escapeStrategy,
+          locale,
+          resourceBundleName  )
       }
     }
     // extends should be ignored at render time
     case ExtendsStatement(template) => ()
 
-    case YieldStatement() => renderInternal(yieldedStatement, renderResult, context, escapeStrategy)
+    case YieldStatement() => renderInternal(yieldedStatement, renderResult, context, escapeStrategy, locale, resourceBundleName)
 
     case IfStatement(condition, ifStatements, elseStatements) =>
       val result = ContextResolver.resolve(condition, context) match {
@@ -113,25 +126,32 @@ class BeardTemplateRenderer(templateCompiler: TemplateCompiler,
       }
 
       for (statement <- if (result) ifStatements else elseStatements) {
-        renderStatement(statement, context, renderResult, yieldedStatement, escapeStrategy)
+        renderStatement(statement, context, renderResult, yieldedStatement, escapeStrategy, locale, resourceBundleName)
       }
     case _ => ()
   }
 
-  private[this] def filter[T](identifierValue: String, filterNodes: Seq[FilterNode], context: Map[String, Any]): String = {
+  private[this] def filter[T](identifierValue: String, filterNodes: Seq[FilterNode], context: Map[String, Any], locale: Locale, resourceBundleName: String): String = {
     filterNodes.foldLeft(identifierValue) {
       case (prevValue, filterNode) => {
 
         val filterIdentifier = filterNode.identifier.identifier
+        var parameters = filterNode.parameters.map {
+          case attr: AttributeWithIdentifier => (attr.key, ContextResolver.resolve(attr.id, context))
+          case attr: AttributeWithValue => (attr.key, attr.value)
+        }.toMap
         val filter = DefaultFilterResolver(filters).resolve(filterIdentifier, Set.empty) match {
+          case Some(filter: TranslationFilter) => {
+            if(!(parameters.contains("bundle") && parameters.contains("locale"))) {
+              parameters = parameters + ("bundle" -> resourceBundleName, "locale" -> locale)
+            }
+            filter
+          }
           case Some(filter) => filter
           case None => throw FilterNotFound(filterIdentifier)
         }
 
-        val parameters = filterNode.parameters.map { 
-          case attr: AttributeWithIdentifier => (attr.key, ContextResolver.resolve(attr.id, context))
-          case attr: AttributeWithValue => (attr.key, attr.value)
-        }.toMap
+
         filter.apply(identifierValue, parameters)
       }
     }
