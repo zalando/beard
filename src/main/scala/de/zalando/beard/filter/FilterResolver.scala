@@ -16,7 +16,7 @@ trait FilterResolver {
     DateFormatFilter(),
     CapitalizeFilter(),
     NumberFilter(),
-    MoneyFilter()
+    CurrencyFilter()
   )
 
   def filters: Map[String, Filter]

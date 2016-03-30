@@ -86,16 +86,16 @@ object NumberFilter {
   def apply(): NumberFilter = new NumberFilter()
 }
 
-class MoneyFilter extends Filter {
-  override def name: String = "money"
+class CurrencyFilter extends Filter {
+  override def name: String = "currency"
 
   override def apply(value: String, parameters: Predef.Map[String, Any]): String = {
     val number = BigDecimal(value)
-    val currency = parameters.get("currency") match {
+    val currency = parameters.get("symbol") match {
       case Some(symbol: String) => {
         Option(symbol)
       }
-      case Some(thing) => throw WrongParameterTypeException("currency", "String")
+      case Some(thing) => throw WrongParameterTypeException("symbol", "String")
       case _ => None
     }
     val formatter =  parameters.get("format") match {
@@ -114,8 +114,8 @@ class MoneyFilter extends Filter {
   }
 }
 
-object MoneyFilter {
-  def apply(): MoneyFilter = new MoneyFilter()
+object CurrencyFilter {
+  def apply(): CurrencyFilter = new CurrencyFilter()
 }
 
 class CapitalizeFilter extends Filter {

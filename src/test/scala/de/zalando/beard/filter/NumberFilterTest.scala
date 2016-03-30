@@ -34,25 +34,25 @@ class NumberFilterTest extends FunSpec with Matchers {
       filter.apply("23.046", Map("format" -> ".00")) should be("23.05")
     }
 
-    it("Should format money") {
+    it("Should format currency") {
       filter.apply("23045", Map("format" -> "#.00 ¤")) should be("23045.00 $")
     }
-    it("Should format money with rounding") {
+    it("Should format currency with rounding") {
       filter.apply("23.46789", Map("format" -> "#.00 ¤")) should be("23.47 $")
     }
 
-    it("Should format money with currency GBP") {
+    it("Should format currency with symbol GBP") {
       filter.apply("23", Map("format" -> "#.00 GBP")) should be("23.00 GBP")
     }
-    it("Should format money with currency €") {
+    it("Should format currency with symbol €") {
       filter.apply("23", Map("format" -> "#.00 €")) should be("23.00 €")
     }
 
-    describe("MoneyFilter template integration") {
+    describe("NumberFilter template integration") {
       val templateCompiler = DefaultTemplateCompiler
       val renderer = new BeardTemplateRenderer(templateCompiler)
 
-      it("Should format money in template") {
+      it("Should format number in template") {
         val expected = Source.fromInputStream(getClass.getResourceAsStream("/filters/number-filter.rendered")).mkString
         val renderResult = StringWriterRenderResult()
 
