@@ -15,7 +15,7 @@ class DateFormatFilter extends Filter {
   // {{ now | date format=format.Variable}}
   override def name = "date"
 
-  case class DateFormatNotSupportedException(formatString: String) extends FilterException
+  case class DateFormatNotSupportedException(formatString: String) extends FilterException(formatString)
 
   override def apply(value: String, parameters: Map[String, Any]): String =
     parameters.get("format") match {
