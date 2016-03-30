@@ -44,33 +44,35 @@ class DateFormatFilter extends Filter {
       // 981173106987
       """\d{12,13}""" -> "EPOCH_MILLI",
       // 2001-02-03
-      """\d\d\d\d-\d\d-\d\d""" -> "yyyy-MM-dd",
+      """\d{4}-\d\d-\d\d""" -> "yyyy-MM-dd",
       // 2001-02-03 04:05:06
-      """\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d""" -> "yyyy-MM-dd HH:mm:ss",
+      """\d{4}-\d\d-\d\d \d\d:\d\d:\d\d""" -> "yyyy-MM-dd HH:mm:ss",
       // 20010203
       """\d{8}""" -> "yyyyMMdd",
       // 2001-02-03T04:05:06
-      """\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\d""" -> "ISO_LOCAL_DATE_TIME",
+      """\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d""" -> "ISO_LOCAL_DATE_TIME",
       // 2001-02-03T04:05:06+01:00'
-      """\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\d[+\-]?\d\d:?\d\d""" -> "ISO_OFFSET_DATE_TIME",
+      """\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d[+\-]?\d\d:?\d\d""" -> "ISO_OFFSET_DATE_TIME",
       // '2001-02-03T04:05:06.789Z'
-      """\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{1,3}Z""" -> "ISO_INSTANT",
+      """\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{1,3}Z""" -> "ISO_INSTANT",
       // '2001-02-03T04:05:06Z'
-      """\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\dZ""" -> "ISO_INSTANT",
+      """\d{4}-\d\d-\d\dT\d\d:\d\d:\d\dZ""" -> "ISO_INSTANT",
       // 2001-2-13
-      """\d\d\d\d-\d-\d\d""" -> "yyyy-M-dd",
+      """\d{4}-\d-\d\d""" -> "yyyy-M-dd",
       // 2001-12-3
-      """\d\d\d\d-\d\d-\d""" -> "yyyy-MM-d",
+      """\d{4}-\d\d-\d""" -> "yyyy-MM-d",
       // 2001-2-3
-      """\d\d\d\d-\d-\d""" -> "yyyy-M-d",
+      """\d{4}-\d-\d""" -> "yyyy-M-d",
       // 03-02-2001
-      """\d\d-\d\d-\d\d\d\d""" -> "dd-MM-yyyy",
+      """\d\d-\d\d-\d{4}""" -> "dd-MM-yyyy",
+      // 03-02-2001 04:05:06
+      """\d\d-\d\d-\d{4} \d\d:\d\d:\d\d""" -> "dd-MM-yyyy HH:mm:ss",
       // 3-12-2001
-      """\d-\d\d-\d\d\d\d""" -> "d-MM-yyyy",
+      """\d-\d\d-\d{4}""" -> "d-MM-yyyy",
       // 13-2-2001
-      """\d\d-\d-\d\d\d\d""" -> "dd-M-yyyy",
+      """\d\d-\d-\d{4}""" -> "dd-M-yyyy",
       // 3-2-2001
-      """\d-\d-\d\d\d\d""" -> "d-M-yyyy",
+      """\d-\d-\d{4}""" -> "d-M-yyyy",
       // 04:05:06
       """\d\d:\d\d:\d\d""" -> "HH:mm:ss"
     )
