@@ -27,6 +27,9 @@ class DateFormatFilterTest extends FunSpec with Matchers {
     it("should recognize yyyy-MM-dd: 2001-02-03") {
       filter.apply("2001-02-03", Map("format" -> "dd-MM-yyyy")) shouldBe "03-02-2001"
     }
+    it("should recognize ISO_OFFSET_DATE: 2001-02-03+04:00") {
+      filter.apply("2001-02-03+04:00", Map("format" -> "dd-MM-yyyy")) shouldBe "03-02-2001"
+    }
     it("should recognize ISO_LOCAL_DATE_TIME: 2001-02-03T04:05:06") {
       filter.apply("2001-02-03T04:05:06", Map("format" -> "dd-MM-yyyy HH:mm:ss")) shouldBe "03-02-2001 04:05:06"
     }

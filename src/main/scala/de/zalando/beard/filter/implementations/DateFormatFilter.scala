@@ -1,6 +1,6 @@
 package de.zalando.beard.filter.implementations
 
-import java.time.{ZoneId, LocalDateTime, OffsetDateTime, Instant}
+import java.time.{ZoneId, LocalDateTime, LocalDate, OffsetDateTime, Instant}
 import java.time.format.DateTimeFormatter
 
 import de.zalando.beard.filter._
@@ -45,12 +45,14 @@ class DateFormatFilter extends Filter {
       """\d{12,13}""" -> "EPOCH_MILLI",
       // 20010203
       """\d{8}""" -> "yyyyMMdd",
-     // 2001-02-03 04:05:06
+      // 2001-02-03 04:05:06
       """\d{4}-\d\d-\d\d \d\d:\d\d:\d\d""" -> "yyyy-MM-dd HH:mm:ss",
       // 2001-02-03 04:05:06+01:00
       """\d{4}-\d\d-\d\d \d\d:\d\d:\d\d[+\-]?\d\d:?\d\d""" -> "yyyy-MM-dd HH:mm:ssZ",
-       // 2001-02-03
+      // 2001-02-03
       """\d{4}-\d\d-\d\d""" -> "yyyy-MM-dd",
+      // 2001-02-03+04:00
+      """\d{4}-\d\d-\d\d[+\-]?\d\d:?\d\d""" -> "ISO_OFFSET_DATE",
       // 2001-02-03T04:05:06
       """\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d""" -> "ISO_LOCAL_DATE_TIME",
       // 2001-02-03T04:05:06+01:00'
@@ -92,6 +94,7 @@ class DateFormatFilter extends Filter {
         case "ISO_INSTANT" => getFormatFromInstant(value, formatOut)
         case "ISO_LOCAL_DATE_TIME" => getFormatFromLocal(value, formatOut)
         case "ISO_OFFSET_DATE_TIME" => getFormatFromOffset(value, formatOut)
+        case "ISO_OFFSET_DATE"  => getFormatFromOffsetDate(value, formatOut)
         case _ => getFormatFromPattern(value, formatIn, formatOut)
       }
     }
@@ -100,39 +103,32 @@ class DateFormatFilter extends Filter {
   }
 
   def getFormatFromMillis(millisAsString: String, formatter: DateTimeFormatter): String = {
-    val dateTime: Instant = Instant.ofEpochMilli(millisAsString.toLong)
-    val formattedDate = formatter.format(LocalDateTime.ofInstant(dateTime, ZoneId.systemDefault()))
-    formattedDate
+    formatter.format(LocalDateTime.ofInstant(Instant.ofEpochMilli(millisAsString.toLong), ZoneId.systemDefault()))
   }
 
   def getFormatFromEpoch(epoch: String, formatter: DateTimeFormatter): String = {
-    val dateTime: Instant = Instant.ofEpochSecond(epoch.toLong)
-    val formattedDate = formatter.format(LocalDateTime.ofInstant(dateTime, ZoneId.systemDefault()))
-    formattedDate
+    formatter.format(LocalDateTime.ofInstant(Instant.ofEpochSecond(epoch.toLong), ZoneId.systemDefault()))
   }
 
   def getFormatFromInstant(dateSrc: String, formatter: DateTimeFormatter): String = {
-    val dateTime: Instant = Instant.parse(dateSrc)
-    val formattedDate = formatter.format(LocalDateTime.ofInstant(dateTime, ZoneId.systemDefault()))
-    formattedDate
+    formatter.format(LocalDateTime.ofInstant(Instant.parse(dateSrc), ZoneId.systemDefault()))
   }
 
   def getFormatFromLocal(dateSrc: String, formatter: DateTimeFormatter): String = {
-    val dateTime: LocalDateTime = LocalDateTime.parse(dateSrc)
-    val formattedDate = formatter.format(dateTime)
-    formattedDate
+    formatter.format(LocalDateTime.parse(dateSrc))
   }
 
   def getFormatFromOffset(dateSrc: String, formatter: DateTimeFormatter): String = {
-    val dateTime: OffsetDateTime = OffsetDateTime.parse(dateSrc)
-    val formattedDate = formatter.format(dateTime)
-    formattedDate
+    formatter.format(OffsetDateTime.parse(dateSrc))
+  }
+
+  def getFormatFromOffsetDate(dateSrc: String, formatter: DateTimeFormatter): String = {
+    formatter.format(LocalDate.parse(dateSrc, DateTimeFormatter.ISO_OFFSET_DATE))
   }
 
   def getFormatFromPattern(dateSrc: String, formatIn: String, formatter: DateTimeFormatter): String = {
     try {
-      val date = DateTimeFormatter.ofPattern(formatIn).parse(dateSrc)
-      formatter.format(date)
+      formatter.format(DateTimeFormatter.ofPattern(formatIn).parse(dateSrc))
     } catch {
       case e: Exception => throw new DateFormatNotSupportedException(formatIn)
     }
