@@ -9,20 +9,23 @@ import org.scalatest.{FunSpec, Matchers}
 class DateFormatFilterTest extends FunSpec with Matchers {
   describe("DateFormat filter test") {
     val filter = DateFormatFilter()
-    it("should recognize millis: 981169506987") {
-      filter.apply("981169506987", Map("format" -> "dd-MM-yyyy HH:mm:ss.SSS")) shouldBe "03-02-2001 04:05:06.987"
-    }
     it("should recognize epoch: 981169506") {
       filter.apply("981169506", Map("format" -> "d-M-yy H:m:s.SSS")) shouldBe "3-2-01 4:5:6.000"
     }
-    it("should recognize yyyy-MM-dd: 2001-02-03") {
-      filter.apply("2001-02-03", Map("format" -> "dd-MM-yyyy")) shouldBe "03-02-2001"
+    it("should recognize millis: 981169506987") {
+      filter.apply("981169506987", Map("format" -> "dd-MM-yyyy HH:mm:ss.SSS")) shouldBe "03-02-2001 04:05:06.987"
     }
-    it("should recognize dd-MM-yyyy HH:mm:ss: 2001-02-03 04:05:06") {
+    it("should recognize yyyyMMdd: 20010203") {
+      filter.apply("20010203", Map("format" -> "dd-MM-yyyy")) shouldBe "03-02-2001"
+    }
+    it("should recognize yyyy-MM-dd HH:mm:ss: 2001-02-03 04:05:06") {
       filter.apply("2001-02-03 04:05:06", Map("format" -> "dd-MM-yyyy HH:mm:ss")) shouldBe "03-02-2001 04:05:06"
     }
-    it("should recognize BASIC_ISO_DATE: 20010203") {
-      filter.apply("20010203", Map("format" -> "dd-MM-yyyy")) shouldBe "03-02-2001"
+    it("should recognize yyyy-MM-dd HH:mm:ss: 2001-02-03 04:05:06+03:00") {
+      filter.apply("2001-02-03 04:05:06", Map("format" -> "dd-MM-yyyy HH:mm:ss")) shouldBe "03-02-2001 04:05:06"
+    }
+    it("should recognize yyyy-MM-dd: 2001-02-03") {
+      filter.apply("2001-02-03", Map("format" -> "dd-MM-yyyy")) shouldBe "03-02-2001"
     }
     it("should recognize ISO_LOCAL_DATE_TIME: 2001-02-03T04:05:06") {
       filter.apply("2001-02-03T04:05:06", Map("format" -> "dd-MM-yyyy HH:mm:ss")) shouldBe "03-02-2001 04:05:06"
