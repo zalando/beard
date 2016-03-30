@@ -1,13 +1,14 @@
 package de.zalando.beard.renderer
 
 import de.zalando.beard.ast._
-import de.zalando.beard.filter.{FilterNotFound, FilterResolver, DefaultFilterResolver}
+import de.zalando.beard.filter.{Filter, FilterNotFound, FilterResolver, DefaultFilterResolver}
 import scala.collection.immutable.Seq
 
 /**
   * @author dpersa
   */
 class BeardTemplateRenderer(templateCompiler: TemplateCompiler,
+                            filters: Seq[Filter] = Seq(),
                             filterResolver: FilterResolver = DefaultFilterResolver()) {
 
   def render[T](template: BeardTemplate,
@@ -117,21 +118,20 @@ class BeardTemplateRenderer(templateCompiler: TemplateCompiler,
     case _ => ()
   }
 
-  private[this] def filter[T](identifierValue: String, filters: Seq[FilterNode], context: Map[String, Any]): String = {
-    filters.foldLeft(identifierValue) { 
+  private[this] def filter[T](identifierValue: String, filterNodes: Seq[FilterNode], context: Map[String, Any]): String = {
+    filterNodes.foldLeft(identifierValue) {
       case (prevValue, filterNode) => {
+
         val filterIdentifier = filterNode.identifier.identifier
-        val filter = DefaultFilterResolver().resolve(filterIdentifier, Set.empty) match {
+        val filter = DefaultFilterResolver(filters).resolve(filterIdentifier, Set.empty) match {
           case Some(filter) => filter
           case None => throw FilterNotFound(filterIdentifier)
         }
-        val parameters = filterNode.parameters.map {
-          case AttributeWithIdentifier(key, id) => (key, ContextResolver.resolve(id, context))
-          case AttributeWithValue(key, value) => (key, Option(value))
-        }.filter(_._2.isDefined)
-          .map{ case (k, v) => (k, v.get) }
-          .toMap
 
+        val parameters = filterNode.parameters.map { 
+          case attr: AttributeWithIdentifier => (attr.key, ContextResolver.resolve(attr.id, context))
+          case attr: AttributeWithValue => (attr.key, attr.value)
+        }.toMap
         filter.apply(identifierValue, parameters)
       }
     }
