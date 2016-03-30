@@ -128,10 +128,13 @@ class BeardTemplateRenderer(templateCompiler: TemplateCompiler,
           case None => throw FilterNotFound(filterIdentifier)
         }
 
-        val parameters = filterNode.parameters.map { 
-          case attr: AttributeWithIdentifier => (attr.key, ContextResolver.resolve(attr.id, context))
-          case attr: AttributeWithValue => (attr.key, attr.value)
-        }.toMap
+        val parameters = filterNode.parameters.map {
+          case AttributeWithIdentifier(key, id) => (key, ContextResolver.resolve(id, context))
+          case AttributeWithValue(key, value) => (key, Option(value))
+        }.filter(_._2.isDefined)
+          .map{ case (k, v) => (k, v.get) }
+          .toMap
+
         filter.apply(identifierValue, parameters)
       }
     }
