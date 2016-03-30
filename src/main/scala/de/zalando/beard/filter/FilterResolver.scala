@@ -12,7 +12,12 @@ import scala.collection.immutable.{Set, Seq, Map}
   */
 trait FilterResolver {
 
-  def registeredFilters = Seq(LowercaseFilter(), UppercaseFilter(), DateFormatFilter(), CapitalizeFilter(), TranslationFilter())
+  def registeredFilters = Seq(
+    LowercaseFilter(),
+    UppercaseFilter(),
+    DateFormatFilter(),
+    CapitalizeFilter(),
+    TranslationFilter())
 
   def filters: Map[String, Filter]
 
@@ -21,10 +26,10 @@ trait FilterResolver {
 
 case class DefaultFilterResolver(userFilters: Seq[Filter] = Seq()) extends FilterResolver {
   val logger = LoggerFactory.getLogger(this.getClass)
-  
+
   override def resolve(identifier: String, parameterNames: Set[String]): Option[Filter] = {
     logger.info(s"Resolve filter ${identifier}")
-    
+
     filters.get(identifier)
   }
 
