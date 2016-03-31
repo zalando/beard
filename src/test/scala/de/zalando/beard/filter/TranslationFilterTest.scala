@@ -10,9 +10,9 @@ class TranslationFilterTest extends FunSpec with Matchers{
   describe("Translation filter") {
     it("should  resolve locale and bundle when given correct arguments") {
       val filter = TranslationFilter()
-      filter.apply("example.title", Map("bundle" -> "messages", "locale" -> "de")) should be "Hallo"
-      filter.apply("example.title", Map("bundle" -> "messages", "locale" -> "en")) should be "Hello"
-      filter.apply("example.title", Map("bundle" -> "messages", "locale" -> "it")) should be "Ciao"
+      filter.apply("example.title", Map("bundle" -> "messages", "locale" -> "de")) should be ("Hallo")
+      filter.apply("example.title", Map("bundle" -> "messages", "locale" -> "en")) should be ("Hello")
+      filter.apply("example.title", Map("bundle" -> "messages", "locale" -> "it")) should be ("Ciao")
     }
 
     it("should complain about missing resource bundle") {
