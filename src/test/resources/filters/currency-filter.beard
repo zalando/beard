@@ -1,0 +1,12 @@
+<div class="amount1">
+{{transaction.amount | currency}}
+</div>
+<div class="amount2">
+{{transaction.amount | currency symbol="GBP"}}
+</div>
+<div class="amount3">
+{{transaction.amount | currency format="#.0 ¤" symbol=transaction.currency}}
+</div>
+<div class="amount4">
+{{transaction.amount | currency format="#.00 ¤" symbol="€"}}
+</div>

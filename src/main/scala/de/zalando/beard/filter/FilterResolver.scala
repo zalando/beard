@@ -14,7 +14,9 @@ trait FilterResolver {
     LowercaseFilter(),
     UppercaseFilter(),
     DateFormatFilter(),
-    CapitalizeFilter()
+    CapitalizeFilter(),
+    NumberFilter(),
+    CurrencyFilter()
   )
 
   def filters: Map[String, Filter]
