@@ -137,9 +137,12 @@ class BeardTemplateRenderer(templateCompiler: TemplateCompiler,
 
         val filterIdentifier = filterNode.identifier.identifier
         var parameters = filterNode.parameters.map {
-          case attr: AttributeWithIdentifier => (attr.key, ContextResolver.resolve(attr.id, context))
-          case attr: AttributeWithValue => (attr.key, attr.value)
-        }.toMap
+          case AttributeWithIdentifier(key, id) => (key, ContextResolver.resolve(id, context))
+          case AttributeWithValue(key, value) => (key, Option(value))
+        }.filter(_._2.isDefined)
+          .map{ case (k, v) => (k, v.get) }
+          .toMap
+
         val filter = DefaultFilterResolver(filters).resolve(filterIdentifier, Set.empty) match {
           case Some(filter: TranslationFilter) => {
             if(!(parameters.contains("bundle") && parameters.contains("locale"))) {
