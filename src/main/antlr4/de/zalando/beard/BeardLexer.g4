@@ -18,7 +18,9 @@ mode INSIDE_INTERPOLATION;
 
     SLASH: '/';
 
-    COMMA : ',';
+    COMMA: ',';
+    
+    BAR: '|';
 
     EXTENDS : 'extends';
 

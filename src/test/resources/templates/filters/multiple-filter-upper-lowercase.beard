@@ -1,0 +1,1 @@
+<div>{{ name | uppercase | lowercase | uppercase }}</div><div>{{ name | uppercase | lowercase | uppercase | lowercase }}</div>
