@@ -7,7 +7,7 @@ Beard is an open-source, logic-less templating engine, written in Scala and insp
 What makes Beard powerful:
 
   - **Streaming**. As soon as you need to render something, you can stream it to the browser. This provides high user-perceived performance.
-  - **Speed**. We've benchmarked it against other template engines for the JVM, and Beard performed much faster in terms of rendering time. (We invite you to run your own benchmarks to see if you get the same results.) It also uses [ANTRL](http://www.antlr.org/) to make template compilation fast.
+  - **Speed**. We've benchmarked it against other template engines for the JVM, and Beard performed much faster in terms of rendering time. (We invite you to run your own benchmarks to see if you get the same results.) It also uses [ANTLR](http://www.antlr.org/) to make template compilation fast.
   - It offers **template inheritance**.
   - Its **simple, beautiful syntax**. A la Mustache, it uses only the `{` and `}` markers for tags and delimiters.
   

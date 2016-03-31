@@ -1,9 +1,9 @@
 package de.zalando.beard.filter
 
+import de.zalando.beard.filter.implementations.{DateFormatFilter, TranslationFilter}
 import org.slf4j.LoggerFactory
 
-import de.zalando.beard.ast.Identifier
-import scala.collection.immutable.{Set, Seq, Map}
+import scala.collection.immutable.{Map, Seq, Set}
 
 /**
   * @author dpersa
@@ -11,13 +11,13 @@ import scala.collection.immutable.{Set, Seq, Map}
 trait FilterResolver {
 
   def registeredFilters = Seq(
+    CapitalizeFilter(),
+    CurrencyFilter(),
+    DateFormatFilter(),
+    NumberFilter(),
     LowercaseFilter(),
     UppercaseFilter(),
-    DateFormatFilter(),
-    CapitalizeFilter(),
-    NumberFilter(),
-    CurrencyFilter()
-  )
+    TranslationFilter())
 
   def filters: Map[String, Filter]
 
@@ -26,10 +26,10 @@ trait FilterResolver {
 
 case class DefaultFilterResolver(userFilters: Seq[Filter] = Seq()) extends FilterResolver {
   val logger = LoggerFactory.getLogger(this.getClass)
-  
+
   override def resolve(identifier: String, parameterNames: Set[String]): Option[Filter] = {
     logger.info(s"Resolve filter ${identifier}")
-    
+
     filters.get(identifier)
   }
 
