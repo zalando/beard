@@ -165,16 +165,33 @@ class BeardTemplateParserSpec extends FunSpec with Matchers {
     describe("attribute identifiers") {
 
       it("should not start with a number") {
-        BeardTemplateParser("{{9hello name=\"Dan\" color = 'blue'}}") should
+        val template = """{{9hello name="Dan" color = 'blue'}}"""
+        BeardTemplateParser(template) should
           be(BeardTemplate(Seq(
             AttrInterpolation(Identifier("hello"), Seq(AttributeWithValue("name", "Dan"), AttributeWithValue("color", "blue"))
             ))))
       }
 
-      //        it("should not allow special chars inside of attribute identifiers") {
-      //          BeardTemplateParser("{{h!el!l%o name=\"Dan\" color = 'blue'}}") should
-      //            be(BeardTemplate(Seq()))
-      //        }
+      it("should not start with a number in multiline") {
+        val template =
+          """<hello>
+            |{{9121hello name="Dan" color = 'blue'}}
+            |</hello>""".stripMargin
+
+        BeardTemplateParser(template) should
+          be(BeardTemplate(Seq(
+            Text("<hello>"),
+            NewLine(1),
+            AttrInterpolation(
+              Identifier("hello"),
+              Seq(AttributeWithValue("name", "Dan"), AttributeWithValue("color", "blue"))),
+            NewLine(1),
+            Text("</hello>"))))
+      }
+
+      it("should not allow special chars inside of attribute identifiers") {
+        an [NoSuchElementException] should be thrownBy BeardTemplateParser("""{{h!el!l%o name="Dan" color = 'blue'}}""")
+      }
     }
 
     it("should return a BeardTemplate containing an interpolation with attributes") {

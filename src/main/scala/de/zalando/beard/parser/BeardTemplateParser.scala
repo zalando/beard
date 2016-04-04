@@ -11,7 +11,7 @@ class BeardTemplateParser {
     val input = new ANTLRInputStream(s)
 
     // create a lexer that feeds off of input CharStream
-    val lexer = new BeardLexer(input)
+    val lexer = new CustomBeardLexer(input)
 
     // create a buffer of tokens pulled from the lexer
     val tokens = new CommonTokenStream(lexer)
