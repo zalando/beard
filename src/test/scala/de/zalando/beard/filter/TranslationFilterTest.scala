@@ -13,6 +13,7 @@ class TranslationFilterTest extends FunSpec with Matchers{
       filter.apply("example.title", Map("bundle" -> "messages", "locale" -> "de")) should be ("Hallo")
       filter.apply("example.title", Map("bundle" -> "messages", "locale" -> "en")) should be ("Hello")
       filter.apply("example.title", Map("bundle" -> "messages", "locale" -> "it")) should be ("Ciao")
+      filter.applyIterable(List("example.title", "example.name"), Map("bundle" -> "messages", "locale" -> "it")) should be (List("Ciao", "Zalando.it"))
     }
 
     it("should complain about missing resource bundle") {

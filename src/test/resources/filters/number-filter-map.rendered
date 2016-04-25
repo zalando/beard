@@ -1,0 +1,12 @@
+<div class="number1">
+(1,12.29),(2,15.6),(3,17.8)
+</div>
+<div class="number2">
+(1,12.3),(2,15.6),(3,17.8)
+</div>
+<div class="amount-as-number1">
+(1,12.3 $),(2,15.6 $),(3,17.8 $)
+</div>
+<div class="amount-as-number2">
+(1,12.29 €),(2,15.60 €),(3,17.80 €)
+</div>

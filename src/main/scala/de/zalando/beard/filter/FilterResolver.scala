@@ -11,13 +11,20 @@ import scala.collection.immutable.{Map, Seq, Set}
 trait FilterResolver {
 
   def registeredFilters = Seq(
+    AbsFilter(),
     CapitalizeFilter(),
     CurrencyFilter(),
     DateFormatFilter(),
-    NumberFilter(),
+    FirstFilter(),
+    LastFilter(),
     LowercaseFilter(),
+    NumberFilter(),
+    ReverseFilter(),
+    TranslationFilter(),
+    TitleFilter(),
+    TrimFilter(),
     UppercaseFilter(),
-    TranslationFilter())
+    UrlEncodeFilter())
 
   def filters: Map[String, Filter]
 
