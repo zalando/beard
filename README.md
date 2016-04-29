@@ -63,7 +63,8 @@ We've started a [Gitbook](https://danpersa.gitbooks.io/beard/content/) for addit
 - [Basic Usage](https://danpersa.gitbooks.io/beard/content/chapter-1-basic-usage.html): rendering an `index` template
 - [Control Flow](https://danpersa.gitbooks.io/beard/content/chapter-2-control-flow.html): If statements and For statements
 - [Template Inheritance](https://danpersa.gitbooks.io/beard/content/chapter-3-template-inheritance.html): layout templates and templates-to-be-rendered
-- [Quick Reference](https://danpersa.gitbooks.io/beard/content/chapter-4-quick-reference.html): with details and code on interpolation, comment statements, block statements, yield statements, and more
+- [Filters](https://danpersa.gitbooks.io/beard/content/chapter-4-filters.html): describes the filters feature
+- [Quick Reference](https://danpersa.gitbooks.io/beard/content/chapter-5-quick-reference.html): with details and code on interpolation, comment statements, block statements, yield statements, and more
 
 You can contribute to this documentation [here](https://github.com/danpersa/beard-book).
 
