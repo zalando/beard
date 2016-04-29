@@ -51,6 +51,7 @@ class BeardTemplateRenderer(templateCompiler: TemplateCompiler,
   }
 
   private def stringRepresentation(value: Any, escapeStrategy: EscapeStrategy): String = value match {
+    case s: String => escapeStrategy.escape(s) //shortcut the match if it's already a string.
     case null => ""
     case Some(str) => stringRepresentation(str, escapeStrategy)
     case None => ""
@@ -69,10 +70,12 @@ class BeardTemplateRenderer(templateCompiler: TemplateCompiler,
     case Text(text) => onNext(renderResult, text)
     case IdInterpolation(identifier, filters) => {
       val identifierValue = ContextResolver.resolve(identifier, context) match {
-        case Some(value) => stringRepresentation(value, escapeStrategy)
+        case Some(value) => value
         case _ => throw new IllegalStateException(s"The identifier ${identifier} was not resolved")
       }
-      val filteredIdentifierValue = filter(identifierValue, filters, context, locale, resourceBundleName)
+
+      val filteredIdentifierValue = filter(identifierValue, filters, context, locale, resourceBundleName, escapeStrategy, stringRepresentation(_: Any, escapeStrategy))
+
       onNext(renderResult, filteredIdentifierValue)
     }
     case RenderStatement(template, localValues) =>
@@ -106,7 +109,7 @@ class BeardTemplateRenderer(templateCompiler: TemplateCompiler,
           yieldedStatement,
           escapeStrategy,
           locale,
-          resourceBundleName  )
+          resourceBundleName)
       }
     }
     // extends should be ignored at render time
@@ -131,8 +134,15 @@ class BeardTemplateRenderer(templateCompiler: TemplateCompiler,
     case _ => ()
   }
 
-  private[this] def filter[T](identifierValue: String, filterNodes: Seq[FilterNode], context: Map[String, Any], locale: Locale, resourceBundleName: String): String = {
-    filterNodes.foldLeft(identifierValue) {
+  /**
+    * Apply a filter to an identifier, if the filter list is empty the stringified identifier is return as default.
+    *
+    * @param identifierValue: the actual value
+    * @param filterNodes: a list of filters to be applied
+    * @param stringifier: a function from any to string, used to return the filtered value into a string.
+    */
+  private[this] def filter[T](identifierValue: Any, filterNodes: Seq[FilterNode], context: Map[String, Any], locale: Locale, resourceBundleName: String, escapeStrategy: EscapeStrategy, stringifier: Any => String): String = {
+    filterNodes.foldLeft(stringifier(identifierValue)) {
       case (prevValue, filterNode) => {
 
         val filterIdentifier = filterNode.identifier.identifier
@@ -154,8 +164,13 @@ class BeardTemplateRenderer(templateCompiler: TemplateCompiler,
           case None => throw FilterNotFound(filterIdentifier)
         }
 
-
-        filter.apply(identifierValue, parameters)
+        stringifier {
+          identifierValue match { // check which filter needs to be applied.
+            case m: Map[_, _] => filter.applyMap(m, parameters) // map's arity is different from the iterable.
+            case i: Iterable[_] => filter.applyIterable(i, parameters)
+            case other => filter.apply(other.toString, parameters)
+          }
+        }
       }
     }
   }

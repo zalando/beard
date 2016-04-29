@@ -1,0 +1,12 @@
+<div class="amount1">
+(1,$12.26),(2,$14.56),(3,$29.90)
+</div>
+<div class="amount2">
+(1,GBP12.26),(2,GBP14.56),(3,GBP29.90)
+</div>
+<div class="amount3">
+(1,12.3 GBP),(2,14.6 GBP),(3,29.9 GBP)
+</div>
+<div class="amount4">
+(1,12.26 €),(2,14.56 €),(3,29.90 €)
+</div>
