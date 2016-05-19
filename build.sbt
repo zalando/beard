@@ -1,6 +1,6 @@
 name          := "beard"
 organization  := "de.zalando"
-version       := "0.0.7-SNAPSHOT"
+version       := "0.1.0"
 licenses      += ("Apache-2.0", url("http://www.apache.org/licenses/"))
 
 scalaVersion := "2.11.8"
