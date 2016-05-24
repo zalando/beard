@@ -6,7 +6,7 @@ import org.scalatest.{FunSpec, Matchers}
 /**
   * Created by scherniavsky on 3/26/16.
   */
-class DateFormatFilterTest extends FunSpec with Matchers {
+class DateFormatFilterSpec extends FunSpec with Matchers {
   describe("DateFormat filter test") {
     val filter = DateFormatFilter()
     it("should recognize epoch: 981169506") {

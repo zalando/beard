@@ -6,7 +6,7 @@ import org.scalatest.{FunSpec, Matchers}
 /**
   * Created by rweyand on 3/23/16.
   */
-class TranslationFilterTest extends FunSpec with Matchers{
+class TranslationFilterSpec extends FunSpec with Matchers{
   describe("Translation filter") {
     it("should  resolve locale and bundle when given correct arguments") {
       val filter = TranslationFilter()

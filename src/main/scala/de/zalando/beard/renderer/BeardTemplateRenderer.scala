@@ -74,9 +74,11 @@ class BeardTemplateRenderer(templateCompiler: TemplateCompiler,
         case _ => throw new IllegalStateException(s"The identifier ${identifier} was not resolved")
       }
 
-      val filteredIdentifierValue = filter(identifierValue, filters, context, locale, resourceBundleName, escapeStrategy, stringRepresentation(_: Any, escapeStrategy))
+      val filteredIdentifierValue = filter(identifierValue, filters, context, locale, resourceBundleName)
 
-      onNext(renderResult, filteredIdentifierValue)
+      val filteredString = stringRepresentation(filteredIdentifierValue, escapeStrategy)
+
+      onNext(renderResult, filteredString)
     }
     case RenderStatement(template, localValues) =>
       val localContext = localValues.map {
@@ -135,17 +137,22 @@ class BeardTemplateRenderer(templateCompiler: TemplateCompiler,
   }
 
   /**
-    * Apply a filter to an identifier, if the filter list is empty the stringified identifier is return as default.
+    * Apply a seq of filters to an identifier
+    * If the filter list is empty the identifier value is return as default
     *
     * @param identifierValue: the actual value
     * @param filterNodes: a list of filters to be applied
-    * @param stringifier: a function from any to string, used to return the filtered value into a string.
     */
-  private[this] def filter[T](identifierValue: Any, filterNodes: Seq[FilterNode], context: Map[String, Any], locale: Locale, resourceBundleName: String, escapeStrategy: EscapeStrategy, stringifier: Any => String): String = {
-    filterNodes.foldLeft(stringifier(identifierValue)) {
+  private[this] def filter[T](identifierValue: Any,
+                              filterNodes: Seq[FilterNode],
+                              context: Map[String, Any],
+                              locale: Locale,
+                              resourceBundleName: String): Any = {
+
+    filterNodes.foldLeft(identifierValue) {
       case (prevValue, filterNode) => {
 
-        val filterIdentifier = filterNode.identifier.identifier
+
         var parameters = filterNode.parameters.map {
           case AttributeWithIdentifier(key, id) => (key, ContextResolver.resolve(id, context))
           case AttributeWithValue(key, value) => (key, Option(value))
@@ -153,6 +160,7 @@ class BeardTemplateRenderer(templateCompiler: TemplateCompiler,
           .map{ case (k, v) => (k, v.get) }
           .toMap
 
+        val filterIdentifier = filterNode.identifier.identifier
         val filter = DefaultFilterResolver(filters).resolve(filterIdentifier, Set.empty) match {
           case Some(filter: TranslationFilter) => {
             if(!(parameters.contains("bundle") && parameters.contains("locale"))) {
@@ -164,12 +172,10 @@ class BeardTemplateRenderer(templateCompiler: TemplateCompiler,
           case None => throw FilterNotFound(filterIdentifier)
         }
 
-        stringifier {
-          identifierValue match { // check which filter needs to be applied.
-            case m: Map[_, _] => filter.applyMap(m, parameters) // map's arity is different from the iterable.
-            case i: Iterable[_] => filter.applyIterable(i, parameters)
-            case other => filter.apply(other.toString, parameters)
-          }
+        prevValue match { // check which filter needs to be applied.
+          case m: Map[_, _] => filter.applyMap(m, parameters) // map's arity is different from the iterable.
+          case i: Iterable[_] => filter.applyIterable(i, parameters)
+          case other => filter.apply(other.toString, parameters)
         }
       }
     }

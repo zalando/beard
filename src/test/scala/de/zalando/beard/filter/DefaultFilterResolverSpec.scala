@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory
 /**
   * @author dpersa
   */
-class DefaultFilterResolverTest extends FunSpec {
+class DefaultFilterResolverSpec extends FunSpec {
 
   val logger = LoggerFactory.getLogger(this.getClass)
   
