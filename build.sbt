@@ -1,3 +1,7 @@
+import com.typesafe.sbt.SbtScalariform.{ScalariformKeys, scalariformSettingsWithIt}
+
+import scalariform.formatter.preferences.{AlignSingleLineCaseStatements, DanglingCloseParenthesis, DoubleIndentClassDeclaration, Preserve, PreserveSpaceBeforeArguments, SpacesAroundMultiImports}
+
 name          := "beard"
 organization  := "de.zalando"
 version       := "0.1.1-SNAPSHOT"
@@ -43,6 +47,16 @@ libraryDependencies ++= {
 
 
 net.virtualvoid.sbt.graph.Plugin.graphSettings
+
+scalariformSettings
+ScalariformKeys.preferences := ScalariformKeys.preferences.value
+  .setPreference(AlignSingleLineCaseStatements, true)
+  .setPreference(AlignSingleLineCaseStatements.MaxArrowIndent, 100)
+  .setPreference(PreserveSpaceBeforeArguments, true)
+  .setPreference(DanglingCloseParenthesis, Preserve)
+  .setPreference(DoubleIndentClassDeclaration, true)
+  .setPreference(SpacesAroundMultiImports, false)
+
 // testFrameworks += new TestFramework("org.scalameter.ScalaMeterFramework")
 
 publishMavenStyle       := true

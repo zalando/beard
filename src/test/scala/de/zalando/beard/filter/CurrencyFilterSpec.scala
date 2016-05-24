@@ -8,8 +8,8 @@ import org.scalatest.{Matchers, FunSpec}
 import scala.io.Source
 
 /**
-  * Created by afurdylo on 16/03/16.
-  */
+ * Created by afurdylo on 16/03/16.
+ */
 class CurrencyFilterSpec extends FunSpec with Matchers {
   Locale.setDefault(Locale.US)
   describe("CurrencyFilterTest") {

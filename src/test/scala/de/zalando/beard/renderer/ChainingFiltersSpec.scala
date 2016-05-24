@@ -5,7 +5,6 @@ import org.scalatest.{FunSpec, Matchers}
 
 import scala.io.Source
 
-
 class ChainingFiltersSpec extends FunSpec with Matchers {
 
   describe("when chaining filters") {

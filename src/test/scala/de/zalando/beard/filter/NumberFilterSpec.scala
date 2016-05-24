@@ -6,8 +6,8 @@ import org.scalatest.{Matchers, FunSpec}
 import scala.io.Source
 
 /**
-  * @author afurdylo
-  */
+ * @author afurdylo
+ */
 class NumberFilterSpec extends FunSpec with Matchers {
 
   Locale.setDefault(Locale.US)

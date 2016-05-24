@@ -12,8 +12,10 @@ import scala.collection.JavaConverters._
  */
 object MustacheJavaBenchmark extends Bench.LocalTime {
 
-  val context = Map[String, AnyRef]("example" -> Map("title" -> "Mustache").asJava,
-    "presentations" -> Seq(Map("title" -> "Title1", "speakerName" -> "Name1", "summary" -> "Summary1").asJava,
+  val context = Map[String, AnyRef](
+    "example" -> Map("title" -> "Mustache").asJava,
+    "presentations" -> Seq(
+      Map("title" -> "Title1", "speakerName" -> "Name1", "summary" -> "Summary1").asJava,
       Map("title" -> "Title2", "speakerName" -> "Name2", "summary" -> "Summary2").asJava).asJava).asJava
 
   val mf = new DefaultMustacheFactory()
@@ -27,11 +29,12 @@ object MustacheJavaBenchmark extends Bench.LocalTime {
   performance of "Mustache" in {
     measure method "render" in {
       using(ranges) in {
-        (r: Range) => {
-          r.foreach { _ =>
-            mustache.execute(new PrintWriter(new StringWriter()), context).flush()
+        (r: Range) =>
+          {
+            r.foreach { _ =>
+              mustache.execute(new PrintWriter(new StringWriter()), context).flush()
+            }
           }
-        }
       }
     }
   }

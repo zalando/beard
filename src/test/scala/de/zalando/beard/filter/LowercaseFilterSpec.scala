@@ -5,8 +5,8 @@ import java.util.Locale
 import org.scalatest.{FunSpec, Matchers}
 
 /**
-  * @author Emiliano Busiello.
-  */
+ * @author Emiliano Busiello.
+ */
 class LowercaseFilterSpec extends FunSpec with Matchers {
   describe("LowercaseFilterTest") {
 

@@ -11,10 +11,11 @@ import scala.collection.JavaConverters._
  */
 object JadeBenchmark extends Bench.LocalTime {
 
-  val context = Map[String, AnyRef]("example" -> Map("title" -> "Mustache").asJava,
-    "presentations" -> Seq(Map("title" -> "Title1", "speakerName" -> "Name1", "summary" -> "Summary1").asJava,
+  val context = Map[String, AnyRef](
+    "example" -> Map("title" -> "Mustache").asJava,
+    "presentations" -> Seq(
+      Map("title" -> "Title1", "speakerName" -> "Name1", "summary" -> "Summary1").asJava,
       Map("title" -> "Title2", "speakerName" -> "Name2", "summary" -> "Summary2").asJava).asJava).asJava
-
 
   val loader = new ClasspathTemplateLoader()
   val config = new JadeConfiguration()
@@ -30,11 +31,12 @@ object JadeBenchmark extends Bench.LocalTime {
   performance of "Jade" in {
     measure method "render" in {
       using(ranges) in {
-        (r: Range) => {
-          r.foreach { _ =>
-            config.renderTemplate(template, context)
+        (r: Range) =>
+          {
+            r.foreach { _ =>
+              config.renderTemplate(template, context)
+            }
           }
-        }
       }
     }
   }

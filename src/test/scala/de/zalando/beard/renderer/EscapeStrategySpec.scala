@@ -3,8 +3,8 @@ package de.zalando.beard.renderer
 import org.scalatest.{Matchers, FunSpec}
 
 /**
-  * @autor cesarla
-  */
+ * @autor cesarla
+ */
 class EscapeStrategySpec extends FunSpec with Matchers {
   describe("XMLEscapeStrategy") {
     it("should escape the XML/HTML special characters") {

@@ -3,8 +3,8 @@ package de.zalando.beard.filter
 import org.scalatest.{FunSpec, Matchers}
 
 /**
-  * @author Emiliano Busiello.
-  */
+ * @author Emiliano Busiello.
+ */
 class AbsFilterSpec extends FunSpec with Matchers {
   describe("AbsFilterTest") {
 

@@ -4,8 +4,8 @@ import de.zalando.beard.filter.implementations.DateFormatFilter
 import org.scalatest.{FunSpec, Matchers}
 
 /**
-  * Created by scherniavsky on 3/26/16.
-  */
+ * Created by scherniavsky on 3/26/16.
+ */
 class DateFormatFilterSpec extends FunSpec with Matchers {
   describe("DateFormat filter test") {
     val filter = DateFormatFilter()

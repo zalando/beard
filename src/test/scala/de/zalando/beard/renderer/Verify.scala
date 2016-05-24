@@ -7,8 +7,8 @@ import org.slf4j.LoggerFactory
 import scala.io.Source
 
 /**
-  * @author dpersa
-  */
+ * @author dpersa
+ */
 class Verify(val renderer: BeardTemplateRenderer) extends Matchers {
 
   private val logger = LoggerFactory.getLogger(this.getClass)

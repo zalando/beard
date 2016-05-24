@@ -1,23 +1,23 @@
 package de.zalando.beard.renderer
 
 /**
-  * @author cesarla
-  */
+ * @author cesarla
+ */
 trait EscapeStrategy {
 
-  def escape(text: String) : String
+  def escape(text: String): String
 
 }
 
 class XMLEscapeStrategy extends EscapeStrategy {
 
-  override def escape(value: String) : String = scala.xml.Utility.escape(value)
+  override def escape(value: String): String = scala.xml.Utility.escape(value)
 
 }
 
 class VanillaEscapeStrategy extends EscapeStrategy {
 
-  override def escape(value: String) : String = value
+  override def escape(value: String): String = value
 
 }
 

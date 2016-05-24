@@ -20,8 +20,10 @@ object FreemarkerBenchmark extends Bench.LocalTime {
 
   val template = config.getTemplate("freemarker-benchmark/index.ftl")
 
-  val context = Map[String, AnyRef]("example" -> Map("title" -> "Freemarker").asJava,
-    "presentations" -> Seq(Map("title" -> "Title1", "speakerName" -> "Name1", "summary" -> "Summary1").asJava,
+  val context = Map[String, AnyRef](
+    "example" -> Map("title" -> "Freemarker").asJava,
+    "presentations" -> Seq(
+      Map("title" -> "Title1", "speakerName" -> "Name1", "summary" -> "Summary1").asJava,
       Map("title" -> "Title2", "speakerName" -> "Name2", "summary" -> "Summary2").asJava).asJava).asJava
 
   val con = new util.HashMap[String, Object]()
@@ -35,11 +37,12 @@ object FreemarkerBenchmark extends Bench.LocalTime {
   performance of "Freemarker" in {
     measure method "render" in {
       using(ranges) in {
-        (r: Range) => {
-          r.foreach { _ =>
-            template.process(con, new StringWriter())
+        (r: Range) =>
+          {
+            r.foreach { _ =>
+              template.process(con, new StringWriter())
+            }
           }
-        }
       }
     }
   }

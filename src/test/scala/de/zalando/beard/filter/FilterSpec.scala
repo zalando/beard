@@ -3,8 +3,8 @@ package de.zalando.beard.filter
 import org.scalatest.{FunSpec, Matchers}
 
 /**
-  * @author boopathi
-  */
+ * @author boopathi
+ */
 class FilterSpec extends FunSpec with Matchers {
 
   describe("filters") {
@@ -38,6 +38,6 @@ class FilterSpec extends FunSpec with Matchers {
   private def getFilter(name: String) =
     DefaultFilterResolver().resolve(name, Set.empty) match {
       case Some(filter) => filter
-      case None => throw FilterNotFound(name)
+      case None         => throw FilterNotFound(name)
     }
 }

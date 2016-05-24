@@ -1,9 +1,7 @@
 package de.zalando.beard.renderer
 
 import java.io.File
-
 import org.slf4j.LoggerFactory
-
 import scala.io.Source
 
 /**
@@ -14,9 +12,10 @@ trait TemplateLoader {
   def load(templateName: TemplateName): Option[Source]
 }
 
-class ClasspathTemplateLoader(val templatePrefix: String = "",
-                              val templateSuffix: String = "") extends TemplateLoader {
-  
+class ClasspathTemplateLoader(
+  val templatePrefix: String = "",
+    val templateSuffix: String = "") extends TemplateLoader {
+
   private val logger = LoggerFactory.getLogger(this.getClass)
 
   override def load(templateName: TemplateName) = {
@@ -33,9 +32,10 @@ class ClasspathTemplateLoader(val templatePrefix: String = "",
   }
 }
 
-class FileTemplateLoader(val directoryPath: String,
-                         val templateSuffix: String = ""
-                         ) extends TemplateLoader {
+class FileTemplateLoader(
+  val directoryPath: String,
+    val templateSuffix: String = ""
+) extends TemplateLoader {
 
   override def load(templateName: TemplateName) = {
 

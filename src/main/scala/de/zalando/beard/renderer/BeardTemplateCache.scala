@@ -1,7 +1,6 @@
 package de.zalando.beard.renderer
 
 import de.zalando.beard.ast.BeardTemplate
-
 import scala.collection.immutable.Map
 
 /**
