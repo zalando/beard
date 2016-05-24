@@ -25,10 +25,12 @@ Here's a code snippet to show you how simply Beard can parse templates:
 ```
 
 ## Requirements
+
 - Scala 2.10 or 2.11
 - a package manager like sbt or Maven
 
 ## Installing
+
 If you're using sbt, add this line to your build.sbt file:
 
     libraryDependencies += "de.zalando" %% "beard" % "0.1.1"
@@ -45,19 +47,10 @@ If you're using Maven, run this:
     	<version>0.1.1</version>
     </dependency>
  
-Binaries are available from [bintray](https://bintray.com/zalando/maven/beard/0.1.1/view).
-   
-## Publishing
+Binaries are available from [bintray](https://bintray.com/zalando/maven/beard/0.1.1/view)
 
-To login to bintray:
+## Additional Documentation
 
-    sbt bintrayChangeCredentials
-
-Then, for cross-publish:
-
-    sbt +publish
-
-##Additional Documentation
 We've started a [Gitbook](https://danpersa.gitbooks.io/beard/content/) for additional docs. There, you'll find more information on:
 
 - [Basic Usage](https://danpersa.gitbooks.io/beard/content/chapter-1-basic-usage.html): rendering an `index` template
@@ -69,6 +62,7 @@ We've started a [Gitbook](https://danpersa.gitbooks.io/beard/content/) for addit
 You can contribute to this documentation [here](https://github.com/danpersa/beard-book).
 
 ##Contributing/TODO List
+
 We gladly welcome contributions—just submit a pull request with a short note summarizing briefly (1-2 sentences) what you've done. If you'd like to make a substantial contribution to Beard, we could use your help with these items:
 - adding filters: ind Handlebars, Angular, Twig, etc.
 - providing more meaningful error messages
