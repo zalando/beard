@@ -9,11 +9,13 @@ class CapitalizeFilterSpec extends FunSpec with Matchers {
   describe("CapitalizeFilterTest") {
 
     val filter = new CapitalizeFilter
+
     it("Should not modify capitalized values") {
       filter.apply("Aaa") should be("Aaa")
       filter.applyIterable(List("Aaa", "Bbb")) should be(List("Aaa", "Bbb"))
       filter.applyMap(Map(1 -> "Aaa", 2 -> "Bbb")) should be(Map("1" -> "Aaa", "2" -> "Bbb"))
     }
+
     it("Should modify non capitalized values") {
       filter.apply("aaa") should be("Aaa")
       filter.applyIterable(List("aAa", "bbB")) should be(List("AAa", "BbB"))

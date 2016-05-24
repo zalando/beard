@@ -6,9 +6,11 @@ import org.scalatest.{FunSpec, Matchers}
  * @author Emiliano Busiello.
  */
 class LastFilterSpec extends FunSpec with Matchers {
+
   describe("LastFilterTest") {
 
     val filter = new LastFilter
+
     it("Should return the last letter/element") {
       filter.apply("Aaa") should be("a")
       filter.applyIterable(List("Aaa", "Bbb")) should be(List("Bbb"))

@@ -13,7 +13,9 @@ class NumberFilterSpec extends FunSpec with Matchers {
   Locale.setDefault(Locale.US)
 
   describe("NumberFilterTest") {
+
     val filter = new NumberFilter
+
     it("should not throw on empy collections") {
       filter.applyIterable(List()) should be(List())
       filter.applyIterable(List()) should be(List())

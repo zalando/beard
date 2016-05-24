@@ -6,9 +6,11 @@ import org.scalatest.{FunSpec, Matchers}
  * @author Emiliano Busiello.
  */
 class ReverseFilterSpec extends FunSpec with Matchers {
+
   describe("ReverseFilterTest") {
 
     val filter = new ReverseFilter
+
     it("Should return the reversed letter/element") {
       filter.apply("Aaa") should be("aaA")
       filter.applyIterable(List("Aaa", "Bbb")) should be(List("Bbb", "Aaa"))

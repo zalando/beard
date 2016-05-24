@@ -51,5 +51,4 @@ class ChainingFiltersSpec extends FunSpec with Matchers {
       }
     }
   }
-
 }

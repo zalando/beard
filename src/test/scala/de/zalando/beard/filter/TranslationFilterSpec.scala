@@ -4,7 +4,7 @@ import de.zalando.beard.filter.implementations.TranslationFilter
 import org.scalatest.{FunSpec, Matchers}
 
 /**
- * Created by rweyand on 3/23/16.
+ * @author rweyand
  */
 class TranslationFilterSpec extends FunSpec with Matchers {
   describe("Translation filter") {

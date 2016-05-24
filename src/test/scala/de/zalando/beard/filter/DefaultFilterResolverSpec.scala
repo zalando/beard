@@ -16,6 +16,5 @@ class DefaultFilterResolverSpec extends FunSpec {
       logger.info("start")
       DefaultFilterResolver().resolve("currency", Set("symbol"))
     }
-
   }
 }

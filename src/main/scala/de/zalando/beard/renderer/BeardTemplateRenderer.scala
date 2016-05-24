@@ -11,7 +11,7 @@ import scala.collection.immutable.Seq
  * @author dpersa
  */
 class BeardTemplateRenderer(
-  templateCompiler: TemplateCompiler,
+    templateCompiler: TemplateCompiler,
     filters: Seq[Filter] = Seq(),
     filterResolver: FilterResolver = DefaultFilterResolver()) {
 

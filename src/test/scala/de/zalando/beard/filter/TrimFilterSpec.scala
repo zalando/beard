@@ -9,6 +9,7 @@ class TrimFilterSpec extends FunSpec with Matchers {
   describe("TrimFilterTest") {
 
     val filter = new TrimFilter
+
     it("Should return the trimmed value") {
       filter.apply("  Aaa ") should be("Aaa")
       filter.applyIterable(List("Aaa  ", "  Bbb")) should be(List("Aaa", "Bbb"))

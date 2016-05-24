@@ -13,7 +13,7 @@ trait TemplateLoader {
 }
 
 class ClasspathTemplateLoader(
-  val templatePrefix: String = "",
+    val templatePrefix: String = "",
     val templateSuffix: String = "") extends TemplateLoader {
 
   private val logger = LoggerFactory.getLogger(this.getClass)
@@ -33,7 +33,7 @@ class ClasspathTemplateLoader(
 }
 
 class FileTemplateLoader(
-  val directoryPath: String,
+    val directoryPath: String,
     val templateSuffix: String = ""
 ) extends TemplateLoader {
 

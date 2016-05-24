@@ -32,7 +32,6 @@ class FilterSpec extends FunSpec with Matchers {
       filter.apply("1991-03-10", Map("format" -> "MMddyy")) should be("031091")
       filter.apply("2011-01-01+01:00", Map("format" -> "D")) should be("1")
     }
-
   }
 
   private def getFilter(name: String) =

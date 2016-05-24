@@ -8,7 +8,9 @@ import org.scalatest.{FunSpec, Matchers}
 class TitleFilterSpec extends FunSpec with Matchers {
 
   describe("TitleFilterTest") {
+
     val filter = new TitleFilter
+
     it("Should return the titled value") {
       filter.apply("aaa, lll") should be("Aaa, Lll")
       filter.applyIterable(List("aaa, lll", "bbb, lll")) should be(List("Aaa, Lll", "Bbb, Lll"))
