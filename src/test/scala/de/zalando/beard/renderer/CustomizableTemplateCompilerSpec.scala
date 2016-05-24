@@ -69,8 +69,9 @@ class CustomizableTemplateCompilerSpec extends FunSpec with Matchers {
         val template = compiler.compile(TemplateName("/extends-example/index.beard")).get
 
         template should be(
-          BeardTemplate(List(
-            Text( """<html>
+          BeardTemplate(
+            List(
+            Text("""<html>
                     |    <div>This is the head</div>
                     |    <body>
                     |        <div>This is the header</div>
@@ -81,8 +82,9 @@ class CustomizableTemplateCompilerSpec extends FunSpec with Matchers {
                     |        </div>
                     |    </body>
                     |<html>""".stripMargin)),
-            None, Seq(RenderStatement("/extends-example/head.beard"),
-              RenderStatement("/extends-example/header.beard")))
+            None, Seq(
+            RenderStatement("/extends-example/head.beard"),
+            RenderStatement("/extends-example/header.beard")))
         )
       }
     }

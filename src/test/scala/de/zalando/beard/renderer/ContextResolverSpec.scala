@@ -12,8 +12,9 @@ class ContextResolverSpec extends FunSpec with Matchers {
   val users = Seq(Map("name" -> "Gigi"), Map("name" -> "Gicu"))
   val emails = Seq("gicu@yahoo.com", "gigi@yahoo.com")
 
-  val context = Map("objects" -> Map("users" -> users, "emails" -> emails),
-                    "emails" -> emails)
+  val context = Map(
+    "objects" -> Map("users" -> users, "emails" -> emails),
+    "emails" -> emails)
 
   describe("ContextResolver") {
 

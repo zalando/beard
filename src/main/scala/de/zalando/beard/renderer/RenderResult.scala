@@ -1,9 +1,8 @@
 package de.zalando.beard.renderer
 
 import java.io.StringWriter
-
 import monifu.reactive.subjects.ReplaySubject
-import monifu.reactive.{Observable, Subject}
+import monifu.reactive.Observable
 
 /**
  * @author dpersa
@@ -28,7 +27,7 @@ case class StringWriterRenderResult() extends RenderResult[StringWriter] {
 }
 
 case class MonifuRenderResult()
-  extends RenderResult[Observable[String]] {
+    extends RenderResult[Observable[String]] {
 
   val subject = ReplaySubject[Observable[String]]()
 

@@ -17,8 +17,10 @@ object HandlebarsBenchmark extends Bench.LocalTime {
 
   var template = handlebars.compile("index")
 
-  val context = Map[String, AnyRef]("example" -> Map("title" -> "Mustache").asJava,
-    "presentations" -> Seq(Map("title" -> "Title1", "speakerName" -> "Name1", "summary" -> "Summary1").asJava,
+  val context = Map[String, AnyRef](
+    "example" -> Map("title" -> "Mustache").asJava,
+    "presentations" -> Seq(
+      Map("title" -> "Title1", "speakerName" -> "Name1", "summary" -> "Summary1").asJava,
       Map("title" -> "Title2", "speakerName" -> "Name2", "summary" -> "Summary2").asJava).asJava).asJava
 
   val sizes = Gen.range("size")(1, 100000, 20000)
@@ -29,11 +31,12 @@ object HandlebarsBenchmark extends Bench.LocalTime {
   performance of "Handlebars" in {
     measure method "render" in {
       using(ranges) in {
-        (r: Range) => {
-          r.foreach { _ =>
-            template.apply(context)
+        (r: Range) =>
+          {
+            r.foreach { _ =>
+              template.apply(context)
+            }
           }
-        }
       }
     }
   }

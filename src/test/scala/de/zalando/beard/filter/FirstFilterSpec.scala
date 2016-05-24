@@ -3,12 +3,14 @@ package de.zalando.beard.filter
 import org.scalatest.{FunSpec, Matchers}
 
 /**
-  * @author Emiliano Busiello.
-  */
+ * @author Emiliano Busiello.
+ */
 class FirstFilterSpec extends FunSpec with Matchers {
+
   describe("FirstFilterTest") {
 
     val filter = new FirstFilter
+
     it("Should return the first letter/element") {
       filter.apply("Aaa") should be("A")
       filter.applyIterable(List("Aaa", "Bbb")) should be(List("Aaa"))

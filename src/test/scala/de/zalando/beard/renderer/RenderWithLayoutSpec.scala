@@ -19,7 +19,6 @@ class RenderWithLayoutSpec extends FunSpec with Matchers {
   val applicationLayout = templateCompiler.compile(TemplateName("/layouts/application")).get
   val doubleColumnLayout = templateCompiler.compile(TemplateName("/layouts/double-column")).get
 
-
   val context: Map[String, Map[String, Object]] = Map("example" -> Map("title" -> "Title"))
 
   it("should render the template with the application layout") {

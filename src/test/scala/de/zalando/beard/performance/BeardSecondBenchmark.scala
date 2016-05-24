@@ -23,7 +23,8 @@ object BeardSecondBenchmark extends Bench.LocalTime {
   var compiledTemplate = compiler.compile(TemplateName("/beard-second-benchmark/index.beard")).get
 
   val context: Map[String, Map[String, Object]] = Map("example" -> Map("title" -> "Title", "presentations" ->
-    Seq(Map("title" -> "Title1", "speakerName" -> "Name1", "summary" -> "Summary1"),
+    Seq(
+      Map("title" -> "Title1", "speakerName" -> "Name1", "summary" -> "Summary1"),
       Map("title" -> "Title2", "speakerName" -> "Name2", "summary" -> "Summary2"))))
 
   val sizes = Gen.range("size")(1, 100000, 20000)
@@ -39,11 +40,12 @@ object BeardSecondBenchmark extends Bench.LocalTime {
   performance of "Beard" in {
     measure method "render" in {
       using(ranges) in {
-        (r: Range) => {
-          r.foreach { _ =>
-            renderer.render(compiledTemplate, MonifuRenderResult(), context, None, EscapeStrategy.vanilla)
+        (r: Range) =>
+          {
+            r.foreach { _ =>
+              renderer.render(compiledTemplate, MonifuRenderResult(), context, None, EscapeStrategy.vanilla)
+            }
           }
-        }
       }
     }
   }

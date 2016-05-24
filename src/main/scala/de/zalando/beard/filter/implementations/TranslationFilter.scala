@@ -1,14 +1,12 @@
 package de.zalando.beard.filter.implementations
 
 import java.util.{Locale, ResourceBundle}
-
 import de.zalando.beard.filter.{Filter, ParameterMissingException}
 
-import scala.util.Try
 /**
-  * Created by rweyand on 3/22/16.
-  */
-class TranslationFilter() extends Filter{
+ * @author rweyand
+ */
+class TranslationFilter() extends Filter {
 
   override def name: String = "translate"
 
@@ -17,13 +15,13 @@ class TranslationFilter() extends Filter{
     val bundleNameParam = parameters.get("bundle")
     (localeStringParam, bundleNameParam) match {
       case (Some(locale: Locale), Some(bundleName: String)) => {
-       fetchStringFromBundle(locale, bundleName, value)
+        fetchStringFromBundle(locale, bundleName, value)
       }
       case (Some(locale: String), Some(bundleName: String)) => {
         fetchStringFromBundle(Locale.forLanguageTag(locale), bundleName, value)
       }
       case (None, _) => throw new ParameterMissingException("resource bundle missing")
-      case (_, _) => throw new ParameterMissingException("paramters for translation missing")
+      case (_, _)    => throw new ParameterMissingException("paramters for translation missing")
     }
   }
 

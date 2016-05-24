@@ -4,8 +4,8 @@ import org.scalatest.{FunSpec, Matchers}
 import org.slf4j.LoggerFactory
 
 /**
-  * @author dpersa
-  */
+ * @author dpersa
+ */
 class WhitespacesSpec extends FunSpec with Matchers {
 
   val logger = LoggerFactory.getLogger(this.getClass)
@@ -16,7 +16,7 @@ class WhitespacesSpec extends FunSpec with Matchers {
   )
 
   val templateCompiler = new CustomizableTemplateCompiler(templateLoader = loader)
-  val renderer = new BeardTemplateRenderer (templateCompiler)
+  val renderer = new BeardTemplateRenderer(templateCompiler)
 
   val example1 = templateCompiler.compile(TemplateName("example1")).get
   val code = templateCompiler.compile(TemplateName("code")).get

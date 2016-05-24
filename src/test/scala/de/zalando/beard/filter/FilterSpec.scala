@@ -3,8 +3,8 @@ package de.zalando.beard.filter
 import org.scalatest.{FunSpec, Matchers}
 
 /**
-  * @author boopathi
-  */
+ * @author boopathi
+ */
 class FilterSpec extends FunSpec with Matchers {
 
   describe("filters") {
@@ -32,12 +32,11 @@ class FilterSpec extends FunSpec with Matchers {
       filter.apply("1991-03-10", Map("format" -> "MMddyy")) should be("031091")
       filter.apply("2011-01-01+01:00", Map("format" -> "D")) should be("1")
     }
-
   }
 
   private def getFilter(name: String) =
     DefaultFilterResolver().resolve(name, Set.empty) match {
       case Some(filter) => filter
-      case None => throw FilterNotFound(name)
+      case None         => throw FilterNotFound(name)
     }
 }

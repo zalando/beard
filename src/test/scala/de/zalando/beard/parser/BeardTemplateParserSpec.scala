@@ -146,7 +146,8 @@ class BeardTemplateParserSpec extends FunSpec with Matchers {
         it("should allow compound identifiers as attribute values") {
           BeardTemplateParser("{{hello name=the.name color = the.color}}") should
             be(BeardTemplate(Seq(
-              AttrInterpolation(Identifier("hello"), Seq(AttributeWithIdentifier("name", CompoundIdentifier("the", Seq("name"))),
+              AttrInterpolation(Identifier("hello"), Seq(
+                AttributeWithIdentifier("name", CompoundIdentifier("the", Seq("name"))),
                 AttributeWithIdentifier("color", CompoundIdentifier("the", Seq("color")))))
             )))
         }
@@ -154,7 +155,8 @@ class BeardTemplateParserSpec extends FunSpec with Matchers {
         it("should allow mixing compound identifiers with strings as attribute values") {
           BeardTemplateParser("{{hello name=the.name color = \"red\"}}") should
             be(BeardTemplate(Seq(
-              AttrInterpolation(Identifier("hello"), Seq(AttributeWithIdentifier("name", CompoundIdentifier("the", Seq("name"))),
+              AttrInterpolation(Identifier("hello"), Seq(
+                AttributeWithIdentifier("name", CompoundIdentifier("the", Seq("name"))),
                 AttributeWithValue("color", "red")))
             )))
         }
@@ -190,7 +192,7 @@ class BeardTemplateParserSpec extends FunSpec with Matchers {
       }
 
       it("should not allow special chars inside of attribute identifiers") {
-        an [NoSuchElementException] should be thrownBy BeardTemplateParser("""{{h!el!l%o name="Dan" color = 'blue'}}""")
+        an[NoSuchElementException] should be thrownBy BeardTemplateParser("""{{h!el!l%o name="Dan" color = 'blue'}}""")
       }
     }
 
@@ -246,7 +248,8 @@ class BeardTemplateParserSpec extends FunSpec with Matchers {
 
     it("should return a BeardTemplate containing a simple if-else statement") {
       BeardTemplateParser("block1{{ if user.isCool }}block2{{ else }}block3{{/if}}block4") should
-        be(BeardTemplate(Seq(Text("block1"),
+        be(BeardTemplate(Seq(
+          Text("block1"),
           IfStatement(
             CompoundIdentifier("user", Seq("isCool")),
             Seq(Text("block2")), Seq(Text("block3"))), Text("block4"))))
@@ -254,9 +257,12 @@ class BeardTemplateParserSpec extends FunSpec with Matchers {
 
     it("should return a BeardTemplate containing nested if statement") {
       BeardTemplateParser("hello{{ if user.isCool }}block1{{ if user.isNice }}block2{{/if}}block3{{ /if }}end") should
-        be(BeardTemplate(Seq(Text("hello"),
-          IfStatement(CompoundIdentifier("user", Seq("isCool")), Seq(Text("block1"),
-            IfStatement(CompoundIdentifier("user", Seq("isNice")),
+        be(BeardTemplate(Seq(
+          Text("hello"),
+          IfStatement(CompoundIdentifier("user", Seq("isCool")), Seq(
+            Text("block1"),
+            IfStatement(
+              CompoundIdentifier("user", Seq("isNice")),
               Seq(Text("block2"))),
             Text("block3"))),
           Text("end"))))
@@ -264,7 +270,8 @@ class BeardTemplateParserSpec extends FunSpec with Matchers {
 
     it("should return a BeardTemplate containing deeper nested if statement") {
       BeardTemplateParser("hello{{if user.isCool}}block1{{if cool}}block2{{/if}}block3{{else}}{{if user.isNice}}block4{{else}}block5{{/if}}{{/if}}end") should
-        be(BeardTemplate(Seq(Text("hello"),
+        be(BeardTemplate(Seq(
+          Text("hello"),
           IfStatement(
             CompoundIdentifier("user", Seq("isCool")),
             Seq(
@@ -326,7 +333,7 @@ class BeardTemplateParserSpec extends FunSpec with Matchers {
 
   describe("render statement") {
     it("should return a beard template containing a simple render statement") {
-      BeardTemplateParser( """<ul>{{render  "li-template"}}</ul>""") should
+      BeardTemplateParser("""<ul>{{render  "li-template"}}</ul>""") should
         be(BeardTemplate(Seq(
           Text("<ul>"),
           RenderStatement("li-template"),
@@ -335,7 +342,7 @@ class BeardTemplateParserSpec extends FunSpec with Matchers {
     }
 
     it("should return a beard template containing a render statement with attributes") {
-      BeardTemplateParser( """<ul>{{render  "li-template" name="Dan" email=the.email}}</ul>""") should
+      BeardTemplateParser("""<ul>{{render  "li-template" name="Dan" email=the.email}}</ul>""") should
         be(BeardTemplate(Seq(
           Text("<ul>"),
           RenderStatement("li-template", Seq(
@@ -350,7 +357,7 @@ class BeardTemplateParserSpec extends FunSpec with Matchers {
 
   describe("extends statement") {
     it("should return a beard template containing an extends statement") {
-      BeardTemplateParser( """{{extends "layout"}}<div>Hello</div>""") should
+      BeardTemplateParser("""{{extends "layout"}}<div>Hello</div>""") should
         be(BeardTemplate(Seq(Text("<div>Hello</div>")), Some(ExtendsStatement("layout"))))
     }
 
@@ -361,7 +368,7 @@ class BeardTemplateParserSpec extends FunSpec with Matchers {
 
   describe("yield statement") {
     it("should return a beard template containing an yield statement") {
-      BeardTemplateParser( """{{extends "layout"}}<div>Hello{{yield}}</div>""") should
+      BeardTemplateParser("""{{extends "layout"}}<div>Hello{{yield}}</div>""") should
         be(BeardTemplate(Seq(Text("<div>Hello"), YieldStatement(), Text("</div>")), Some(ExtendsStatement("layout"))))
     }
   }
@@ -383,7 +390,7 @@ class BeardTemplateParserSpec extends FunSpec with Matchers {
 
   describe("contentFor statement") {
     it("should return a beard template containing a simple contentFor statement") {
-      BeardTemplateParser( """{{contentFor header}}<div>Hello</div>{{/contentFor}}<body>Hello</body>""") should
+      BeardTemplateParser("""{{contentFor header}}<div>Hello</div>{{/contentFor}}<body>Hello</body>""") should
         be(BeardTemplate(Seq(
           Text("<body>Hello</body>")
         ), contentForStatements = Seq(ContentForStatement(Identifier("header"), Seq(Text("<div>Hello</div>"))))))
@@ -416,7 +423,8 @@ class BeardTemplateParserSpec extends FunSpec with Matchers {
       BeardTemplateParser(template).statements should be(
         Seq(
           Text("<div>somediv</div>"),
-          BlockStatement(Identifier("navigation"), List(NewLine(1),
+          BlockStatement(Identifier("navigation"), List(
+            NewLine(1),
             White(4),
             Text("<ul>"),
             NewLine(1),
@@ -432,22 +440,26 @@ class BeardTemplateParserSpec extends FunSpec with Matchers {
           NewLine(2),
           IfStatement(
             CompoundIdentifier("usersExist"),
-            List(White(4),
+            List(
+              White(4),
               Text("<div>No"),
               White(1),
               Text("users</div>"),
-              NewLine(1)), List(White(4),
+              NewLine(1)), List(
+              White(4),
               Text("<div"),
               White(1),
               Text("class=\"users\">"),
               NewLine(1),
               ForStatement(Identifier("user"), None, CompoundIdentifier("users", List()),
-                List(White(8),
+                List(
+                  White(8),
                   IdInterpolation(CompoundIdentifier("user", List("name"))),
                   IfStatement(
                     CompoundIdentifier("user", Seq("isLast")),
                     List(Text(",")), List()),
-                  RenderStatement("user-details", List(AttributeWithIdentifier("user", CompoundIdentifier("user", List())),
+                  RenderStatement("user-details", List(
+                    AttributeWithIdentifier("user", CompoundIdentifier("user", List())),
                     AttributeWithValue("class", "default")))), true),
               White(4),
               Text("</div>"),
@@ -516,7 +528,8 @@ class BeardTemplateParserSpec extends FunSpec with Matchers {
           Text("<div"),
           White(1),
           Text("class=\"container\">"),
-          RenderStatement("/templates/_partial.beard", List(AttributeWithIdentifier("title", CompoundIdentifier("example", List("title"))),
+          RenderStatement("/templates/_partial.beard", List(
+            AttributeWithIdentifier("title", CompoundIdentifier("example", List("title"))),
             AttributeWithIdentifier("presentations", CompoundIdentifier("example", List("presentations"))))),
           NewLine(1),
           Text("</div>"),
@@ -533,34 +546,31 @@ class BeardTemplateParserSpec extends FunSpec with Matchers {
   describe("with filters") {
     it("should parse one filter correctly") {
       BeardTemplateParser("{{ someIdentifier | filter }}") should
-        be(BeardTemplate
-        (Seq(IdInterpolation
-        (CompoundIdentifier("someIdentifier"),
+        be(BeardTemplate (Seq(IdInterpolation (
+          CompoundIdentifier("someIdentifier"),
           Seq(FilterNode(Identifier("filter")))))))
     }
 
     it("should parse a filter chain correctly") {
       BeardTemplateParser("{{ someIdentifier | filter1 | filter2 | filter3 | filter4 }}") should
-        be(BeardTemplate
-        (Seq(IdInterpolation
-        (CompoundIdentifier("someIdentifier"),
+        be(BeardTemplate (Seq(IdInterpolation (
+          CompoundIdentifier("someIdentifier"),
           Seq(FilterNode(Identifier("filter1")), FilterNode(Identifier("filter2")), FilterNode(Identifier("filter3")), FilterNode(Identifier("filter4")))))))
     }
 
     it("should parse named filter parameters correctly") {
       BeardTemplateParser("""{{ someIdentifier | filter param="value" }}""") should
-        be(BeardTemplate
-        (Seq(IdInterpolation
-        (CompoundIdentifier("someIdentifier"),
+        be(BeardTemplate (Seq(IdInterpolation (
+          CompoundIdentifier("someIdentifier"),
           Seq(FilterNode(Identifier("filter"), Seq(AttributeWithValue("param", "value"))))))))
     }
 
     it("should parse filter chains with named parameters correctly") {
       BeardTemplateParser("""{{ someIdentifier | filter1 param="value" | filter2 param2=compound.id }}""") should
-        be(BeardTemplate
-        (Seq(IdInterpolation
-        (CompoundIdentifier("someIdentifier"),
-          Seq(FilterNode(Identifier("filter1"), Seq(AttributeWithValue("param", "value"))),
+        be(BeardTemplate (Seq(IdInterpolation (
+          CompoundIdentifier("someIdentifier"),
+          Seq(
+            FilterNode(Identifier("filter1"), Seq(AttributeWithValue("param", "value"))),
             FilterNode(Identifier("filter2"), Seq(AttributeWithIdentifier("param2", CompoundIdentifier("compound", Seq("id"))))))))))
     }
   }

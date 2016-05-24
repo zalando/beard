@@ -9,8 +9,8 @@ import scala.collection.immutable.Map
 import scala.util.matching.Regex
 
 /**
-  * Created by rweyand on 3/15/16.
-  */
+ * @author rweyand
+ */
 class DateFormatFilter extends Filter {
   // {{ now | date format=format.Variable}}
   override def name = "date"
@@ -20,7 +20,7 @@ class DateFormatFilter extends Filter {
   override def apply(value: String, parameters: Map[String, Any]): String =
     parameters.get("format") match {
       // format given as static string in the template
-      case Some(format: String) =>  {
+      case Some(format: String) => {
         val dateTimeFormatter = getDateTimeFormatter(format)
         resolveDateFormatting(value, dateTimeFormatter)
       }
@@ -30,9 +30,8 @@ class DateFormatFilter extends Filter {
         resolveDateFormatting(value, dateTimeFormatter)
       }
       case Some(thing) => throw WrongParameterTypeException("format", "String")
-      case None => throw ParameterMissingException("format")
+      case None        => throw ParameterMissingException("format")
     }
-
 
   def resolveDateFormatting(value: String, formatOut: DateTimeFormatter): String = {
     // All formatters supported by DateTimeFormatter may be added in a form:
@@ -86,16 +85,16 @@ class DateFormatFilter extends Filter {
 
     if (a.isDefined) {
       val patternIndex = a.get.subgroups.indexOf(value, 1)
-      val formatIn = datePatterns.slice(patternIndex-1, patternIndex).values.mkString
+      val formatIn = datePatterns.slice(patternIndex - 1, patternIndex).values.mkString
 
       return formatIn match {
-        case "EPOCH" => getFormatFromEpoch(value, formatOut)
-        case "EPOCH_MILLI" => getFormatFromMillis(value, formatOut)        
-        case "ISO_INSTANT" => getFormatFromInstant(value, formatOut)
-        case "ISO_LOCAL_DATE_TIME" => getFormatFromLocal(value, formatOut)
+        case "EPOCH"                => getFormatFromEpoch(value, formatOut)
+        case "EPOCH_MILLI"          => getFormatFromMillis(value, formatOut)
+        case "ISO_INSTANT"          => getFormatFromInstant(value, formatOut)
+        case "ISO_LOCAL_DATE_TIME"  => getFormatFromLocal(value, formatOut)
         case "ISO_OFFSET_DATE_TIME" => getFormatFromOffset(value, formatOut)
-        case "ISO_OFFSET_DATE"  => getFormatFromOffsetDate(value, formatOut)
-        case _ => getFormatFromPattern(value, formatIn, formatOut)
+        case "ISO_OFFSET_DATE"      => getFormatFromOffsetDate(value, formatOut)
+        case _                      => getFormatFromPattern(value, formatIn, formatOut)
       }
     }
 

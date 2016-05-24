@@ -7,9 +7,8 @@ import org.scalatest.{Matchers, FunSpec}
  */
 class NewLineSpec extends FunSpec with Matchers {
 
-
-    it("should return the right text") {
-      NewLine(3).text should be("\n\n\n")
-      NewLine(1).text should be("\n")
-    }
+  it("should return the right text") {
+    NewLine(3).text should be("\n\n\n")
+    NewLine(1).text should be("\n")
+  }
 }

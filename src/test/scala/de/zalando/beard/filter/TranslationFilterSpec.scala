@@ -4,9 +4,9 @@ import de.zalando.beard.filter.implementations.TranslationFilter
 import org.scalatest.{FunSpec, Matchers}
 
 /**
-  * Created by rweyand on 3/23/16.
-  */
-class TranslationFilterSpec extends FunSpec with Matchers{
+ * @author rweyand
+ */
+class TranslationFilterSpec extends FunSpec with Matchers {
   describe("Translation filter") {
     it("should  resolve locale and bundle when given correct arguments") {
       val filter = TranslationFilter()
@@ -18,12 +18,12 @@ class TranslationFilterSpec extends FunSpec with Matchers{
 
     it("should complain about missing resource bundle") {
       val filter = TranslationFilter()
-      a [ParameterMissingException] should be thrownBy filter.apply("example.title", Map("locale" -> "en"))
+      a[ParameterMissingException] should be thrownBy filter.apply("example.title", Map("locale" -> "en"))
     }
 
     it("should complain about missing locale") {
       val filter = TranslationFilter()
-      a [ParameterMissingException] should be thrownBy filter.apply("example.title", Map("bundle" -> "messages"))
+      a[ParameterMissingException] should be thrownBy filter.apply("example.title", Map("bundle" -> "messages"))
     }
   }
 }
