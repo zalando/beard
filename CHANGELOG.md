@@ -1,3 +1,7 @@
+# 0.1.2
+
+- When a template is not found the compiler should return Failure and not throw an exception
+
 # 0.1.1
 
 - Use scalariform #62
