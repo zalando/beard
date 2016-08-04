@@ -1,8 +1,10 @@
 package de.zalando.beard.renderer
 
 import de.zalando.beard.ast._
-import org.scalatest.{Matchers, FunSpec}
-import scala.collection.immutable.{Seq, Map}
+import org.scalatest.{FunSpec, Matchers}
+
+import scala.collection.immutable.{Map, Seq}
+import scala.util.Failure
 
 /**
  * @author dpersa
@@ -71,7 +73,7 @@ class CustomizableTemplateCompilerSpec extends FunSpec with Matchers {
         template should be(
           BeardTemplate(
             List(
-            Text("""<html>
+              Text("""<html>
                     |    <div>This is the head</div>
                     |    <body>
                     |        <div>This is the header</div>
@@ -83,8 +85,8 @@ class CustomizableTemplateCompilerSpec extends FunSpec with Matchers {
                     |    </body>
                     |<html>""".stripMargin)),
             None, Seq(
-            RenderStatement("/extends-example/head.beard"),
-            RenderStatement("/extends-example/header.beard")))
+              RenderStatement("/extends-example/head.beard"),
+              RenderStatement("/extends-example/header.beard")))
         )
       }
     }
@@ -99,6 +101,16 @@ class CustomizableTemplateCompilerSpec extends FunSpec with Matchers {
         template.statements.head.asInstanceOf[Text].text should include("index header")
         template.statements.head.asInstanceOf[Text].text should include("application footer")
         template.statements.head.asInstanceOf[Text].text should include("index left column")
+      }
+    }
+
+    describe("if the template is not found") {
+
+      it ("should return failure") {
+        compiler.compile(TemplateName("some-name")) match {
+          case Failure(ex) =>
+          case _           => fail
+        }
       }
     }
   }
