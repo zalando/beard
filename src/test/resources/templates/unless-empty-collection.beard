@@ -1,0 +1,9 @@
+{{unless users }}
+<div>No users</div>
+{{else}}
+<ul>
+  {{for user in users}}
+  <li>{{user.name}}</li>
+  {{/for}}
+</ul>
+{{/unless}}

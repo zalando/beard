@@ -1,0 +1,19 @@
+some
+{{unless user.isCool }}
+  {{user.name}} is not cool
+  {{unless user.isCool }}
+    {{user.name}} is not cool yet
+  {{else}}
+    {{user.name}} became cool
+  {{/unless}}
+  some1
+{{else}}
+  {{user.name}} is cool
+  {{unless user.isCool }}
+    {{user.name}} is not cool anymore
+  {{else}}
+    {{user.name}} is still cool
+  {{/unless}}
+  some2
+{{/unless}}
+some4

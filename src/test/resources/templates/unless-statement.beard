@@ -1,0 +1,3 @@
+{{unless user.isCool }}
+{{user.name}} is cool
+{{/unless}}

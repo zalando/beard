@@ -98,6 +98,12 @@ class CustomizableTemplateCompiler(
         elseStatements = concatTextsRec(head.elseStatements))
       concatTexts(tail, mergedStatements ++ concatTextsSeq(existingTexts) :+ concatTextsIfStatement, Seq.empty)
     }
+    case (head: UnlessStatement) :: tail =>
+      val concatTextsUnlessStatement = head.copy(
+        head.condition,
+        unlessStatements = concatTextsRec(head.unlessStatements),
+        elseStatements = concatTextsRec(head.elseStatements))
+      concatTexts(tail, mergedStatements ++ concatTextsSeq(existingTexts) :+ concatTextsUnlessStatement, Seq.empty)
     // TODO concat the texts for the other statements
     case head :: tail => concatTexts(tail, mergedStatements ++ concatTextsSeq(existingTexts) :+ head, Seq.empty)
   }

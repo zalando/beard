@@ -28,6 +28,8 @@ case class ContentForStatement(identifier: Identifier, statements: Seq[Statement
 
 case class IfStatement(condition: CompoundIdentifier, ifStatements: Seq[Statement], elseStatements: Seq[Statement] = Seq.empty) extends Statement
 
+case class UnlessStatement(condition: CompoundIdentifier, unlessStatements: Seq[Statement], elseStatements: Seq[Statement] = Seq.empty) extends Statement
+
 case class ForStatement(iterator: Identifier, index: Option[Identifier], collection: CompoundIdentifier,
   statements: Seq[Statement] = Seq.empty, addNewLine: Boolean = false) extends Statement
 

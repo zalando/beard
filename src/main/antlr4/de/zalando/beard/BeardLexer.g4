@@ -33,6 +33,7 @@ mode INSIDE_INTERPOLATION;
     CONTENT_FOR : 'contentFor';
 
     IF : 'if';
+    UNLESS : 'unless';
     ELSE: 'else';
 
     FOR: 'for';

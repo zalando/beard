@@ -125,19 +125,17 @@ class BeardTemplateRenderer(
     case YieldStatement()           => renderInternal(yieldedStatement, renderResult, context, escapeStrategy, locale, resourceBundleName)
 
     case IfStatement(condition, ifStatements, elseStatements) =>
-      val result = ContextResolver.resolve(condition, context) match {
-        case Some(result: Boolean)     => result
-        case Some(result: Iterable[_]) => result.nonEmpty // includes Map as well
-        case Some(result: Option[_])   => result.nonEmpty
-        case Some(result: String)      => result.nonEmpty
-        case Some(null)                => false
-        case Some(other)               => throw new IllegalStateException(s"A condition should be of type Boolean or { def nonEmpty: Boolean } but it has ${other.getClass} type")
-        case None                      => false
-      }
-
+      val result = resolveCondition(context, condition)
       for (statement <- if (result) ifStatements else elseStatements) {
         renderStatement(statement, context, renderResult, yieldedStatement, escapeStrategy, locale, resourceBundleName)
       }
+
+    case UnlessStatement(condition, unlessStatements, elseStatements) =>
+      val result = resolveCondition(context, condition)
+      for (statement <- if (!result) unlessStatements else elseStatements) {
+        renderStatement(statement, context, renderResult, yieldedStatement, escapeStrategy, locale, resourceBundleName)
+      }
+
     case _ => ()
   }
 
@@ -183,6 +181,18 @@ class BeardTemplateRenderer(
           case other          => filter.apply(other.toString, parameters)
         }
       }
+    }
+  }
+
+  private def resolveCondition[T](context: Map[String, Any], condition: CompoundIdentifier): Boolean = {
+    ContextResolver.resolve(condition, context) match {
+      case Some(result: Boolean)     => result
+      case Some(result: Iterable[_]) => result.nonEmpty // includes Map as well
+      case Some(result: Option[_])   => result.nonEmpty
+      case Some(result: String)      => result.nonEmpty
+      case Some(null)                => false
+      case Some(other)               => throw new IllegalStateException(s"A condition should be of type Boolean or { def nonEmpty: Boolean } but it has ${other.getClass} type")
+      case None                      => false
     }
   }
 }
