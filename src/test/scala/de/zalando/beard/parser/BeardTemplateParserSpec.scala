@@ -287,6 +287,56 @@ class BeardTemplateParserSpec extends FunSpec with Matchers {
     }
   }
 
+  describe("unless statement") {
+    it("should return a BeardTemplate containing a simple unless statement") {
+      BeardTemplateParser("hello{{ unless user.isCool }}hello{{ /unless}}end") should
+        be(BeardTemplate(Seq(Text("hello"), UnlessStatement(
+          CompoundIdentifier("user", Seq("isCool")),
+          Seq(Text("hello"))),
+          Text("end"))))
+    }
+
+    it("should return a BeardTemplate containing a simple unless-else statement") {
+      BeardTemplateParser("block1{{ unless user.isCool }}block2{{ else }}block3{{/unless}}block4") should
+        be(BeardTemplate(Seq(
+          Text("block1"),
+          UnlessStatement(
+            CompoundIdentifier("user", Seq("isCool")),
+            Seq(Text("block2")), Seq(Text("block3"))), Text("block4"))))
+    }
+
+    it("should return a BeardTemplate containing nested unless statement") {
+      BeardTemplateParser("hello{{ unless user.isCool }}block1{{ unless user.isNice }}block2{{/unless}}block3{{ /unless }}end") should
+        be(BeardTemplate(Seq(
+          Text("hello"),
+          UnlessStatement(CompoundIdentifier("user", Seq("isCool")), Seq(
+            Text("block1"),
+            UnlessStatement(
+              CompoundIdentifier("user", Seq("isNice")),
+              Seq(Text("block2"))),
+            Text("block3"))),
+          Text("end"))))
+    }
+
+    it("should return a BeardTemplate containing deeper nested unless statement") {
+      BeardTemplateParser("hello{{unless user.isCool}}block1{{unless cool}}block2{{/unless}}block3{{else}}{{unless user.isNice}}block4{{else}}block5{{/unless}}{{/unless}}end") should
+        be(BeardTemplate(Seq(
+          Text("hello"),
+          UnlessStatement(
+            CompoundIdentifier("user", Seq("isCool")),
+            Seq(
+              Text("block1"),
+              UnlessStatement(CompoundIdentifier("cool"), Seq(Text("block2"))),
+              Text("block3")),
+            Seq(
+              UnlessStatement(
+                CompoundIdentifier("user", Seq("isNice")),
+                Seq(Text("block4")),
+                Seq(Text("block5"))))),
+          Text("end"))))
+    }
+  }
+
   describe("for statement") {
     it("should return a beard template containing a for statement") {
       BeardTemplateParser("<ul>{{for user in users}}<li>{{user.name}}</li>{{/for}}</ul>") should

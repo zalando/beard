@@ -34,6 +34,7 @@ locals [ExtendsStatement result]
 
 structuredStatement
     : ifStatement
+    | unlessStatement
     | forStatement
     | renderStatement
     | blockStatement
@@ -103,6 +104,22 @@ elseInterpolation
 
 endIfInterpolation
     : LL SLASH IF RR
+    ;
+
+unlessStatement
+locals [scala.collection.immutable.List<Statement> result]
+    : startingSpace+=leadingSpace unlessInterpolation NL unlessStatements+=statement+ unlessSpace+=leadingSpace elseInterpolation NL elseStatements+=statement+ elseSpace+=leadingSpace endUnlessInterpolation NL? # UnlessElseStatement
+    | unlessInterpolation unlessStatements+=statement+ elseInterpolation elseStatements+=statement+ endUnlessInterpolation # UnlessElseStatement
+    | startingSpace+=leadingSpace unlessInterpolation NL statement+ unlessSpace+=leadingSpace endUnlessInterpolation NL? # UnlessOnlyStatement
+    | unlessInterpolation statement+ endUnlessInterpolation # UnlessOnlyStatement
+    ;
+
+unlessInterpolation
+    : LL UNLESS compoundIdentifier RR
+    ;
+
+endUnlessInterpolation
+    : LL SLASH UNLESS RR
     ;
 
 forStatement

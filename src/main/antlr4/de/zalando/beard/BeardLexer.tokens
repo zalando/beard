@@ -25,6 +25,7 @@ NLSKIP=24
 WSSKIP=25
 END_ATTR_VALUE=26
 ATTR_TEXT=27
+UNLESS=28
 '{{'=1
 '}}'=7
 '/'=8
@@ -41,3 +42,4 @@ ATTR_TEXT=27
 'in'=19
 '.'=21
 '='=22
+'unless'=28

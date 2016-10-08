@@ -25,9 +25,9 @@ class ForContextFactorySpec extends FunSpec with Matchers {
 
       context.should(be(Map(
         "users" ->
-        List(
-          Map("name" -> "Gigi"),
-          Map("name" -> "Gicu")),
+          List(
+            Map("name" -> "Gigi"),
+            Map("name" -> "Gicu")),
         "user" ->
           Map(
             "name" -> "Gigi",

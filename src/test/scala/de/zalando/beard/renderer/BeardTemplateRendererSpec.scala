@@ -212,6 +212,122 @@ class BeardTemplateRendererSpec extends FunSpec with Matchers {
       }
     }
 
+    describe("render an UnlessStatement") {
+      def context(cool: Boolean) =
+        Map("user" -> Map("name" -> "Gigi", "isCool" -> cool))
+
+      val template = templateCompiler.compile(TemplateName("/templates/unless-statement.beard")).get
+
+      describe("when the condition is true") {
+        it("should not render the template") {
+          val renderResult = StringWriterRenderResult()
+          renderer.render(template, renderResult, context(true))
+          renderResult.result.toString should be("")
+        }
+      }
+
+      describe("when the condition is false") {
+        it("should render the template") {
+          val renderResult = StringWriterRenderResult()
+          renderer.render(template, renderResult, context(false))
+          renderResult.result.toString should be("\nGigi is cool\n")
+        }
+      }
+    }
+
+    describe("render an UnlessElseStatement") {
+      def context(cool: Boolean) =
+        Map("user" -> Map("name" -> "Gigi", "isCool" -> cool))
+
+      val template = templateCompiler.compile(TemplateName("/templates/unless-else-statement.beard")).get
+
+      describe("when the condition is true") {
+        it("should not render the template") {
+          val renderResult = StringWriterRenderResult()
+          renderer.render(template, renderResult, context(true))
+          renderResult.result.toString should be("\nGigi is not cool\n")
+        }
+      }
+
+      describe("when the condition is false") {
+        it("should render the template") {
+          val renderResult = StringWriterRenderResult()
+          renderer.render(template, renderResult, context(false))
+          renderResult.result.toString should be("\nGigi is cool\n")
+        }
+      }
+    }
+
+    describe("render an Unless Statement nested in a For Statement") {
+      val context = Map("users" -> Seq(Map("name" -> "Gigi"), Map("name" -> "Gicu")))
+
+      val template = templateCompiler.compile(TemplateName("/templates/unless-in-for-statement.beard")).get
+
+      it("should render the template") {
+        val renderResult = StringWriterRenderResult()
+        renderer.render(template, renderResult, context)
+        renderResult.result.toString should be("\nGigi is odd\n\nGicu is not odd\n")
+      }
+    }
+
+    describe("render a nested Unless Statements") {
+      def context(cool: Boolean) =
+        Map("user" -> Map("name" -> "Gigi", "isCool" -> cool))
+
+      val template = templateCompiler.compile(TemplateName("/templates/unless-nested-statements.beard")).get
+
+      it("should render the template") {
+        val renderResult = StringWriterRenderResult()
+        renderer.render(template, renderResult, context(true))
+        logger.info(renderResult.result.toString)
+        renderResult.result.toString should be("""some
+                                                 |  Gigi is cool
+                                                 |    Gigi is still cool
+                                                 |  some2
+                                                 |some4""".stripMargin)
+      }
+    }
+
+    describe("Unless Statements to check for non empty collections") {
+      def context(cool: Boolean) =
+        Map("users" -> Seq(Map("name" -> "Gigi"), Map("name" -> "Gicu")))
+
+      val template = templateCompiler.compile(TemplateName("/templates/unless-empty-collection.beard")).get
+
+      describe("users collection is empty") {
+        it("should render the template") {
+          val renderResult = StringWriterRenderResult()
+          renderer.render(template, renderResult, Map("users" -> Seq()))
+          renderResult.result.toString should be("""
+                                                   |<div>No users</div>
+                                                   |""".stripMargin)
+        }
+      }
+
+      describe("users collection does not exist") {
+        it("should render else branch in the template") {
+          val renderResult = StringWriterRenderResult()
+          renderer.render(template, renderResult, Map.empty)
+          renderResult.result.toString should be("""
+                                                   |<div>No users</div>
+                                                   |""".stripMargin)
+        }
+      }
+
+      describe("users collection is present") {
+        it("should render the template") {
+          val renderResult = StringWriterRenderResult()
+          renderer.render(template, renderResult, context(true))
+          renderResult.result.toString should be("""
+                                                   |<ul>
+                                                   |  <li>Gigi</li>
+                                                   |  <li>Gicu</li>
+                                                   |</ul>
+                                                   |""".stripMargin)
+        }
+      }
+    }
+
     it("should render a template with a render statement") {
 
       val expected = Source.fromInputStream(getClass.getResourceAsStream(s"/templates/layout-with-partial.rendered")).mkString

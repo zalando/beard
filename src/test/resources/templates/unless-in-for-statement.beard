@@ -1,0 +1,7 @@
+{{for user in users}}
+{{unless user.isOdd}}
+{{user.name}} is odd
+{{else}}
+{{user.name}} is not odd
+{{/unless}}
+{{/for}}

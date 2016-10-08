@@ -1,0 +1,5 @@
+{{unless user.isCool}}
+{{user.name}} is cool
+{{else}}
+{{user.name}} is not cool
+{{/unless}}
