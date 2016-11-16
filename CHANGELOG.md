@@ -1,3 +1,8 @@
+# 0.2.0
+- Add support for scala 2.12
+- Remove support for scala 2.10 (use older versions of Beard if still need that)
+- Add support for unless 
+
 # 0.1.2
 
 - When a template is not found the compiler should return Failure and not throw an exception

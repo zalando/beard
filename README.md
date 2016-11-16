@@ -26,14 +26,14 @@ Here's a code snippet to show you how simply Beard can parse templates:
 
 ## Requirements
 
-- Scala 2.10 or 2.11
+- Scala 2.11 or 2.12
 - a package manager like sbt or Maven
 
 ## Installing
 
 If you're using sbt, add this line to your build.sbt file:
 
-    libraryDependencies += "de.zalando" %% "beard" % "0.1.2"
+    libraryDependencies += "de.zalando" %% "beard" % "0.2.0"
 
     resolvers ++= Seq(
       "zalando-maven" at "https://dl.bintray.com/zalando/maven"
@@ -44,10 +44,10 @@ If you're using Maven, run this:
     <dependency>
     	<groupId>de.zalando</groupId>
     	<artifactId>beard</artifactId>
-    	<version>0.1.2</version>
+    	<version>0.2.0</version>
     </dependency>
  
-Binaries are available from [bintray](https://bintray.com/zalando/maven/beard/0.1.2/view)
+Binaries are available from [bintray](https://bintray.com/zalando/maven/beard/0.2.0)
 
 ## Additional Documentation
 
