@@ -1,10 +1,8 @@
 package de.zalando.beard.performance
 
-import java.util.{Locale, ResourceBundle}
-
 import de.zalando.beard.parser.BeardTemplateParser
 import de.zalando.beard.renderer._
-import monifu.concurrent.Implicits.globalScheduler
+import monix.execution.Scheduler.Implicits.global
 import org.scalameter.api._
 
 import scala.io.Source

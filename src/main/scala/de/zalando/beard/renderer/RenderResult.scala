@@ -1,8 +1,8 @@
 package de.zalando.beard.renderer
 
 import java.io.StringWriter
-import monifu.reactive.subjects.ReplaySubject
-import monifu.reactive.Observable
+import monix.reactive.subjects.ReplaySubject
+import monix.reactive.Observable
 
 /**
  * @author dpersa
@@ -32,7 +32,7 @@ case class MonifuRenderResult()
   val subject = ReplaySubject[Observable[String]]()
 
   override def write(renderedChunk: String): Unit = {
-    subject.onNext(Observable.from(renderedChunk))
+    subject.onNext(Observable.pure(renderedChunk))
   }
 
   override def complete(): Unit = subject.onComplete()
