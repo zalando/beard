@@ -14,7 +14,7 @@ import scala.collection.JavaConverters._
  */
 object FreemarkerBenchmark extends Bench.LocalTime {
   val config = new Configuration(Configuration.VERSION_2_3_23)
-  val loader = new ClassTemplateLoader()
+  val loader = new ClassTemplateLoader(getClass, "/")
 
   config.setTemplateLoader(loader)
 

@@ -3,7 +3,7 @@ package de.zalando.beard.parser
 import org.antlr.v4.runtime.ANTLRInputStream
 import org.scalatest.{FunSpec, Matchers}
 
-import scala.collection.JavaConversions._
+import scala.collection.JavaConverters._
 
 class BeardLexerSpec extends FunSpec with Matchers {
 
@@ -11,7 +11,7 @@ class BeardLexerSpec extends FunSpec with Matchers {
     it("should parse the correct tokens") {
       val stream = new ANTLRInputStream("more {{   hello   \n name='  He   llo  '}} { world   } {{ val | filter }}")
       val lexer = new CustomBeardLexer(stream)
-      val tokens = lexer.getAllTokens.map(token => (token.getText, lexer.getTokenNames.toList(token.getType))).toList
+      val tokens = lexer.getAllTokens.asScala.map(token => (token.getText, lexer.getTokenNames.toList(token.getType))).toList
       val expected = List(
         ("more", "TEXT"),
         (" ", "WS"),

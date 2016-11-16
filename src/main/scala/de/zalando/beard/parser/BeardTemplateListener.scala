@@ -4,7 +4,7 @@ import de.zalando.beard.BeardParser._
 import de.zalando.beard.BeardParserBaseListener
 import de.zalando.beard.ast._
 import scala.collection.immutable.Seq
-import scala.collection.JavaConversions._
+import scala.collection.JavaConverters._
 
 class BeardTemplateListener extends BeardParserBaseListener {
 
@@ -25,13 +25,13 @@ class BeardTemplateListener extends BeardParserBaseListener {
   }
 
   override def exitCompoundIdentifier(ctx: CompoundIdentifierContext) = {
-    val identifiers = ctx.IDENTIFIER().map(id => id.getText).toList
+    val identifiers = ctx.IDENTIFIER().asScala.map(id => id.getText).toList
 
     ctx.result = CompoundIdentifier(identifiers.head, identifiers.tail)
   }
 
   override def exitFilter(ctx: FilterContext) = {
-    val parameters = ctx.attribute().toList.map(_.result)
+    val parameters = ctx.attribute().asScala.toList.map(_.result)
     ctx.result = FilterNode(ctx.identifier().result, parameters)
   }
 
@@ -55,73 +55,73 @@ class BeardTemplateListener extends BeardParserBaseListener {
     ctx.result = ExtendsStatement(ctx.attrValue().result)
 
   override def exitRenderStatement(ctx: RenderStatementContext) =
-    ctx.result = RenderStatement(ctx.attrValue().result, ctx.attribute().map(_.result).toList)
+    ctx.result = RenderStatement(ctx.attrValue().result, ctx.attribute().asScala.map(_.result).toList)
 
   override def exitBlockStatement(ctx: BlockStatementContext) =
-    ctx.result = BlockStatement(ctx.blockInterpolation().identifier().result, ctx.statement().flatMap(_.result).toList)
+    ctx.result = BlockStatement(ctx.blockInterpolation().identifier().result, ctx.statement().asScala.flatMap(_.result).toList)
 
   override def exitContentForStatement(ctx: ContentForStatementContext) =
-    ctx.result = ContentForStatement(ctx.contentForInterpolation().identifier().result, ctx.statement().flatMap(_.result).toList)
+    ctx.result = ContentForStatement(ctx.contentForInterpolation().identifier().result, ctx.statement().asScala.flatMap(_.result).toList)
 
   override def exitIfOnlyStatement(ctx: IfOnlyStatementContext) = {
-    val startingSpaceStatements = ctx.startingSpace.toList.map(_.result)
-    val ifSpaceStatements = ctx.ifSpace.toList.map(_.result)
+    val startingSpaceStatements = ctx.startingSpace.asScala.toList.map(_.result)
+    val ifSpaceStatements = ctx.ifSpace.asScala.toList.map(_.result)
 
     val condition = ctx.ifInterpolation().compoundIdentifier().result
-    val statements: Seq[Statement] = ctx.statement().flatMap(st => st.result).toList
+    val statements: Seq[Statement] = ctx.statement().asScala.flatMap(st => st.result).toList
     ctx.result = startingSpaceStatements ++ Seq(IfStatement(condition, statements ++ ifSpaceStatements))
   }
 
   override def exitIfElseStatement(ctx: IfElseStatementContext) = {
-    val startingSpaceStatements = ctx.startingSpace.toList.map(_.result)
-    val ifSpaceStatements = ctx.ifSpace.toList.map(_.result)
-    val elseSpaceStatements = ctx.elseSpace.toList.map(_.result)
+    val startingSpaceStatements = ctx.startingSpace.asScala.toList.map(_.result)
+    val ifSpaceStatements = ctx.ifSpace.asScala.toList.map(_.result)
+    val elseSpaceStatements = ctx.elseSpace.asScala.toList.map(_.result)
 
     val condition = ctx.ifInterpolation().compoundIdentifier().result
-    val ifStatements = ctx.ifStatements.flatMap(st => st.result).toList
-    val elseStatements = ctx.elseStatements.flatMap(st => st.result).toList
+    val ifStatements = ctx.ifStatements.asScala.flatMap(st => st.result).toList
+    val elseStatements = ctx.elseStatements.asScala.flatMap(st => st.result).toList
     ctx.result = startingSpaceStatements ++ Seq(IfStatement(condition, ifStatements ++ ifSpaceStatements, elseStatements ++ elseSpaceStatements))
   }
 
   override def exitUnlessOnlyStatement(ctx: UnlessOnlyStatementContext) = {
-    val startingSpaceStatements = ctx.startingSpace.toList.map(_.result)
-    val unlessSpaceStatements = ctx.unlessSpace.toList.map(_.result)
+    val startingSpaceStatements = ctx.startingSpace.asScala.toList.map(_.result)
+    val unlessSpaceStatements = ctx.unlessSpace.asScala.toList.map(_.result)
 
     val condition = ctx.unlessInterpolation().compoundIdentifier().result
-    val statements: Seq[Statement] = ctx.statement().flatMap(_.result).toList
+    val statements: Seq[Statement] = ctx.statement().asScala.flatMap(_.result).toList
     ctx.result = startingSpaceStatements ++ Seq(UnlessStatement(condition, statements ++ unlessSpaceStatements))
   }
 
   override def exitUnlessElseStatement(ctx: UnlessElseStatementContext) = {
-    val startingSpaceStatements = ctx.startingSpace.toList.map(_.result)
-    val unlessSpaceStatements = ctx.unlessSpace.toList.map(_.result)
-    val elseSpaceStatements = ctx.elseSpace.toList.map(_.result)
+    val startingSpaceStatements = ctx.startingSpace.asScala.toList.map(_.result)
+    val unlessSpaceStatements = ctx.unlessSpace.asScala.toList.map(_.result)
+    val elseSpaceStatements = ctx.elseSpace.asScala.toList.map(_.result)
 
     val condition = ctx.unlessInterpolation().compoundIdentifier().result
-    val unlessStatements = ctx.unlessStatements.flatMap(_.result).toList
-    val elseStatements = ctx.elseStatements.flatMap(_.result).toList
+    val unlessStatements = ctx.unlessStatements.asScala.flatMap(_.result).toList
+    val elseStatements = ctx.elseStatements.asScala.flatMap(_.result).toList
     ctx.result = startingSpaceStatements ++ Seq(UnlessStatement(condition, unlessStatements ++ unlessSpaceStatements, elseStatements ++ elseSpaceStatements))
   }
 
   override def exitForStatement(ctx: ForStatementContext) = {
-    val statements: Seq[Statement] = ctx.statement().flatMap(st => st.result).toList
+    val statements: Seq[Statement] = ctx.statement().asScala.flatMap(st => st.result).toList
 
     val leadingSpaceStatements = Option(ctx.leadingSpace()).toSeq.map(_.result).toList
 
     ctx.result = leadingSpaceStatements ++
-      List(ForStatement(ctx.forInterpolation().iter.head.result, ctx.forInterpolation().index.headOption.map(_.result),
-        ctx.forInterpolation().coll.head.result, statements, leadingSpaceStatements.nonEmpty))
+      List(ForStatement(ctx.forInterpolation().iter.asScala.head.result, ctx.forInterpolation().index.asScala.headOption.map(_.result),
+        ctx.forInterpolation().coll.asScala.head.result, statements, leadingSpaceStatements.nonEmpty))
   }
 
   override def exitAttrInterpolation(ctx: AttrInterpolationContext) = {
-    val attributes = ctx.attribute().map(a => a.result).toList
+    val attributes = ctx.attribute().asScala.map(a => a.result).toList
 
     ctx.result =
       AttrInterpolation(ctx.identifier().result, attributes)
   }
 
   override def exitIdInterpolation(ctx: IdInterpolationContext) = {
-    val filters = ctx.filter().toList.map(_.result)
+    val filters = ctx.filter().asScala.toList.map(_.result)
     ctx.result = IdInterpolation(ctx.compoundIdentifier().result, filters)
   }
 
@@ -148,13 +148,13 @@ class BeardTemplateListener extends BeardParserBaseListener {
   }
 
   override def exitBeard(ctx: BeardContext) = {
-    val statements = ctx.statement().flatMap(_.result).toList
+    val statements = ctx.statement().asScala.flatMap(_.result).toList
     val renderStatements = statements.collect {
       case renderStatement: RenderStatement => renderStatement
     }
     ctx.result = statements
     val extended = Option(ctx.extendsStatement()).map(_.result)
-    val contentForStatements = ctx.contentForStatement().map(_.result).toList
+    val contentForStatements = ctx.contentForStatement().asScala.map(_.result).toList
     result = BeardTemplate(statements, extended, renderStatements, contentForStatements)
   }
 }
