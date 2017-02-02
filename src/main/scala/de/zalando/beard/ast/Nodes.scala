@@ -30,7 +30,7 @@ case class IfStatement(condition: CompoundIdentifier, ifStatements: Seq[Statemen
 
 case class UnlessStatement(condition: CompoundIdentifier, unlessStatements: Seq[Statement], elseStatements: Seq[Statement] = Seq.empty) extends Statement
 
-case class ForStatement(iterator: Identifier, index: Option[Identifier], collection: CompoundIdentifier,
+case class ForStatement(identifier: Identifier, index: Option[Identifier], collection: CompoundIdentifier,
   statements: Seq[Statement] = Seq.empty, addNewLine: Boolean = false) extends Statement
 
 case class FilterNode(identifier: Identifier, parameters: Seq[Attribute] = Seq.empty)
