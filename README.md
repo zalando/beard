@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/zalando/beard.svg)](https://travis-ci.org/zalando/beard)
 
-Beard is an open-source, logic-less templating engine, written in Scala and inspired by [Mustache](https://mustache.github.io/). You can use it out-of-the-box; see the Requirements list below. 
+Beard is a logic-less templating engine written in Scala and inspired by [Mustache](https://mustache.github.io/). You can use it out-of-the-box; see the [Requirements list](#requirements) below. 
 
 What makes Beard powerful:
 
@@ -61,9 +61,17 @@ We've started a [Gitbook](https://danpersa.gitbooks.io/beard/content/) for addit
 
 You can contribute to this documentation [here](https://github.com/danpersa/beard-book).
 
-##Contributing/TODO List
+## Contributing/TODO List
 
 We gladly welcome contributions—just submit a pull request with a short note summarizing briefly (1-2 sentences) what you've done. If you'd like to make a substantial contribution to Beard, we could use your help with these items:
 - adding filters: ind Handlebars, Angular, Twig, etc.
 - providing more meaningful error messages
-- XSS prevention; [see related issue](https://github.com/zalando/beard/issues/11)
+
+## License
+Copyright 2015 Zalando SE
+
+Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
