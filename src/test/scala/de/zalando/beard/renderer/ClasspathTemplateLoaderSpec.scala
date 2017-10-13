@@ -15,6 +15,13 @@ class ClasspathTemplateLoaderSpec extends FunSpec with Matchers {
       val template = loader.load(TemplateName("/loader/dir/template.beard"))
       template.isDefined.should(be(true))
     }
+
+    describe("template doesn't exist") {
+      it("should not load anything") {
+        val template = loader.load(TemplateName("/does/not/exist"))
+        template.isDefined.should(be(false))
+      }
+    }
   }
 
   describe("loader with prefix and suffix") {
