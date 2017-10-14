@@ -3,6 +3,7 @@ package de.zalando.beard.renderer
 import java.io.File
 import org.slf4j.LoggerFactory
 import scala.io.Source
+import scala.util.{Try, Success, Failure}
 
 /**
  * @author dpersa
@@ -49,10 +50,21 @@ class FileTemplateLoader(
 
   override def load(templateName: TemplateName) = {
 
-    val file = new File(s"$directoryPath/${templateName.name}$templateSuffix")
+    val path = buildPath(templateName)
 
-    Option(Source.fromFile(file))
+    Try { Source.fromFile(path) } match {
+      case Success(source) => Option(source)
+      case Failure(_)      => None
+    }
   }
+
+  override def failure(templateName: TemplateName) = {
+    val path = buildPath(templateName)
+    new TemplateNotFoundException(s"Expected to find template '${templateName.name}' in file '${path}', file not found")
+  }
+
+  def buildPath(templateName: TemplateName) =
+    s"$directoryPath/${templateName.name}$templateSuffix"
 }
 
 class TemplateNotFoundException(msg: String) extends Exception(msg) {}

@@ -1,6 +1,7 @@
 package de.zalando.beard.renderer
 
 import de.zalando.beard.ast._
+import de.zalando.beard.parser.BeardTemplateParser
 import org.scalatest.{FunSpec, Matchers}
 
 import scala.collection.immutable.{Map, Seq}
@@ -114,6 +115,25 @@ class CustomizableTemplateCompilerSpec extends FunSpec with Matchers {
           }
         exception shouldBe a[TemplateNotFoundException]
         exception.getMessage should equal("Expected to find template 'some-name' in file 'some-name', file not found on classpath")
+      }
+    }
+  }
+
+  describe("with FileTemplateLoader") {
+    val compiler = new CustomizableTemplateCompiler(
+      new FileTemplateLoader(""),
+      new BeardTemplateCache(),
+      new BeardTemplateParser())
+
+    describe("if the template is not found") {
+      it ("should return failure") {
+        val exception =
+          compiler.compile(TemplateName("some-name")) match {
+            case Failure(ex) => ex
+            case _           => fail
+          }
+        exception shouldBe a[TemplateNotFoundException]
+        exception.getMessage should equal("Expected to find template 'some-name' in file '/some-name', file not found")
       }
     }
   }
