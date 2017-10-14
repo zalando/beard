@@ -107,10 +107,13 @@ class CustomizableTemplateCompilerSpec extends FunSpec with Matchers {
     describe("if the template is not found") {
 
       it ("should return failure") {
-        compiler.compile(TemplateName("some-name")) match {
-          case Failure(ex) =>
-          case _           => fail
-        }
+        val exception =
+          compiler.compile(TemplateName("some-name")) match {
+            case Failure(ex) => ex
+            case _           => fail
+          }
+        exception shouldBe a[TemplateNotFoundException]
+        exception.getMessage should equal("Expected to find template 'some-name' in file 'some-name', file not found on classpath")
       }
     }
   }
