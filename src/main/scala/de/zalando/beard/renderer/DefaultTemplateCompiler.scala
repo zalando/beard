@@ -36,7 +36,7 @@ class CustomizableTemplateCompiler(
           case None =>
             val templateFileSource = templateLoader.load(templateName) match {
               case Some(content) => content
-              case _             => throw new IllegalStateException(s"Could not find template with name ${templateName}")
+              case _             => throw templateLoader.failure(templateName)
             }
 
             val rawTemplate = templateParser.parse(templateFileSource.mkString)

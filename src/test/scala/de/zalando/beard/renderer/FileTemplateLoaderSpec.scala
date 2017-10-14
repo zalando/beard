@@ -5,14 +5,14 @@ import org.scalatest.{Matchers, FunSpec}
 /**
  * @author dpersa
  */
-class ClasspathTemplateLoaderSpec extends FunSpec with Matchers {
+class FileTemplateLoaderSpec extends FunSpec with Matchers {
 
   describe("simple loader") {
 
-    val loader = new ClasspathTemplateLoader()
+    val loader = new FileTemplateLoader(".")
 
     it("should load the template") {
-      val template = loader.load(TemplateName("/loader/dir/template.beard"))
+      val template = loader.load(TemplateName("src/test/resources/loader/dir/template.beard"))
       template.isDefined.should(be(true))
     }
 
@@ -24,12 +24,12 @@ class ClasspathTemplateLoaderSpec extends FunSpec with Matchers {
     }
   }
 
-  describe("loader with prefix and suffix") {
+  describe("loader with suffix") {
 
-    val loader = new ClasspathTemplateLoader(templatePrefix = "/loader/", templateSuffix = ".beard")
+    val loader = new FileTemplateLoader(directoryPath = ".", templateSuffix = ".beard")
 
     it("should load the template") {
-      val template = loader.load(TemplateName("dir/template"))
+      val template = loader.load(TemplateName("src/test/resources/loader/dir/template"))
       template.isDefined.should(be(true))
     }
   }
