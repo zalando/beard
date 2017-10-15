@@ -34,10 +34,8 @@ class CustomizableTemplateCompiler(
         templateCache.get(templateName) match {
           case Some(template) => template
           case None =>
-            val template = templateLoader.load(templateName) match {
-              case Success(content)   => content
-              case Failure(exception) => throw exception
-            }
+            // ! throws error prepared by template loader if loading failed
+            val template = templateLoader.load(templateName).get
 
             val rawTemplate = templateParser.parse(template)
             templateCache.add(templateName, rawTemplate)
