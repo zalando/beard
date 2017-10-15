@@ -4,7 +4,7 @@ import de.zalando.beard.ast._
 import de.zalando.beard.parser.BeardTemplateParser
 import scala.annotation.tailrec
 import scala.collection.immutable.Seq
-import scala.util.{Success, Try}
+import scala.util.{Success, Failure, Try}
 
 /**
  * @author dpersa
@@ -34,12 +34,12 @@ class CustomizableTemplateCompiler(
         templateCache.get(templateName) match {
           case Some(template) => template
           case None =>
-            val templateFileSource = templateLoader.load(templateName) match {
-              case Some(content) => content
-              case _             => throw templateLoader.failure(templateName)
+            val template = templateLoader.load(templateName) match {
+              case Success(content)   => content
+              case Failure(exception) => throw exception
             }
 
-            val rawTemplate = templateParser.parse(templateFileSource.mkString)
+            val rawTemplate = templateParser.parse(template)
             templateCache.add(templateName, rawTemplate)
             // TODO maybe do this in parallel
             compileRenderedTemplates(rawTemplate.renderStatements)

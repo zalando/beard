@@ -113,7 +113,7 @@ class CustomizableTemplateCompilerSpec extends FunSpec with Matchers {
             case Failure(ex) => ex
             case _           => fail
           }
-        exception shouldBe a[TemplateNotFoundException]
+        exception shouldBe a[TemplateLoadException]
         exception.getMessage should equal("Expected to find template 'some-name' in file 'some-name', file not found on classpath")
       }
     }
@@ -132,7 +132,7 @@ class CustomizableTemplateCompilerSpec extends FunSpec with Matchers {
             case Failure(ex) => ex
             case _           => fail
           }
-        exception shouldBe a[TemplateNotFoundException]
+        exception shouldBe a[TemplateLoadException]
         exception.getMessage should equal("Expected to find template 'some-name' in file '/some-name', file not found")
       }
     }
