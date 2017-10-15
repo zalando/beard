@@ -49,13 +49,8 @@ class FileTemplateLoader(
 ) extends TemplateLoader {
 
   override def load(templateName: TemplateName) = {
-
     val path = buildPath(templateName)
-
-    Try { Source.fromFile(path) } match {
-      case Success(source) => Option(source)
-      case Failure(_)      => None
-    }
+    Try(Source.fromFile(path)).toOption
   }
 
   override def failure(templateName: TemplateName) = {
