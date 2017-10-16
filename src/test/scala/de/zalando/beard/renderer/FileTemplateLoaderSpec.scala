@@ -13,13 +13,13 @@ class FileTemplateLoaderSpec extends FunSpec with Matchers {
 
     it("should load the template") {
       val template = loader.load(TemplateName("src/test/resources/loader/dir/template.beard"))
-      template.isDefined.should(be(true))
+      template.isSuccess.should(be(true))
     }
 
     describe("template doesn't exist") {
       it("should not load anything") {
         val template = loader.load(TemplateName("/does/not/exist"))
-        template.isDefined.should(be(false))
+        template.isSuccess.should(be(false))
       }
     }
   }
@@ -30,7 +30,7 @@ class FileTemplateLoaderSpec extends FunSpec with Matchers {
 
     it("should load the template") {
       val template = loader.load(TemplateName("src/test/resources/loader/dir/template"))
-      template.isDefined.should(be(true))
+      template.isSuccess.should(be(true))
     }
   }
 }

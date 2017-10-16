@@ -1,6 +1,6 @@
 package de.zalando.beard.renderer
 
-import java.io.File
+import java.io.{File, FileNotFoundException}
 import org.slf4j.LoggerFactory
 import scala.io.Source
 import scala.util.{Try, Success, Failure}
@@ -10,11 +10,7 @@ import scala.util.{Try, Success, Failure}
  */
 trait TemplateLoader {
 
-  def load(templateName: TemplateName): Option[Source]
-
-  def failure(templateName: TemplateName) = {
-    new TemplateNotFoundException(s"Could not find template with name '${templateName.name}'")
-  }
+  def load(templateName: TemplateName): Try[String]
 }
 
 class ClasspathTemplateLoader(
@@ -24,23 +20,18 @@ class ClasspathTemplateLoader(
   private val logger = LoggerFactory.getLogger(this.getClass)
 
   override def load(templateName: TemplateName) = {
-    val path = buildPath(templateName)
-    val resource = Option(getClass.getResourceAsStream(path))
+    val path = s"${templatePrefix}${templateName.name}$templateSuffix"
 
     logger.debug(s"Looking for template with path: $path")
 
-    resource.flatMap { res =>
-      Option(Source.fromInputStream(res))
+    val source = Option(getClass.getResourceAsStream(path))
+      .flatMap(stream => Option(Source.fromInputStream(stream)))
+      .flatMap(source => Option(source.mkString))
+    source match {
+      case Some(source) => new Success(source)
+      case None         => new Failure(new TemplateLoadException(s"Expected to find template '${templateName.name}' in file '${path}', file not found on classpath"))
     }
   }
-
-  override def failure(templateName: TemplateName) = {
-    val path = buildPath(templateName)
-    new TemplateNotFoundException(s"Expected to find template '${templateName.name}' in file '${path}', file not found on classpath")
-  }
-
-  def buildPath(templateName: TemplateName) =
-    s"${templatePrefix}${templateName.name}$templateSuffix"
 }
 
 class FileTemplateLoader(
@@ -49,22 +40,16 @@ class FileTemplateLoader(
 ) extends TemplateLoader {
 
   override def load(templateName: TemplateName) = {
-
-    val path = buildPath(templateName)
-
-    Try { Source.fromFile(path) } match {
-      case Success(source) => Option(source)
-      case Failure(_)      => None
+    val path = s"$directoryPath/${templateName.name}$templateSuffix"
+    Try {
+      try {
+        Source.fromFile(path).mkString
+      } catch {
+        case e: FileNotFoundException =>
+          throw new TemplateLoadException(s"Expected to find template '${templateName.name}' in file '${path}', file not found")
+      }
     }
   }
-
-  override def failure(templateName: TemplateName) = {
-    val path = buildPath(templateName)
-    new TemplateNotFoundException(s"Expected to find template '${templateName.name}' in file '${path}', file not found")
-  }
-
-  def buildPath(templateName: TemplateName) =
-    s"$directoryPath/${templateName.name}$templateSuffix"
 }
 
-class TemplateNotFoundException(msg: String) extends Exception(msg) {}
+class TemplateLoadException(msg: String) extends Exception(msg) {}
