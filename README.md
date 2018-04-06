@@ -41,10 +41,21 @@ If you're using sbt, add this line to your build.sbt file:
 
 If you're using Maven, run this:
 
+    <repositories>
+        <repository>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <id>bintray-maven</id>
+            <name>bintray</name>
+            <url>https://dl.bintray.com/zalando/maven</url>
+        </repository>
+    </repositories>
+    
     <dependency>
-    	<groupId>de.zalando</groupId>
-    	<artifactId>beard</artifactId>
-    	<version>0.2.0</version>
+        <groupId>de.zalando</groupId>
+        <artifactId>beard_2.12</artifactId>
+        <version>0.2.0</version>
     </dependency>
  
 Binaries are available from [bintray](https://bintray.com/zalando/maven/beard/0.2.0)
