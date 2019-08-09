@@ -12,9 +12,9 @@ case class AttrInterpolation(identifier: Identifier, attributes: Seq[Attribute] 
 }
 
 case class IdInterpolation(
-  identifier: CompoundIdentifier,
-  filters: Seq[FilterNode] = Seq.empty)
-    extends Interpolation
+    identifier: CompoundIdentifier,
+    filters: Seq[FilterNode] = Seq.empty)
+  extends Interpolation
 
 case class YieldStatement() extends Statement
 
@@ -31,7 +31,7 @@ case class IfStatement(condition: CompoundIdentifier, ifStatements: Seq[Statemen
 case class UnlessStatement(condition: CompoundIdentifier, unlessStatements: Seq[Statement], elseStatements: Seq[Statement] = Seq.empty) extends Statement
 
 case class ForStatement(identifier: Identifier, index: Option[Identifier], collection: CompoundIdentifier,
-  statements: Seq[Statement] = Seq.empty, addNewLine: Boolean = false) extends Statement
+    statements: Seq[Statement] = Seq.empty, addNewLine: Boolean = false) extends Statement
 
 case class FilterNode(identifier: Identifier, parameters: Seq[Attribute] = Seq.empty)
 
@@ -66,10 +66,10 @@ case class White(times: Int) extends Statement with HasText {
 }
 
 case class BeardTemplate(
-  statements: Seq[Statement],
-  extended: Option[ExtendsStatement] = None,
-  renderStatements: Seq[RenderStatement] = Seq.empty,
-  contentForStatements: Seq[ContentForStatement] = Seq.empty)
+    statements: Seq[Statement],
+    extended: Option[ExtendsStatement] = None,
+    renderStatements: Seq[RenderStatement] = Seq.empty,
+    contentForStatements: Seq[ContentForStatement] = Seq.empty)
 
 object EmptyBeardTemplate extends BeardTemplate(Seq.empty)
 

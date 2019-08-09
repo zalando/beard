@@ -5,7 +5,7 @@ import java.io.{PrintWriter, StringWriter}
 import com.github.mustachejava.DefaultMustacheFactory
 import org.scalameter.api._
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 
 /**
  * @author dpersa

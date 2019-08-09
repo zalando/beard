@@ -1,20 +1,18 @@
-import com.typesafe.sbt.SbtScalariform.ScalariformKeys
-
-import scalariform.formatter.preferences.{AlignSingleLineCaseStatements, DanglingCloseParenthesis, DoubleIndentClassDeclaration, Preserve, PreserveSpaceBeforeArguments, SpacesAroundMultiImports}
+import scalariform.formatter.preferences._
 
 name          := "beard"
 organization  := "de.zalando"
-version       := "0.2.1-SNAPSHOT"
+version       := "0.3.0"
 licenses      += ("Apache-2.0", url("http://www.apache.org/licenses/"))
 
-scalaVersion := "2.12.0"
+scalaVersion := "2.13.0"
 scalacOptions := Seq("-unchecked", "-feature", "-deprecation", "-encoding", "utf8")
 
-val antlrVersion = "4.5.2"
+val antlrVersion = "4.7.2"
 
-crossScalaVersions := Seq(scalaVersion.value, "2.11.8")
+crossScalaVersions := Seq(scalaVersion.value, "2.12.8")
 
-antlr4Settings
+enablePlugins(Antlr4Plugin)
 
 antlr4GenListener in Antlr4 := true
 
@@ -30,32 +28,29 @@ libraryDependencies ++= {
                                                                               exclude("org.antlr", "ST4")
                                                                               exclude("org.antlr", "antlr-runtime"),
     "org.scala-lang"               % "scala-reflect"                        % scalaVersion.value,
-    "org.scala-lang.modules"      %% "scala-xml"                            % "1.0.6",
-    "io.monix"                    %% "monix"                                % "2.1.0",
+    "org.scala-lang.modules"      %% "scala-xml"                            % "1.2.0",
     "org.slf4j"                    % "slf4j-api"                            % "1.7.7",
     "ch.qos.logback"               % "logback-classic"                      % "1.1.7",
-    "org.scalatest"               %% "scalatest"                            % "3.0.1"          % "test",
-    "com.mitchellbosecke"          % "pebble"                               % "1.6.0"          % "test",
-    "org.freemarker"               % "freemarker"                           % "2.3.23"         % "test",
-    "com.github.spullara.mustache.java"   % "compiler"                      % "0.9.1"          % "test",
-    "com.github.jknack"            % "handlebars"                           % "2.2.2"          % "test",
-    "de.neuland-bfi"               % "jade4j"                               % "0.4.0"          % "test",
-    "com.storm-enroute"           %% "scalameter"                           % "0.8.2"          % "test"
+    "org.scalatest"               %% "scalatest"                            % "3.0.8"          % "test",
+    "io.pebbletemplates"           % "pebble"                               % "3.0.10"         % "test",
+    "org.freemarker"               % "freemarker"                           % "2.3.28"         % "test",
+    "com.github.spullara.mustache.java"   % "compiler"                      % "0.9.6"          % "test",
+    "com.github.jknack"            % "handlebars"                           % "4.1.2"          % "test",
+    "de.neuland-bfi"               % "jade4j"                               % "1.2.7"          % "test",
+    "com.storm-enroute"           %% "scalameter"                           % "0.19"           % "test"
   )
 }
 
-
-net.virtualvoid.sbt.graph.Plugin.graphSettings
-
-scalariformSettings
-ScalariformKeys.preferences := ScalariformKeys.preferences.value
+scalariformPreferences := scalariformPreferences.value
   .setPreference(AlignSingleLineCaseStatements, true)
   .setPreference(AlignSingleLineCaseStatements.MaxArrowIndent, 100)
   .setPreference(PreserveSpaceBeforeArguments, true)
   .setPreference(DanglingCloseParenthesis, Preserve)
-  .setPreference(DoubleIndentClassDeclaration, true)
+  .setPreference(DoubleIndentConstructorArguments, true)
   .setPreference(SpacesAroundMultiImports, false)
 
+logBuffered := false
+parallelExecution in Test := false
 // testFrameworks += new TestFramework("org.scalameter.ScalaMeterFramework")
 
 publishMavenStyle       := true

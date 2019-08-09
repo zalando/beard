@@ -1,15 +1,15 @@
 package de.zalando.beard.parser
 
-import org.antlr.v4.runtime.ANTLRInputStream
+import org.antlr.v4.runtime.{CharStream, CharStreams}
 import org.scalatest.{FunSpec, Matchers}
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 
 class BeardLexerSpec extends FunSpec with Matchers {
 
   describe("BeardLexer") {
     it("should parse the correct tokens") {
-      val stream = new ANTLRInputStream("more {{   hello   \n name='  He   llo  '}} { world   } {{ val | filter }}")
+      val stream = CharStreams.fromString("more {{   hello   \n name='  He   llo  '}} { world   } {{ val | filter }}")
       val lexer = new CustomBeardLexer(stream)
       val tokens = lexer.getAllTokens.asScala.map(token => (token.getText, lexer.getTokenNames.toList(token.getType))).toList
       val expected = List(

@@ -38,9 +38,9 @@ object ForContextFactory {
 }
 
 case class ForIterationContext(
-  globalContext: Map[String, Any],
-  templateIteratorIdentifier: String,
-  templateIndexIdentifier: Option[String],
-  collectionContext: Any,
-  currentIndex: Int,
-  collectionOfContexts: Iterable[Any])
+    globalContext: Map[String, Any],
+    templateIteratorIdentifier: String,
+    templateIndexIdentifier: Option[String],
+    collectionContext: Any,
+    currentIndex: Int,
+    collectionOfContexts: Iterable[Any])

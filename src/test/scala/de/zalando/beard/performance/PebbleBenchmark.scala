@@ -8,7 +8,7 @@ import com.mitchellbosecke.pebble.extension.i18n.I18nExtension
 import com.mitchellbosecke.pebble.loader.ClasspathLoader
 import org.scalameter.api._
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 
 /**
  * @author dpersa
@@ -18,8 +18,7 @@ object PebbleBenchmark extends Bench.LocalTime {
   loader.setSuffix(".html")
   loader.setPrefix("pebble-benchmark")
 
-  val engine = new PebbleEngine(loader)
-  engine.addExtension(new I18nExtension())
+  val engine = new PebbleEngine.Builder().loader(loader).extension(new I18nExtension()).build()
 
   val template = engine.getTemplate("index")
 
@@ -39,7 +38,6 @@ object PebbleBenchmark extends Bench.LocalTime {
 
   val sr = new StringWriter()
   template.evaluate(sr, con)
-  println(sr.toString)
 
   performance of "Pebble" in {
     measure method "render" in {

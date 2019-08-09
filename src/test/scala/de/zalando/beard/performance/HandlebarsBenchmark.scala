@@ -4,7 +4,7 @@ import com.github.jknack.handlebars.Handlebars
 import com.github.jknack.handlebars.io.ClassPathTemplateLoader
 import org.scalameter.api._
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 
 /**
  * @author dpersa
@@ -23,7 +23,7 @@ object HandlebarsBenchmark extends Bench.LocalTime {
       Map("title" -> "Title1", "speakerName" -> "Name1", "summary" -> "Summary1").asJava,
       Map("title" -> "Title2", "speakerName" -> "Name2", "summary" -> "Summary2").asJava).asJava).asJava
 
-  val sizes = Gen.range("size")(1, 100000, 20000)
+  val sizes = Gen.range("size")(1, 1000, 200)
   val ranges = for {
     size <- sizes
   } yield 0 until size

@@ -11,7 +11,7 @@ class CustomBeardLexer(input: CharStream) extends BeardLexer(input) {
     val tokenText = _input.getText(Interval.of(_tokenStartCharIndex, _input.index()))
     val msg =
       s"""token recognition error at: '${getErrorDisplay(tokenText)}'
-        |$sourceCode
+         |$sourceCode
       """.stripMargin
 
     val listener = getErrorListenerDispatch
@@ -26,12 +26,13 @@ class CustomBeardLexer(input: CharStream) extends BeardLexer(input) {
 
     val lineOfCode = _input
       .getText(Interval.of(lineStart, lineEnd))
-      .lines
-      .next
+      .lines()
+      .iterator()
+      .next()
 
     val highlight = "^".padTo(_tokenStartCharPositionInLine + 1, " ").reverse.mkString
 
-    val codeWithHighlights = Seq(lineOfCode, highlight).mkString(System.lineSeparator)
+    val codeWithHighlights: String = Seq[String](lineOfCode, highlight).mkString(System.lineSeparator)
     codeWithHighlights
   }
 }
