@@ -35,7 +35,7 @@ case class DefaultFilterResolver(userFilters: Seq[Filter] = Seq()) extends Filte
   val logger = LoggerFactory.getLogger(this.getClass)
 
   override def resolve(identifier: String, parameterNames: Set[String]): Option[Filter] = {
-    logger.info(s"Resolve filter ${identifier}")
+    logger.debug(s"Resolve filter ${identifier}")
 
     filters.get(identifier)
   }

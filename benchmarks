@@ -1,34 +1,41 @@
 Beard No Streaming
-Parameters(size -> 1): 0.008744
-Parameters(size -> 20001): 44.330413
-Parameters(size -> 40001): 88.826521
-Parameters(size -> 60001): 137.370712
-Parameters(size -> 80001): 179.232451
+Parameters(size -> 1): 0.008004 ms
+Parameters(size -> 20001): 142.911375 ms
+Parameters(size -> 40001): 289.632865 ms
+Parameters(size -> 60001): 435.117027 ms
+Parameters(size -> 80001): 579.471628 ms
 
 Mustache.java
-Parameters(size -> 1): 0.004849
-Parameters(size -> 20001): 71.431516
-Parameters(size -> 40001): 144.628086
-Parameters(size -> 60001): 214.869461
-Parameters(size -> 80001): 288.737725
+Parameters(size -> 1): 0.002502 ms
+Parameters(size -> 20001): 40.355196 ms
+Parameters(size -> 40001): 81.420325 ms
+Parameters(size -> 60001): 122.23568 ms
+Parameters(size -> 80001): 163.051888 ms
 
 Pebble
-Parameters(size -> 1): 0.005384
-Parameters(size -> 20001): 81.740897
-Parameters(size -> 40001): 164.555768
-Parameters(size -> 60001): 247.83125
-Parameters(size -> 80001): 334.931101
+Parameters(size -> 1): 0.004769 ms
+Parameters(size -> 20001): 82.851232 ms
+Parameters(size -> 40001): 167.965286 ms
+Parameters(size -> 60001): 250.366538 ms
+Parameters(size -> 80001): 335.246818 ms
 
 Freemarker
-Parameters(size -> 1): 0.005673
-Parameters(size -> 20001): 90.04892
-Parameters(size -> 40001): 183.563551
-Parameters(size -> 60001): 273.024154
-Parameters(size -> 80001): 352.930733
+Parameters(size -> 1): 0.004041 ms
+[info] Parameters(size -> 20001): 69.843362 ms
+[info] Parameters(size -> 40001): 140.551882 ms
+[info] Parameters(size -> 60001): 211.179154 ms
+[info] Parameters(size -> 80001): 281.9435 ms
 
-Jade4j
-Parameters(size -> 1): 0.043619
-Parameters(size -> 20001): 875.951181
-Parameters(size -> 40001): 1791.350485
-Parameters(size -> 60001): 2680.437264
-Parameters(size -> 80001): 3577.868017
+Jade4j // at least 10 time slower compared to the other ones
+Parameters(size -> 1): 0.020903 ms
+Parameters(size -> 20001): 404.030786 ms
+Parameters(size -> 40001): 817.520734 ms
+Parameters(size -> 60001): 1221.196045 ms
+Parameters(size -> 80001): 1630.547614 ms
+
+Handlebars // at least 100 time slower compared to the other ones
+Parameters(size -> 1): 0.538895 ms
+Parameters(size -> 201): 111.385518 ms
+Parameters(size -> 401): 220.697567 ms
+Parameters(size -> 601): 327.077743 ms
+Parameters(size -> 801): 442.38003 ms

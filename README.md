@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/zalando/beard.svg)](https://travis-ci.org/zalando/beard)
 
-Beard is a logic-less templating engine written in Scala and inspired by [Mustache](https://mustache.github.io/). You can use it out-of-the-box; see the [Requirements list](#requirements) below. 
+Beard is a logic-less templating engine written in Scala and inspired by [Mustache](https://mustache.github.io/). You can use it out-of-the-box; see the [Requirements list](#requirements) below.
 
 What makes Beard powerful:
 
@@ -10,7 +10,7 @@ What makes Beard powerful:
   - **Speed**. We've benchmarked it against other template engines for the JVM, and Beard performed much faster in terms of rendering time. (We invite you to run your own benchmarks to see if you get the same results.) It also uses [ANTLR](http://www.antlr.org/) to make template compilation fast.
   - It offers **template inheritance**.
   - Its **simple, beautiful syntax**. A la Mustache, it uses only the `{` and `}` markers for tags and delimiters.
-  
+
 Here's a code snippet to show you how simply Beard can parse templates:
 
 ```html
@@ -26,14 +26,14 @@ Here's a code snippet to show you how simply Beard can parse templates:
 
 ## Requirements
 
-- Scala 2.11 or 2.12
+- Scala 2.12 or 2.13
 - a package manager like sbt or Maven
 
 ## Installing
 
 If you're using sbt, add this line to your build.sbt file:
 
-    libraryDependencies += "de.zalando" %% "beard" % "0.2.0"
+    libraryDependencies += "de.zalando" %% "beard" % "0.3.0"
 
     resolvers ++= Seq(
       "zalando-maven" at "https://dl.bintray.com/zalando/maven"
@@ -51,14 +51,14 @@ If you're using Maven, run this:
             <url>https://dl.bintray.com/zalando/maven</url>
         </repository>
     </repositories>
-    
+
     <dependency>
         <groupId>de.zalando</groupId>
-        <artifactId>beard_2.12</artifactId>
-        <version>0.2.0</version>
+        <artifactId>beard_2.13</artifactId>
+        <version>0.3.0</version>
     </dependency>
- 
-Binaries are available from [bintray](https://bintray.com/zalando/maven/beard/0.2.0)
+
+Binaries are available from [bintray](https://dl.bintray.com/zalando/maven/de/zalando/beard_2.13/0.3.0/)
 
 ## Additional Documentation
 
@@ -71,6 +71,11 @@ We've started a [Gitbook](https://danpersa.gitbooks.io/beard/content/) for addit
 - [Quick Reference](https://danpersa.gitbooks.io/beard/content/chapter-5-quick-reference.html): with details and code on interpolation, comment statements, block statements, yield statements, and more
 
 You can contribute to this documentation [here](https://github.com/danpersa/beard-book).
+
+## Performance Tests
+
+Here is how to run them:
+    sbt "testOnly de.zalando.beard.performance.JadeBenchmark"
 
 ## Contributing/TODO List
 

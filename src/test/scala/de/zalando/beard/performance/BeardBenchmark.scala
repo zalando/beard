@@ -1,7 +1,5 @@
 package de.zalando.beard.performance
 
-import java.util.{Locale, ResourceBundle}
-
 import de.zalando.beard.renderer._
 import org.scalameter.api._
 
@@ -18,6 +16,7 @@ object BeardBenchmark extends Bench.LocalTime {
       Map("title" -> "Title1", "speakerName" -> "Name1", "summary" -> "Summary1"),
       Map("title" -> "Title2", "speakerName" -> "Name2", "summary" -> "Summary2"))))
 
+  //val sizes = Gen.range("size")(1, 20000, 5000)
   val sizes = Gen.range("size")(1, 100000, 20000)
   val ranges = for {
     size <- sizes
@@ -26,7 +25,6 @@ object BeardBenchmark extends Bench.LocalTime {
   val renderResult = StringWriterRenderResult()
 
   val result = renderer.render(compiledTemplate, renderResult, context)
-  println(result)
 
   performance of "Beard" in {
     measure method "render" in {

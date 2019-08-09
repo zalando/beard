@@ -19,10 +19,10 @@ trait TemplateCompiler {
 }
 
 class CustomizableTemplateCompiler(
-  templateLoader: TemplateLoader = new ClasspathTemplateLoader(),
-  templateCache: BeardTemplateCache = new BeardTemplateCache(),
-  templateParser: BeardTemplateParser = new BeardTemplateParser())
-    extends TemplateCompiler {
+    templateLoader: TemplateLoader = new ClasspathTemplateLoader(),
+    templateCache: BeardTemplateCache = new BeardTemplateCache(),
+    templateParser: BeardTemplateParser = new BeardTemplateParser())
+  extends TemplateCompiler {
 
   def compile(
     templateName: TemplateName,
