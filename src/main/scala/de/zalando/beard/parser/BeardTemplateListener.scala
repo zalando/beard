@@ -4,7 +4,7 @@ import de.zalando.beard.BeardParser._
 import de.zalando.beard.BeardParserBaseListener
 import de.zalando.beard.ast._
 import scala.collection.immutable.Seq
-import scala.jdk.CollectionConverters._
+import de.zalando.beard.parser.JDKCollectionConvertersCompat.Converters._
 
 class BeardTemplateListener extends BeardParserBaseListener {
 
