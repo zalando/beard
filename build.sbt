@@ -5,12 +5,12 @@ organization  := "de.zalando"
 version       := "0.3.1-SNAPSHOT"
 licenses      += ("Apache-2.0", url("http://www.apache.org/licenses/"))
 
-scalaVersion := "2.13.0"
+scalaVersion := "2.13.1"
 scalacOptions := Seq("-unchecked", "-feature", "-deprecation", "-encoding", "utf8")
 
-val antlrVersion = "4.7.2"
+val antlrVersion = "4.8-1"
 
-crossScalaVersions := Seq(scalaVersion.value, "2.12.8")
+crossScalaVersions := Seq(scalaVersion.value, "2.12.11")
 
 enablePlugins(Antlr4Plugin)
 
@@ -28,10 +28,10 @@ libraryDependencies ++= {
                                                                               exclude("org.antlr", "ST4")
                                                                               exclude("org.antlr", "antlr-runtime"),
     "org.scala-lang"               % "scala-reflect"                        % scalaVersion.value,
-    "org.scala-lang.modules"      %% "scala-xml"                            % "1.2.0",
-    "org.slf4j"                    % "slf4j-api"                            % "1.7.7",
-    "ch.qos.logback"               % "logback-classic"                      % "1.1.7",
-    "org.scalatest"               %% "scalatest"                            % "3.0.8"          % "test",
+    "org.scala-lang.modules"      %% "scala-xml"                            % "1.3.0",
+    "org.slf4j"                    % "slf4j-api"                            % "1.7.30",
+    "ch.qos.logback"               % "logback-classic"                      % "1.1.11",
+    "org.scalatest"               %% "scalatest"                            % "3.1.1"          % "test",
     "io.pebbletemplates"           % "pebble"                               % "3.0.10"         % "test",
     "org.freemarker"               % "freemarker"                           % "2.3.28"         % "test",
     "com.github.spullara.mustache.java"   % "compiler"                      % "0.9.6"          % "test",
