@@ -17,3 +17,5 @@ Note:
 To login to bintray:
 
     sbt bintrayChangeCredentials
+
+  Make sure you use your bintray API Key and not the password!
