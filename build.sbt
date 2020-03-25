@@ -2,7 +2,7 @@ import scalariform.formatter.preferences._
 
 name          := "beard"
 organization  := "de.zalando"
-version       := "0.3.1-SNAPSHOT"
+version       := "0.3.1"
 licenses      += ("Apache-2.0", url("http://www.apache.org/licenses/"))
 
 scalaVersion := "2.13.1"

@@ -33,7 +33,7 @@ Here's a code snippet to show you how simply Beard can parse templates:
 
 If you're using sbt, add this line to your build.sbt file:
 
-    libraryDependencies += "de.zalando" %% "beard" % "0.3.0"
+    libraryDependencies += "de.zalando" %% "beard" % "0.3.1"
 
     resolvers ++= Seq(
       "zalando-maven" at "https://dl.bintray.com/zalando/maven"
@@ -55,10 +55,10 @@ If you're using Maven, run this:
     <dependency>
         <groupId>de.zalando</groupId>
         <artifactId>beard_2.13</artifactId>
-        <version>0.3.0</version>
+        <version>0.3.1</version>
     </dependency>
 
-Binaries are available from [bintray](https://dl.bintray.com/zalando/maven/de/zalando/beard_2.13/0.3.0/)
+Binaries are available from [bintray](https://dl.bintray.com/zalando/maven/de/zalando/beard_2.13/0.3.1/)
 
 ## Additional Documentation
 
