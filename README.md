@@ -1,4 +1,4 @@
-# Beard: A Blazing-Fast Template Engine
+# [DEPRECATED] Beard: A Blazing-Fast Template Engine
 
 [![Build Status](https://travis-ci.org/zalando/beard.svg)](https://travis-ci.org/zalando/beard)
 
